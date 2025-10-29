@@ -16,6 +16,37 @@ return {
               ["<C-k>"] = "move_selection_previous",
             },
           },
+          -- Ultra minimal: show clean message for images, preview text normally
+          buffer_previewer_maker = function(filepath, bufnr, opts)
+            local previewers = require("telescope.previewers")
+
+            -- Check if file is an image
+            local image_extensions = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "svg", "ico" }
+            local extension = vim.fn.fnamemodify(filepath, ":e"):lower()
+            local is_image = vim.tbl_contains(image_extensions, extension)
+
+            if is_image then
+              -- Show clean message for images (ultra minimal)
+              vim.schedule(function()
+                if vim.api.nvim_buf_is_valid(bufnr) then
+                  local filename = vim.fn.fnamemodify(filepath, ":t")
+                  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
+                    "",
+                    "",
+                    "  Image file",
+                    "",
+                    "  " .. filename,
+                    "",
+                    "  Press <Enter> to open",
+                    "",
+                  })
+                end
+              end)
+            else
+              -- Use default previewer for text files
+              previewers.buffer_previewer_maker(filepath, bufnr, opts)
+            end
+          end,
         },
       })
 
