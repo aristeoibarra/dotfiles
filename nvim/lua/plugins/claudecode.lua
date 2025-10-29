@@ -22,7 +22,7 @@ return {
     opts = {
       terminal = {
         split_side = "right",           -- Panel a la derecha
-        split_width_percentage = 0.45,  -- 45% del ancho de la ventana (más ancho que el default 30%)
+        split_width_percentage = 0.25,  -- 25% del ancho de la ventana (más compacto)
       },
     },
     keys = {

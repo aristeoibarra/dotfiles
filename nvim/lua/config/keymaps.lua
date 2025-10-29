@@ -73,3 +73,9 @@ vim.keymap.set('n', '<leader>tm', function()
     print('Mouse: ON')
   end
 end, { desc = 'Toggle mouse' })
+
+-- Diagnostics
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Show diagnostics list' })
+vim.keymap.set('n', '<leader>D', vim.diagnostic.open_float, { desc = 'Show diagnostic details' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })

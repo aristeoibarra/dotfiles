@@ -61,6 +61,17 @@ return {
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", opts, { desc = "Rename" }))
           vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))
           vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", opts, { desc = "Go to references" }))
+
+          -- Go to definition in splits
+          vim.keymap.set("n", "gv", function()
+            vim.cmd('vsplit')
+            vim.lsp.buf.definition()
+          end, vim.tbl_extend("force", opts, { desc = "Go to definition in vertical split" }))
+
+          vim.keymap.set("n", "gs", function()
+            vim.cmd('split')
+            vim.lsp.buf.definition()
+          end, vim.tbl_extend("force", opts, { desc = "Go to definition in horizontal split" }))
         end,
       })
 

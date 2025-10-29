@@ -54,7 +54,7 @@ vim.opt.shortmess:append("I")
 -- Diagnostics (inline error display)
 vim.diagnostic.config({
   virtual_text = {
-    prefix = "■", -- Ultra minimal: simple ASCII block
+    prefix = "", -- Ultra minimal: no prefix
     spacing = 4,
     source = "if_many", -- Show source if multiple sources
   },
