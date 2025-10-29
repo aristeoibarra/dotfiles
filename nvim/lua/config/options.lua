@@ -23,6 +23,8 @@ vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.cmdheight = 1
+vim.opt.mouse = "" -- Disable mouse by default (use <leader>tm to toggle)
+vim.opt.laststatus = 0 -- Disable statusline by default (use <leader>ts to toggle)
 
 -- Files
 vim.opt.swapfile = false
@@ -46,19 +48,22 @@ vim.opt.completeopt = "menu,menuone,noselect"
 -- Concealing (for Obsidian.nvim UI features)
 vim.opt.conceallevel = 2
 
+-- Disable intro message
+vim.opt.shortmess:append("I")
+
 -- Diagnostics (inline error display)
 vim.diagnostic.config({
   virtual_text = {
-    prefix = "●", -- Could be '■', '▎', 'x', '●', etc.
+    prefix = "■", -- Ultra minimal: simple ASCII block
     spacing = 4,
     source = "if_many", -- Show source if multiple sources
   },
   signs = {
     text = {
-      [vim.diagnostic.severity.ERROR] = " ",
-      [vim.diagnostic.severity.WARN] = " ",
-      [vim.diagnostic.severity.HINT] = " ",
-      [vim.diagnostic.severity.INFO] = " ",
+      [vim.diagnostic.severity.ERROR] = "E", -- Ultra minimal: letters only (was: Nerd Font icon)
+      [vim.diagnostic.severity.WARN] = "W",  -- Ultra minimal: letters only (was: Nerd Font icon)
+      [vim.diagnostic.severity.HINT] = "H",  -- Ultra minimal: letters only (was: Nerd Font icon)
+      [vim.diagnostic.severity.INFO] = "I",  -- Ultra minimal: letters only (was: Nerd Font icon)
     },
   },
   underline = true,

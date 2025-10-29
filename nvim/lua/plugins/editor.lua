@@ -8,8 +8,8 @@ return {
       preset = "modern",
       delay = 300,
       icons = {
-        breadcrumb = "»",
-        separator = "➜",
+        breadcrumb = ">", -- Ultra minimal: ASCII only (was: »)
+        separator = "|",  -- Ultra minimal: ASCII only (was: ➜)
         group = "+",
       },
       win = {

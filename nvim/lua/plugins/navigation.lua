@@ -50,7 +50,7 @@ return {
               file = true,
               folder = true,
               folder_arrow = true,
-              git = true,
+              git = false, -- Disabled for ultra minimal (no git status icons)
             },
           },
         },

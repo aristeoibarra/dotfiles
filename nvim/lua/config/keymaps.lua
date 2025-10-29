@@ -62,3 +62,14 @@ vim.keymap.set('n', '<leader>e', '<cmd>Ex<CR>', { desc = 'File explorer' })
 -- Splits
 vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>', { desc = 'Horizontal split' })
 vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
+
+-- Toggle mouse support
+vim.keymap.set('n', '<leader>tm', function()
+  if vim.o.mouse == 'a' then
+    vim.o.mouse = ''
+    print('Mouse: OFF')
+  else
+    vim.o.mouse = 'a'
+    print('Mouse: ON')
+  end
+end, { desc = 'Toggle mouse' })
