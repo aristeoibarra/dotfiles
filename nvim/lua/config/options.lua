@@ -43,6 +43,9 @@ vim.opt.timeoutlen = 300
 -- Completion
 vim.opt.completeopt = "menu,menuone,noselect"
 
+-- Concealing (for Obsidian.nvim UI features)
+vim.opt.conceallevel = 2
+
 -- Diagnostics (inline error display)
 vim.diagnostic.config({
   virtual_text = {
