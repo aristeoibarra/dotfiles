@@ -11,7 +11,6 @@ return {
         transparent_background = false,
         integrations = {
           cmp = true,
-          gitsigns = true,
           nvimtree = true,
           treesitter = true,
           mason = true,
@@ -34,8 +33,6 @@ return {
             enabled = true,
           },
           which_key = true,
-          alpha = true,  -- Dashboard
-          trouble = true,  -- Error list
         },
       })
       vim.cmd.colorscheme("catppuccin")
@@ -47,7 +44,7 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
-      "catppuccin/nvim",  -- Asegurar que catppuccin cargue primero
+      "catppuccin/nvim",
     },
     config = function()
       require("lualine").setup({
@@ -55,18 +52,6 @@ return {
           theme = "catppuccin",
           component_separators = { left = "|", right = "|" },
           section_separators = "",
-        },
-      })
-    end,
-  },
-
-  -- Tailwind colorizer
-  {
-    "NvChad/nvim-colorizer.lua",
-    config = function()
-      require("colorizer").setup({
-        user_default_options = {
-          tailwind = true,
         },
       })
     end,

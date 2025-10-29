@@ -56,20 +56,6 @@ return {
     end,
   },
 
-  -- Autopairs
-  {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    config = function()
-      require("nvim-autopairs").setup({})
-
-      -- Integration with nvim-cmp
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-      local cmp = require("cmp")
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-    end,
-  },
-
   -- Comment plugin
   {
     "numToStr/Comment.nvim",
@@ -85,13 +71,13 @@ return {
     opts = {
       window = {
         backdrop = 0.95,
-        width = 120,        -- Ancho de la ventana zen
-        height = 1,         -- 100% de alto
+        width = 120,
+        height = 1,
         options = {
           signcolumn = "no",
-          number = true,           -- Mostrar números de línea
-          relativenumber = false,  -- Números absolutos (mejor para principiantes)
-          cursorline = true,       -- Mostrar línea actual resaltada
+          number = true,
+          relativenumber = false,
+          cursorline = true,
           cursorcolumn = false,
           foldcolumn = "0",
           list = false,
@@ -102,10 +88,9 @@ return {
           enabled = true,
           ruler = false,
           showcmd = false,
-          laststatus = 0,   -- Ocultar statusline
+          laststatus = 0,
         },
         twilight = { enabled = false },
-        gitsigns = { enabled = false },
         tmux = { enabled = false },
       },
     },
