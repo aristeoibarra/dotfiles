@@ -80,6 +80,13 @@ RPROMPT='$(git_prompt_info)'
 alias vim='nvim'
 alias dns-clean='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
 
+alias gs='git status -sb'
+alias gp='git push'
+alias gl='git pull'
+alias gc='git clone'
+alias glog='git log --oneline --graph --decorate'
+alias gcm='git commit -m'
+
 alias ta='tmux attach -t'
 
 alias tl='tmux list-sessions'
