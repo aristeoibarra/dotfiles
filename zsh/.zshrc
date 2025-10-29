@@ -1,8 +1,6 @@
-# Oh My Zsh configuration
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME=""
 
-# Oh My Zsh plugins
 plugins=(
   git
   zsh-autosuggestions
@@ -13,32 +11,25 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# === Enhanced Autocompletion Configuration ===
-
-# zsh-completions (additional completion definitions)
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 fi
 
-# Enable advanced completion system
 autoload -Uz compinit
 compinit
 
-# zsh-autosuggestions configuration (fish-like autosuggestions)
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7d8590,bold"  # More visible gray color
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)       # Use history and completion
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20                  # Limit for performance
-ZSH_AUTOSUGGEST_USE_ASYNC=1                         # Async for better performance
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7d8590,bold"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=1
 
-# Completion styling
-zstyle ':completion:*' menu select                           # Interactive menu
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'   # Case insensitive
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"     # Colored completion
-zstyle ':completion:*' group-name ''                         # Group results by category
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' group-name ''
 zstyle ':completion:*:descriptions' format '%F{cyan}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{red}-- no matches found --%f'
 
-# fzf integration (fuzzy finder)
 if [ -f ~/.fzf.zsh ]; then
   source ~/.fzf.zsh
 elif type brew &>/dev/null && [ -f $(brew --prefix)/opt/fzf/shell/completion.zsh ]; then
@@ -46,7 +37,6 @@ elif type brew &>/dev/null && [ -f $(brew --prefix)/opt/fzf/shell/completion.zsh
   source $(brew --prefix)/opt/fzf/shell/completion.zsh
 fi
 
-# fzf configuration
 export FZF_DEFAULT_OPTS="
   --height 40%
   --layout=reverse
@@ -58,36 +48,51 @@ export FZF_DEFAULT_OPTS="
   --color=marker:#9ece6a,spinner:#9ece6a,header:#9ece6a
 "
 
-# Use fd if available for fzf
 if command -v fd > /dev/null; then
   export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
 
-# History configuration (better search)
 HISTSIZE=50000
 SAVEHIST=50000
-setopt EXTENDED_HISTORY          # Write timestamp
-setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicates first
-setopt HIST_IGNORE_DUPS          # Ignore duplicates
-setopt HIST_IGNORE_ALL_DUPS      # Remove old duplicates
-setopt HIST_FIND_NO_DUPS         # Don't show duplicates in search
-setopt HIST_SAVE_NO_DUPS         # Don't save duplicates
-setopt SHARE_HISTORY             # Share history between sessions
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt SHARE_HISTORY
 
-# Show execution time for commands that take longer than 2 seconds
 REPORTTIME=2
 
-# Git prompt customization
 ZSH_THEME_GIT_PROMPT_PREFIX="%F{cyan}("
 ZSH_THEME_GIT_PROMPT_SUFFIX=")%f"
 ZSH_THEME_GIT_PROMPT_DIRTY=""
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
-# Custom prompt
-PROMPT='❯ '
+if [ -n "$TMUX" ]; then
+  PROMPT='%F{#a6a69c}$(tmux display-message -p "#S")%f %F{#7aa89f}❯%f '
+else
+  PROMPT='❯ '
+fi
 RPROMPT='$(git_prompt_info)'
 
-# Aliases
 alias vim='nvim'
 alias dns-clean='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+
+alias ta='tmux attach -t'
+
+alias tl='tmux list-sessions'
+alias ts='tmux new-session -s'
+alias tr='tmux rename-session -t'
+alias tk='tmux kill-session -t'
+alias tka='tmux kill-session -a'
+alias tkall='tmux kill-server'
+
+if [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ]; then
+  if tmux has-session 2>/dev/null; then
+    tmux attach
+  else
+    tmux new-session -s "$(date +%Y%m%d)"
+  fi
+fi
