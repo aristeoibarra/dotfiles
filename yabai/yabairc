@@ -1,38 +1,33 @@
 #!/usr/bin/env sh
 
-# BSP layout (pure tiling)
+# Layout BSP (tiling puro)
 yabai -m config layout bsp
 
-# ZERO padding - windows stick to edges
+# CERO padding - ventanas pegadas a los bordes
 yabai -m config top_padding    0
 yabai -m config bottom_padding 0
 yabai -m config left_padding   0
 yabai -m config right_padding  0
 
-# Minimal gap between windows (2-4px to distinguish them)
+# Gap mínimo entre ventanas (2-4px para distinguirlas)
 yabai -m config window_gap     2
 
-# No borders or visual shadows
+# Sin bordes ni sombras visuales
 yabai -m config window_border off
 yabai -m config mouse_follows_focus off
 yabai -m config focus_follows_mouse off
 
-# Each new window splits available space
+# Cada ventana nueva se divide el espacio disponible
 yabai -m config window_placement second_child
 
-# Balanced split ratio
+# Split ratio balanceado
 yabai -m config split_ratio 0.50
 
-# Apps that do NOT use tiling
+# Apps que NO van en tiling
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Finder$" manage=off
 yabai -m rule --add app="^Raycast$" manage=off
-yabai -m rule --add app="^Spotify$" manage=off
-yabai -m rule --add app="^WhatsApp$" manage=off
-yabai -m rule --add app="^Discord$" manage=off
-yabai -m rule --add app="^Slack$" manage=off
-yabai -m rule --add app="^1Password$" manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
 yabai -m rule --add app="^RoundPie$" manage=off
 

@@ -42,6 +42,17 @@ autocmd("FileType", {
   desc = "Close certain filetypes with q",
 })
 
+-- Better wrap for text files (Markdown, etc)
+autocmd("FileType", {
+  group = augroup("text_wrap", { clear = true }),
+  pattern = { "markdown", "text", "gitcommit" },
+  callback = function()
+    vim.opt_local.linebreak = true  -- Break at word boundaries
+    vim.opt_local.breakindent = true  -- Maintain indentation when wrapping
+  end,
+  desc = "Better wrapping for text files",
+})
+
 -- Open images with external application (ultra minimal)
 autocmd("BufReadPre", {
   group = augroup("open_images_externally", { clear = true }),

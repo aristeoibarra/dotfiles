@@ -8,6 +8,7 @@ My personal dotfiles for macOS.
 - **[Alacritty](https://alacritty.org/)** - GPU-accelerated terminal emulator
 - **[Yabai](https://github.com/koekeishiya/yabai)** - Tiling window manager for macOS
 - **[skhd](https://github.com/koekeishiya/skhd)** - Hotkey daemon for macOS
+- **[Tmux](https://github.com/tmux/tmux)** - Terminal multiplexer
 - **[Zsh](https://www.zsh.org/)** - Shell with Oh My Zsh, autosuggestions, and fzf integration
 
 ## Structure
@@ -18,6 +19,8 @@ dotfiles/
 ├── alacritty/     # Alacritty configuration
 ├── yabai/         # Yabai configuration
 ├── skhd/          # skhd configuration
+├── tmux/          # Tmux configuration
+│   └── .tmux.conf
 ├── zsh/           # Zsh configuration
 │   └── .zshrc
 ├── install.sh     # Installation script
@@ -58,6 +61,7 @@ ln -sf ~/dotfiles/nvim ~/.config/nvim
 ln -sf ~/dotfiles/alacritty ~/.config/alacritty
 ln -sf ~/dotfiles/yabai ~/.config/yabai
 ln -sf ~/dotfiles/skhd ~/.config/skhd
+ln -sf ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
 ln -sf ~/dotfiles/zsh/.zshrc ~/.zshrc
 ```
 
@@ -89,6 +93,7 @@ brew install neovim
 brew install --cask alacritty
 brew install koekeishiya/formulae/yabai
 brew install koekeishiya/formulae/skhd
+brew install tmux
 
 # Install Oh My Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

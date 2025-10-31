@@ -19,6 +19,9 @@ size = 18.0
 family = "JetBrainsMono Nerd Font Mono"
 style = "Regular"
 
+[mouse]
+hide_when_typing = true
+
 [[keyboard.bindings]]
 key = "Return"
 mods = "Shift"

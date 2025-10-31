@@ -26,6 +26,7 @@ return {
           "cssls", -- CSS
           "tailwindcss", -- Tailwind CSS
           "jsonls", -- JSON
+          "prismals", -- Prisma
         },
         automatic_installation = true,
       })
@@ -101,6 +102,11 @@ return {
           cmd = { "vscode-json-language-server", "--stdio" },
           filetypes = { "json", "jsonc" },
           root_markers = { ".git" },
+        },
+        prismals = {
+          cmd = { "prisma-language-server", "--stdio" },
+          filetypes = { "prisma" },
+          root_markers = { "package.json", ".git" },
         },
       }
 

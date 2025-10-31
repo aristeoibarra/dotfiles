@@ -1,19 +1,27 @@
 -- Editor enhancement plugins
 return {
-  -- Which-key: Show keybindings
+  -- Which-key: Show keybindings (ultra minimal)
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {
-      preset = "modern",
+      preset = "helix",    -- Esquina inferior
       delay = 300,
       icons = {
-        breadcrumb = ">", -- Ultra minimal: ASCII only (was: »)
-        separator = "|",  -- Ultra minimal: ASCII only (was: ➜)
-        group = "+",
+        breadcrumb = "",   -- Sin breadcrumb
+        separator = " ",   -- Separador invisible
+        group = "",        -- Sin indicador de grupo
+        mappings = false,  -- Sin iconos de mapeo
       },
       win = {
-        border = "rounded",
+        border = "none",   -- Sin borde
+        padding = { 0, 1 },
+        wo = {
+          winblend = 0,
+        },
+      },
+      layout = {
+        spacing = 3,       -- Espacio mínimo entre columnas
       },
     },
     keys = {
@@ -52,6 +60,25 @@ return {
         indent = {
           enable = true,
         },
+        autotag = {
+          enable = true,
+        },
+      })
+    end,
+  },
+
+  -- Auto-close and auto-rename HTML/JSX tags
+  {
+    "windwp/nvim-ts-autotag",
+    dependencies = "nvim-treesitter/nvim-treesitter",
+    event = "InsertEnter",
+    config = function()
+      require("nvim-ts-autotag").setup({
+        opts = {
+          enable_close = true, -- Auto close tags
+          enable_rename = true, -- Auto rename pairs of tags
+          enable_close_on_slash = false, -- Auto close on trailing </
+        },
       })
     end,
   },
@@ -75,7 +102,7 @@ return {
         height = 1,
         options = {
           signcolumn = "no",
-          number = true,
+          number = false, -- Hidden by default, toggle with <leader>tn
           relativenumber = false,
           cursorline = true,
           cursorcolumn = false,

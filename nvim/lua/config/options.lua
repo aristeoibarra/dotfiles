@@ -1,7 +1,7 @@
 -- Basic Neovim options
 
--- Line numbers
-vim.opt.number = true
+-- Line numbers (hidden by default)
+vim.opt.number = false
 vim.opt.relativenumber = false
 
 -- Indentation
@@ -21,7 +21,7 @@ vim.opt.termguicolors = true
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
-vim.opt.wrap = false
+vim.opt.wrap = true
 vim.opt.cmdheight = 1
 vim.opt.mouse = "" -- Disable mouse by default (use <leader>tm to toggle)
 vim.opt.laststatus = 0 -- Disable statusline by default (use <leader>ts to toggle)
@@ -76,3 +76,5 @@ vim.diagnostic.config({
     prefix = "",
   },
 })
+
+-- Note: netrw is disabled by nvim-tree plugin

@@ -24,15 +24,15 @@ return {
     "nvim-telescope/telescope.nvim", -- Required: Picker for search/navigation
   },
   opts = {
-    -- Workspaces: Define multiple Obsidian vaults
+    -- Workspaces: Define multiple Obsidian vaults (digiin is default)
     workspaces = {
-      {
-        name = "personal",
-        path = "/Users/aristeoibarra/Library/Mobile Documents/iCloud~md~obsidian/Documents/aristeoibarra",
-      },
       {
         name = "digiin",
         path = "/Users/aristeoibarra/digiin/digiin-documentation",
+      },
+      {
+        name = "personal",
+        path = "/Users/aristeoibarra/Library/Mobile Documents/iCloud~md~obsidian/Documents/aristeoibarra",
       },
     },
 
@@ -60,10 +60,13 @@ return {
 
   -- Keymaps: Lazy-loaded shortcuts (only available when plugin is loaded)
   keys = {
-    { "<leader>of", "<cmd>ObsidianQuickSwitch<cr>", desc = "Find notes" }, -- Fuzzy search notes in current workspace
-    { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search vault" }, -- Full-text search in vault
-    { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "New note" }, -- Create new note
-    { "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = "Backlinks" }, -- Show notes linking to current note
-    { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Switch workspace" }, -- Switch between personal/digiin vaults
+    { "<leader>of", "<cmd>ObsidianQuickSwitch<cr>", desc = "Find notes" },
+    { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search vault" },
+    { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "New note" },
+    { "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = "Backlinks" },
+    -- Quick workspace switching (minimal)
+    { "<leader>od", "<cmd>ObsidianWorkspace digiin<cr>", desc = "Digiin vault" },
+    { "<leader>op", "<cmd>ObsidianWorkspace personal<cr>", desc = "Personal vault" },
+    { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Switch workspace" },
   },
 }
