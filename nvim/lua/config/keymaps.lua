@@ -174,3 +174,19 @@ vim.keymap.set('n', '<leader>la', function()
   -- Start loading
   load_batch(1)
 end, { desc = 'Load all project files (scan)' })
+
+-- Cheatsheet: Show all keybindings interactively with Telescope
+vim.keymap.set('n', '<leader>?', function()
+  require('telescope.builtin').keymaps({
+    prompt_title = 'Cheatsheet - Todos los Keybindings',
+    layout_config = {
+      height = 0.9,
+      width = 0.9,
+    },
+  })
+end, { desc = 'Cheatsheet (all keybindings)' })
+
+-- Vim Cheatsheet: Native Vim commands for programmers
+vim.keymap.set('n', '<leader>ch', function()
+  require('config.vim-cheatsheet').toggle()
+end, { desc = 'Vim Cheatsheet (native commands)' })

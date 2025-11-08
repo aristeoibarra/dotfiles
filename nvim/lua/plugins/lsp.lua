@@ -97,6 +97,17 @@ return {
           cmd = { "tailwindcss-language-server", "--stdio" },
           filetypes = { "html", "css", "javascript", "javascriptreact", "typescript", "typescriptreact" },
           root_markers = { "tailwind.config.js", "tailwind.config.ts", ".git" },
+          settings = {
+            tailwindCSS = {
+              experimental = {
+                classRegex = {
+                  { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                  { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                  "class[:]\\s*?[\"'`]([^\"'`]*).*?[\"'`]",
+                },
+              },
+            },
+          },
         },
         jsonls = {
           cmd = { "vscode-json-language-server", "--stdio" },
@@ -117,6 +128,7 @@ return {
           filetypes = config.filetypes,
           root_markers = config.root_markers,
           capabilities = capabilities,
+          settings = config.settings,
         })
         vim.lsp.enable(server_name)
       end

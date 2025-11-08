@@ -1,35 +1,61 @@
 #!/usr/bin/env sh
 
-# Layout BSP (tiling puro)
+# BSP layout (pure tiling)
 yabai -m config layout bsp
 
-# CERO padding - ventanas pegadas a los bordes
+# Zero padding - fullscreen windows
 yabai -m config top_padding    0
 yabai -m config bottom_padding 0
 yabai -m config left_padding   0
 yabai -m config right_padding  0
 
-# Gap mínimo entre ventanas (2-4px para distinguirlas)
-yabai -m config window_gap     2
+# No gaps between windows
+yabai -m config window_gap     0
 
-# Sin bordes ni sombras visuales
+# No borders or visual shadows
 yabai -m config window_border off
 yabai -m config mouse_follows_focus off
 yabai -m config focus_follows_mouse off
 
-# Cada ventana nueva se divide el espacio disponible
+# Disable mouse completely (keyboard only)
+yabai -m config mouse_modifier fn
+yabai -m config mouse_action1 none
+yabai -m config mouse_action2 none
+yabai -m config mouse_drop_action swap
+
+# Subtle opacity to distinguish active window
+yabai -m config window_opacity on
+yabai -m config active_window_opacity 1.0
+yabai -m config normal_window_opacity 0.95
+
+# Instant animations (requires SIP disabled)
+yabai -m config window_animation_duration 0.0
+
+# New windows split available space
 yabai -m config window_placement second_child
 
-# Split ratio balanceado
+# Balanced split ratio
 yabai -m config split_ratio 0.50
 
-# Apps que NO van en tiling
+# Auto-balance when closing windows
+yabai -m config auto_balance on
+
+# Apps that should NOT be tiled
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Finder$" manage=off
 yabai -m rule --add app="^Raycast$" manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
 yabai -m rule --add app="^RoundPie$" manage=off
+yabai -m rule --add app="^App Store$" manage=off
+yabai -m rule --add app="^Archive Utility$" manage=off
+yabai -m rule --add app="^Disk Utility$" manage=off
+yabai -m rule --add app="^System Information$" manage=off
+yabai -m rule --add app="^Preferences$" manage=off
+yabai -m rule --add app="^Software Update$" manage=off
+yabai -m rule --add app="^Preview$" manage=off
+yabai -m rule --add app="^Simulator$" manage=off
+yabai -m rule --add app="^QuickTime Player$" manage=off
 
 
 echo "yabai ultra minimal loaded.."

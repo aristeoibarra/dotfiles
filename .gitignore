@@ -40,3 +40,6 @@ nvim/spell/
 # Local environment files
 .env
 .env.local
+
+# Claude Code
+.claude/

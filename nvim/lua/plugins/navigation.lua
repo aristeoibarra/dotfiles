@@ -3,9 +3,16 @@ return {
   -- Telescope: Fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.5",
+    branch = "0.1.x",
     dependencies = {
       "nvim-lua/plenary.nvim",
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+        cond = function()
+          return vim.fn.executable("make") == 1
+        end,
+      },
     },
     config = function()
       require("telescope").setup({
@@ -16,6 +23,7 @@ return {
               ["<C-k>"] = "move_selection_previous",
             },
           },
+          file_ignore_patterns = { "node_modules", ".git/" },
           -- Ultra minimal: show clean message for images, preview text normally
           buffer_previewer_maker = function(filepath, bufnr, opts)
             local previewers = require("telescope.previewers")
@@ -49,6 +57,9 @@ return {
           end,
         },
       })
+
+      -- Load fzf extension
+      pcall(require("telescope").load_extension, "fzf")
 
       -- Keymaps
       local builtin = require("telescope.builtin")

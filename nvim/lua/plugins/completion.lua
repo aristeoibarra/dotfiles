@@ -1,22 +1,17 @@
--- Completion and snippets (minimal setup)
+-- Completion (minimal setup)
 return {
   -- nvim-cmp: Autocompletion
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
-      "rafamadriz/friendly-snippets",
     },
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-
-      -- Load friendly-snippets
-      require("luasnip.loaders.from_vscode").lazy_load()
 
       cmp.setup({
         snippet = {
@@ -56,12 +51,10 @@ return {
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
-          { name = "buffer" },
           { name = "path" },
         }),
         formatting = {
           format = function(entry, vim_item)
-            -- Ultra minimal: no icons, no labels
             vim_item.menu = ""
             return vim_item
           end,

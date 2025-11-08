@@ -8,12 +8,12 @@ TERM = "xterm-256color"
 
 [window]
 decorations = "none"
-opacity = 1.0
+opacity = 1
 padding.x = 0
 padding.y = 0
 
 [font]
-size = 18.0
+size = 19.0
 
 [font.normal]
 family = "JetBrainsMono Nerd Font Mono"

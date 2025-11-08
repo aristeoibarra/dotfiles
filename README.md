@@ -9,7 +9,7 @@ My personal dotfiles for macOS.
 - **[Yabai](https://github.com/koekeishiya/yabai)** - Tiling window manager for macOS
 - **[skhd](https://github.com/koekeishiya/skhd)** - Hotkey daemon for macOS
 - **[Tmux](https://github.com/tmux/tmux)** - Terminal multiplexer
-- **[Zsh](https://www.zsh.org/)** - Shell with Oh My Zsh, autosuggestions, and fzf integration
+- **[Zsh](https://www.zsh.org/)** - Shell with standalone plugins (no Oh My Zsh), autosuggestions, and fzf integration
 
 ## Structure
 
@@ -19,10 +19,13 @@ dotfiles/
 ├── alacritty/     # Alacritty configuration
 ├── yabai/         # Yabai configuration
 ├── skhd/          # skhd configuration
-├── tmux/          # Tmux configuration
+├── tmux/          # Tmux configuration (pure, no plugins)
 │   └── .tmux.conf
-├── zsh/           # Zsh configuration
+├── zsh/           # Zsh configuration (no Oh My Zsh)
 │   └── .zshrc
+├── macos/         # macOS system optimizations
+│   ├── disable-animations.sh
+│   └── enable-animations.sh
 ├── install.sh     # Installation script
 └── README.md      # This file
 ```
@@ -76,11 +79,22 @@ git pull
 
 Since we use symlinks, changes are reflected automatically.
 
+## Philosophy
+
+**Ultraminimalist setup:**
+- ⚡ Speed over aesthetics
+- ⌨️ Keyboard over mouse
+- 🎯 Function over features
+- 🧘 Zero distractions
+- 🔧 Pure config over plugins
+
 ## Notes
 
-- Configurations are optimized for macOS
-- Some tools require additional installation (Homebrew, etc.)
+- Configurations optimized for macOS
+- No Oh My Zsh (standalone plugins via Homebrew)
+- No Tmux plugins (pure configuration)
 - Yabai requires partially disabling SIP on macOS
+- Optional: Disable macOS animations with `bash ~/dotfiles/macos/disable-animations.sh`
 
 ## Prerequisites
 
@@ -88,26 +102,29 @@ Since we use symlinks, changes are reflected automatically.
 # Install Homebrew (if you don't have it)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install tools
+# Install core tools
 brew install neovim
 brew install --cask alacritty
 brew install koekeishiya/formulae/yabai
 brew install koekeishiya/formulae/skhd
 brew install tmux
 
-# Install Oh My Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# Install Zsh plugins
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# Install Zsh plugins (standalone, no Oh My Zsh)
+brew install zsh-autosuggestions
+brew install zsh-syntax-highlighting
 
 # Install fzf (fuzzy finder)
 brew install fzf
 $(brew --prefix)/opt/fzf/install
 
-# Install fd (optional, for better fzf performance)
+# Install fd (for better fzf performance)
 brew install fd
+
+# Install lazygit (optional, for git TUI)
+brew install lazygit
+
+# Optional: Disable macOS animations
+bash ~/dotfiles/macos/disable-animations.sh
 ```
 
 ## License

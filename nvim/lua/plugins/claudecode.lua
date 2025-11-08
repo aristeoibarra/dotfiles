@@ -21,8 +21,8 @@ return {
     dependencies = { "folke/snacks.nvim" },
     opts = {
       terminal = {
-        split_side = "right",           -- Panel a la derecha
-        split_width_percentage = 0.25,  -- 25% del ancho de la ventana (más compacto)
+        split_side = "right",           -- Panel on the right
+        split_width_percentage = 0.25,  -- 25% of window width (more compact)
       },
     },
     config = function(_, opts)

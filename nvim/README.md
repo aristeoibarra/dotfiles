@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-Modular Neovim configuration optimized for web development (TypeScript/React/Tailwind).
+Ultraminimalist Neovim configuration optimized for full-stack web development (React/Next.js/NestJS/TypeScript/Tailwind/Prisma).
 
 ## Structure
 
@@ -15,85 +15,95 @@ Modular Neovim configuration optimized for web development (TypeScript/React/Tai
 │   │   ├── autocmds.lua       # Autocommands
 │   │   └── lazy.lua           # lazy.nvim bootstrap
 │   └── plugins/               # Plugins organized by category
-│       ├── ui.lua             # Theme, statusline, colorizer
-│       ├── editor.lua         # Treesitter, autopairs, comments, which-key
+│       ├── ui.lua             # Theme (Kanagawa)
+│       ├── editor.lua         # Treesitter, autotag, autopairs, which-key
 │       ├── lsp.lua            # Mason, LSP servers
-│       ├── completion.lua     # nvim-cmp, snippets
-│       ├── formatting.lua     # conform.nvim (Prettier)
+│       ├── completion.lua     # nvim-cmp (LSP + path only)
+│       ├── formatting.lua     # conform.nvim (Prettier, ESLint)
 │       ├── navigation.lua     # Telescope, nvim-tree
-│       ├── git.lua            # Gitsigns, LazyGit
+│       ├── git.lua            # Gitsigns
 │       ├── copilot.lua        # GitHub Copilot AI assistant
 │       ├── claudecode.lua     # Claude Code AI assistant
-│       ├── trouble.lua        # Error diagnostics list
-│       ├── terminal.lua       # Integrated terminal
-│       ├── dashboard.lua      # Custom start screen (Alpha)
-│       └── session.lua        # Session management (persistence.nvim)
+│       ├── obsidian.lua       # Obsidian notes integration
+│       ├── colorizer.lua      # Color highlighting (Tailwind)
+│       └── snippets.lua       # Custom React/TypeScript snippets
 ```
 
 ## Key Features
 
-- **LSP**: TypeScript, JavaScript, HTML, CSS, Tailwind, JSON
+- **LSP**: TypeScript, JavaScript, HTML, CSS, Tailwind, JSON, Prisma
 - **AI Assistants**: GitHub Copilot (inline) + Claude Code (chat)
-- **Git**: LazyGit TUI + Gitsigns inline
-- **Terminal**: Integrated toggleable terminal
-- **Theme**: Catppuccin Macchiato
-- **Format on save**: Prettier
-- **Error diagnostics**: Inline with Trouble list
-- **Session management**: Auto-save/restore workspace state
+- **Git**: Gitsigns inline hunks
+- **Theme**: Kanagawa Dragon (ultraminimal, no statusline)
+- **Format on save**: Prettier + ESLint
+- **Obsidian**: Integration with 2 vaults (personal + work)
+- **Plugins**: 27 total, lazy-loaded for performance
+- **Custom snippets**: React components (rfc, ust)
 
 ## Main Keybindings
 
 ### General
 - `<leader>` = Space
 - `<leader>e` - Toggle file explorer
+- `<leader>ef` - Find file in tree
 - `<leader>w` - Save file
 - `<leader>q` - Quit
-- `<leader>z` - Toggle Zen Mode
+- `<leader><leader>` - Toggle to last buffer
+- `<leader>c` - Open keybindings cheatsheet
+- `<leader>ch` - Open Vim cheatsheet
 
 ### Navigation (Telescope)
 - `<leader>ff` - Find files
-- `<leader>fg` - Live grep
+- `<leader>fg` - Live grep (search content)
 - `<leader>fb` - Find buffers
-- `<leader>fh` - Help tags
+- `<leader>fc` - Find changed files (git)
+- `<leader>fd` - Find diagnostics
 
 ### LSP
 - `gd` - Go to definition
+- `gv` - Go to definition (vertical split)
+- `gs` - Go to definition (horizontal split)
 - `K` - Hover documentation
 - `gi` - Go to implementation
 - `gr` - Go to references
 - `<leader>rn` - Rename symbol
 - `<leader>ca` - Code actions
+- `<leader>la` - Load all files (full project LSP scan)
+- `]d` / `[d` - Next/prev diagnostic
+
+### Diagnostics
+- `<leader>d` - Diagnostics list (current buffer)
+- `<leader>da` - All diagnostics (project)
+- `<leader>D` - Show diagnostic details
 - `]d` / `[d` - Next/prev diagnostic
 
 ### Git
-- `<leader>gg` - Open LazyGit
-- `<leader>gf` - LazyGit current file
 - `]h` / `[h` - Next/prev hunk
-- `<leader>gp` - Preview hunk
-- `<leader>gs` - Stage hunk
-- `<leader>gr` - Reset hunk
-- `<leader>gb` - Git blame line
-- `<leader>gd` - Git diff
+- `<leader>hp` - Preview hunk
+- `<leader>hs` - Stage hunk
+- `<leader>hu` - Undo stage hunk
+- `<leader>hr` - Reset hunk
+- `<leader>hb` - Blame line
+- `<leader>hd` - Diff this
 
-### Errors/Diagnostics
-- `<leader>xx` - Toggle Trouble diagnostics
-- `<leader>xX` - Trouble buffer diagnostics
-
-### Terminal
-- `Ctrl+\` - Toggle terminal
-- `<leader>tf` - Floating terminal
-- `<leader>th` - Horizontal terminal
-- `<leader>tv` - Vertical terminal
+### Formatting
+- `<leader>f` - Format file or selection (manual)
+- Auto-format on save enabled
 
 ### Splits
 - `<leader>sh` - Horizontal split
 - `<leader>sv` - Vertical split
 - `Ctrl+h/j/k/l` - Navigate between splits
+- `<leader>rh/j/k/l` - Resize splits
+
+### UI Toggles
+- `<leader>tn` - Toggle line numbers
+- `<leader>tm` - Toggle mouse
 
 ### AI Assistants
 
 #### Copilot (inline suggestions)
-- `Ctrl+J` - Accept suggestion
+- `Ctrl+J` (insert mode) - Accept suggestion
 - `Alt+]` - Next suggestion
 - `Alt+[` - Previous suggestion
 - `Ctrl+x` - Dismiss suggestion
@@ -102,12 +112,15 @@ Modular Neovim configuration optimized for web development (TypeScript/React/Tai
 - `<leader>ac` - Toggle Claude Code
 - `<leader>af` - Focus Claude window
 - `<leader>ab` - Add current buffer to context
-- `<leader>as` - Send selection to Claude (visual mode)
 - `<leader>aa` - Accept diff
 - `<leader>ad` - Deny diff
 
-### Formatting
-- `<leader>f` - Format file or selection
+### Obsidian Notes
+- `<leader>of` - Find notes (quick switch)
+- `<leader>os` - Search vault content
+- `<leader>on` - New note
+- `<leader>ow` - Switch workspace (aristeoibarra ↔ digiin)
+- `gf` - Follow link under cursor
 
 ### Autocompletion
 - `Tab` - Next suggestion
@@ -115,10 +128,62 @@ Modular Neovim configuration optimized for web development (TypeScript/React/Tai
 - `Enter` - Confirm suggestion
 - `Ctrl+Space` - Trigger completion
 
-### Session Management
-- `<leader>qs` - Restore session for current directory
-- `<leader>ql` - Restore last session
-- `<leader>qd` - Don't save current session on exit
+## Plugins (27 total)
+
+### Core (5)
+- lazy.nvim - Plugin manager
+- plenary.nvim - Lua utilities
+- nvim-web-devicons - Icons
+- snacks.nvim - Utilities (required by claudecode)
+- kanagawa.nvim - Theme
+
+### LSP & Completion (7)
+- mason.nvim - LSP installer
+- mason-lspconfig.nvim - Bridge
+- mason-tool-installer.nvim - Auto-install formatters
+- nvim-lspconfig - LSP config
+- nvim-cmp - Autocompletion
+- cmp-nvim-lsp - LSP source
+- cmp-path - Path source
+
+### Snippets (2)
+- LuaSnip - Snippet engine
+- cmp_luasnip - Integration
+
+### Navigation (3)
+- telescope.nvim - Fuzzy finder
+- telescope-fzf-native.nvim - FZF extension
+- nvim-tree.lua - File explorer
+
+### Editor (4)
+- nvim-treesitter - Syntax highlighting
+- nvim-ts-autotag - Auto-close HTML/JSX tags
+- nvim-autopairs - Auto-close brackets
+- which-key.nvim - Keybinding help
+
+### Git (1)
+- gitsigns.nvim - Git hunks inline
+
+### Formatting (1)
+- conform.nvim - Prettier + ESLint integration
+
+### AI (2)
+- copilot.vim - GitHub Copilot
+- claudecode.nvim - Claude Code
+
+### Utilities (2)
+- nvim-colorizer.lua - Color preview (Tailwind colors)
+- obsidian.nvim - Obsidian vault integration
+
+## LSP Servers
+
+Auto-installed via Mason:
+- **ts_ls** - TypeScript/JavaScript
+- **html** - HTML
+- **cssls** - CSS
+- **tailwindcss** - Tailwind CSS (with custom regex for cva/cx)
+- **jsonls** - JSON
+- **prismals** - Prisma
 
 ## Adding New Plugins
 
@@ -137,7 +202,7 @@ Modular Neovim configuration optimized for web development (TypeScript/React/Tai
 }
 ```
 
-3. Restart Neovim - plugins auto-install
+3. Restart Neovim - plugins auto-install via lazy.nvim
 
 ## Configuring New LSP Servers
 
@@ -163,36 +228,23 @@ servers = {
 }
 ```
 
-## Dashboard
+## Custom Snippets
 
-When opening Neovim without a file (`nvim`):
-- `e` - New file
-- `f` - Find file
-- `r` - Recent files
-- `g` - Live grep
-- `c` - Open config
-- `l` - Open Lazy (plugin manager)
-- `q` - Quit
+Custom TypeScript/React snippets for faster development:
 
-## LazyGit
+- **rfc** - React Functional Component
+  ```tsx
+  export default function Component() {
+    return (
+      <div>content</div>
+    )
+  }
+  ```
 
-### Requirements
-```bash
-brew install lazygit
-```
-
-### Usage
-- `<leader>gg` - Open LazyGit
-- `?` - Show all keybindings (inside LazyGit)
-- `q` - Close LazyGit
-
-## Zen Mode
-
-Distraction-free coding mode.
-
-- `<leader>z` - Toggle Zen Mode
-- Centered 120 column width
-- Hides statusline and UI elements
+- **ust** - useState hook
+  ```tsx
+  const [state, setState] = useState<string>('')
+  ```
 
 ## Which-key
 
@@ -200,44 +252,6 @@ Shows available commands automatically:
 - Press `<leader>` and wait 300ms - see all leader commands
 - Press `g` and wait - see all g commands
 - Press `<leader>?` - show buffer-local keymaps
-
-## Session Management
-
-Sessions are **automatically saved** when you quit Neovim and **automatically restored** when you open Neovim in the same directory.
-
-### How it works
-- Sessions are saved per directory in `~/.local/state/nvim/sessions/`
-- Saves: open buffers, window layout, cursor position, working directory
-- Auto-saves on exit (unless you use `<leader>qd`)
-- Auto-restores when opening `nvim` without arguments in a previously saved directory
-
-### Usage
-```bash
-# Work on project A
-cd ~/project-a
-nvim
-# Open files, configure layout...
-# Close Neovim
-
-# Work on project B
-cd ~/project-b
-nvim
-# Different session, different files...
-
-# Return to project A
-cd ~/project-a
-nvim
-# ✅ Your project-a session is automatically restored!
-```
-
-### Manual controls
-- `<leader>qs` - Manually restore session for current directory
-- `<leader>ql` - Restore the very last session (regardless of directory)
-- `<leader>qd` - Stop auto-saving (useful for temporary work)
-
-## Pending Features
-
-- 🖼️ **Image viewer** - Not yet implemented (Alacritty doesn't support inline images)
 
 ## Troubleshooting
 

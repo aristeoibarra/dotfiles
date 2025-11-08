@@ -5,32 +5,41 @@ return {
     "folke/which-key.nvim",
     event = "VeryLazy",
     opts = {
-      preset = "helix",    -- Esquina inferior
+      preset = "helix",
       delay = 300,
       icons = {
-        breadcrumb = "",   -- Sin breadcrumb
-        separator = " ",   -- Separador invisible
-        group = "",        -- Sin indicador de grupo
-        mappings = false,  -- Sin iconos de mapeo
+        breadcrumb = "",
+        separator = " ",
+        group = "",
+        mappings = false,
       },
       win = {
-        border = "none",   -- Sin borde
+        border = "none",
         padding = { 0, 1 },
         wo = {
           winblend = 0,
         },
       },
       layout = {
-        spacing = 3,       -- Espacio mínimo entre columnas
+        spacing = 3,
       },
-    },
-    keys = {
-      {
-        "<leader>?",
-        function()
-          require("which-key").show({ global = false })
-        end,
-        desc = "Buffer Local Keymaps (which-key)",
+      spec = {
+        -- Descriptive groups for learning
+        { "<leader>f", group = "Find" },
+        { "<leader>g", group = "Git" },
+        { "<leader>h", group = "Git Hunks" },
+        { "<leader>a", group = "AI Assistants" },
+        { "<leader>o", group = "Obsidian Notes" },
+        { "<leader>d", group = "Diagnostics" },
+        { "<leader>t", group = "Toggle UI" },
+        { "<leader>s", group = "Splits" },
+        { "<leader>r", group = "Resize" },
+        { "<leader>c", group = "Code/Cheatsheet" },
+        { "<leader>e", group = "Explorer" },
+        { "<leader>l", group = "LSP Utils" },
+        { "g", group = "Go to (Navigation)" },
+        { "]", group = "Next" },
+        { "[", group = "Previous" },
       },
     },
   },
@@ -48,6 +57,7 @@ return {
           "html",
           "css",
           "json",
+          "prisma",
           "lua",
           "vim",
           "markdown",
@@ -58,9 +68,6 @@ return {
           additional_vim_regex_highlighting = false,
         },
         indent = {
-          enable = true,
-        },
-        autotag = {
           enable = true,
         },
       })
@@ -83,46 +90,27 @@ return {
     end,
   },
 
-  -- Comment plugin
+  -- Auto-close brackets, parens, quotes
   {
-    "numToStr/Comment.nvim",
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     config = function()
-      require("Comment").setup()
+      local autopairs = require("nvim-autopairs")
+      autopairs.setup({
+        check_ts = true, -- Enable treesitter
+        ts_config = {
+          lua = { "string" }, -- Don't add pairs in lua string treesitter nodes
+          javascript = { "template_string" },
+          java = false, -- Don't check treesitter on java
+        },
+      })
+
+      -- Integration with nvim-cmp
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      local cmp = require("cmp")
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
     end,
   },
 
-  -- Zen mode: Distraction-free coding
-  {
-    "folke/zen-mode.nvim",
-    cmd = "ZenMode",
-    opts = {
-      window = {
-        backdrop = 0.95,
-        width = 120,
-        height = 1,
-        options = {
-          signcolumn = "no",
-          number = false, -- Hidden by default, toggle with <leader>tn
-          relativenumber = false,
-          cursorline = true,
-          cursorcolumn = false,
-          foldcolumn = "0",
-          list = false,
-        },
-      },
-      plugins = {
-        options = {
-          enabled = true,
-          ruler = false,
-          showcmd = false,
-          laststatus = 0,
-        },
-        twilight = { enabled = false },
-        tmux = { enabled = false },
-      },
-    },
-    keys = {
-      { "<leader>z", "<cmd>ZenMode<cr>", desc = "Toggle Zen Mode" },
-    },
-  },
 }
