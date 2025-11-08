@@ -76,62 +76,49 @@ return {
         end,
       })
 
-      -- Define LSP servers manually using vim.lsp.config (Neovim 0.11 native API)
-      local servers = {
-        ts_ls = {
-          cmd = { "typescript-language-server", "--stdio" },
-          filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-          root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
-        },
-        html = {
-          cmd = { "vscode-html-language-server", "--stdio" },
-          filetypes = { "html" },
-          root_markers = { "package.json", ".git" },
-        },
-        cssls = {
-          cmd = { "vscode-css-language-server", "--stdio" },
-          filetypes = { "css", "scss", "less" },
-          root_markers = { "package.json", ".git" },
-        },
-        tailwindcss = {
-          cmd = { "tailwindcss-language-server", "--stdio" },
-          filetypes = { "html", "css", "javascript", "javascriptreact", "typescript", "typescriptreact" },
-          root_markers = { "tailwind.config.js", "tailwind.config.ts", ".git" },
-          settings = {
-            tailwindCSS = {
-              experimental = {
-                classRegex = {
-                  { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
-                  { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
-                  "class[:]\\s*?[\"'`]([^\"'`]*).*?[\"'`]",
-                },
+      -- Setup LSP servers using stable lspconfig API
+      local lspconfig = require("lspconfig")
+
+      -- TypeScript/JavaScript
+      lspconfig.ts_ls.setup({
+        capabilities = capabilities,
+      })
+
+      -- HTML
+      lspconfig.html.setup({
+        capabilities = capabilities,
+      })
+
+      -- CSS
+      lspconfig.cssls.setup({
+        capabilities = capabilities,
+      })
+
+      -- Tailwind CSS with custom class regex for cva/cx
+      lspconfig.tailwindcss.setup({
+        capabilities = capabilities,
+        settings = {
+          tailwindCSS = {
+            experimental = {
+              classRegex = {
+                { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                { "cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                "class[:]\\s*?[\"'`]([^\"'`]*).*?[\"'`]",
               },
             },
           },
         },
-        jsonls = {
-          cmd = { "vscode-json-language-server", "--stdio" },
-          filetypes = { "json", "jsonc" },
-          root_markers = { ".git" },
-        },
-        prismals = {
-          cmd = { "prisma-language-server", "--stdio" },
-          filetypes = { "prisma" },
-          root_markers = { "package.json", ".git" },
-        },
-      }
+      })
 
-      -- Configure and enable each server
-      for server_name, config in pairs(servers) do
-        vim.lsp.config(server_name, {
-          cmd = config.cmd,
-          filetypes = config.filetypes,
-          root_markers = config.root_markers,
-          capabilities = capabilities,
-          settings = config.settings,
-        })
-        vim.lsp.enable(server_name)
-      end
+      -- JSON
+      lspconfig.jsonls.setup({
+        capabilities = capabilities,
+      })
+
+      -- Prisma
+      lspconfig.prismals.setup({
+        capabilities = capabilities,
+      })
     end,
   },
 }

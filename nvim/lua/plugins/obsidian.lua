@@ -1,3 +1,5 @@
+-- Obsidian.nvim - Neovim plugin for Obsidian note-taking
+-- IMPORTANT: Customize the workspace paths below to match your Obsidian vaults
 return {
   "obsidian-nvim/obsidian.nvim",
   version = "*",
@@ -9,12 +11,12 @@ return {
   opts = {
     workspaces = {
       {
-        name = "aristeoibarra",
-        path = "/Users/aristeoibarra/Library/Mobile Documents/iCloud~md~obsidian/Documents/aristeoibarra",
+        name = "personal",
+        path = vim.fn.expand("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/personal"),
       },
       {
-        name = "digiin",
-        path = "/Users/aristeoibarra/digiin/digiin-documentation",
+        name = "work",
+        path = vim.fn.expand("~/work/documentation"),
       },
     },
     legacy_commands = false,

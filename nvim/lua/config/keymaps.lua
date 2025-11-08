@@ -24,11 +24,7 @@ vim.keymap.set('v', '<Down>', '<Nop>', { noremap = true, silent = true })
 vim.keymap.set('v', '<Left>', '<Nop>', { noremap = true, silent = true })
 vim.keymap.set('v', '<Right>', '<Nop>', { noremap = true, silent = true })
 
--- Command mode
-vim.keymap.set('c', '<Up>', '<Nop>', { noremap = true })
-vim.keymap.set('c', '<Down>', '<Nop>', { noremap = true })
-vim.keymap.set('c', '<Left>', '<Nop>', { noremap = true })
-vim.keymap.set('c', '<Right>', '<Nop>', { noremap = true })
+-- Command mode: Allow arrow keys for history navigation (Up/Down) and cursor movement (Left/Right)
 
 -- Better window navigation
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })

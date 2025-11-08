@@ -27,6 +27,13 @@ nvim/plugin/
 nvim/.netrwhist
 nvim/spell/
 
+# Neovim plugin data (may contain tokens/secrets)
+nvim/copilot/
+nvim/.copilot/
+nvim/lazy/
+nvim/sessions/
+nvim/undo/
+
 # Backup files
 *.backup
 *.bak

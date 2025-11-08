@@ -67,8 +67,9 @@ alias tk='tmux kill-session -t'
 alias tka='tmux kill-session -a'
 alias tkall='tmux kill-server'
 
-# Auto-attach to tmux session
-if [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ]; then
+# Auto-attach to tmux session (only in interactive terminals)
+# Skip if: already in tmux, SSH session, VSCode, CI/CD, or non-interactive shell
+if [ -z "$TMUX" ] && [ -z "$SSH_CONNECTION" ] && [ -z "$VSCODE_INJECTION" ] && [ -z "$CI" ] && [ -t 0 ]; then
   if tmux has-session 2>/dev/null; then
     tmux attach
   else

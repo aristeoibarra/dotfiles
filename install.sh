@@ -9,10 +9,19 @@ NC='\033[0m' # No Color
 
 # Parse arguments
 DRY_RUN=false
-if [ "$1" = "--dry-run" ]; then
-    DRY_RUN=true
-    echo -e "${YELLOW}Running in DRY RUN mode (no changes will be made)${NC}\n"
-fi
+SKIP_VALIDATION=false
+
+for arg in "$@"; do
+    case $arg in
+        --dry-run)
+            DRY_RUN=true
+            echo -e "${YELLOW}Running in DRY RUN mode (no changes will be made)${NC}\n"
+            ;;
+        --skip-validation)
+            SKIP_VALIDATION=true
+            ;;
+    esac
+done
 
 echo -e "${BLUE}Installing dotfiles...${NC}\n"
 
@@ -35,8 +44,19 @@ check_dependencies() {
     done
 
     if [ $missing -gt 0 ]; then
-        echo -e "\n${YELLOW}$missing dependencies missing. Install them with Homebrew:${NC}"
-        echo -e "${BLUE}  brew install neovim alacritty yabai skhd tmux zsh${NC}\n"
+        echo -e "\n${RED}ERROR: $missing dependencies missing.${NC}"
+        echo -e "${BLUE}Install them with Homebrew:${NC}"
+        echo -e "${BLUE}  brew install neovim tmux zsh${NC}"
+        echo -e "${BLUE}  brew install --cask alacritty${NC}"
+        echo -e "${BLUE}  brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd${NC}\n"
+
+        if [ "$SKIP_VALIDATION" = false ]; then
+            echo -e "${RED}Aborting installation.${NC}"
+            echo -e "${YELLOW}Use --skip-validation to bypass this check (not recommended).${NC}\n"
+            exit 1
+        else
+            echo -e "${YELLOW}Skipping validation as requested...${NC}\n"
+        fi
     else
         echo -e "${GREEN}All dependencies found!${NC}\n"
     fi
@@ -105,7 +125,6 @@ else
     echo -e "\n${GREEN}✓ Dotfiles installed successfully!${NC}"
     echo -e "${BLUE}Next steps:${NC}"
     echo -e "  1. Restart your terminal or run: source ~/.zshrc"
-    echo -e "  2. Install Tmux plugins: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm"
-    echo -e "  3. Open Neovim and run: :Lazy sync"
-    echo -e "  4. Restart services: yabai --restart-service && skhd --restart-service"
+    echo -e "  2. Open Neovim and run: :Lazy sync"
+    echo -e "  3. Restart services: yabai --restart-service && skhd --restart-service"
 fi
