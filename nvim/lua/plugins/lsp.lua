@@ -76,26 +76,41 @@ return {
         end,
       })
 
-      -- Setup LSP servers using stable lspconfig API
-      local lspconfig = require("lspconfig")
+      -- Setup LSP servers using Neovim 0.11+ native API
+      -- Note: nvim-lspconfig is now deprecating in favor of vim.lsp.config()
 
       -- TypeScript/JavaScript
-      lspconfig.ts_ls.setup({
+      vim.lsp.config("ts_ls", {
+        cmd = { "typescript-language-server", "--stdio" },
+        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+        root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
         capabilities = capabilities,
       })
+      vim.lsp.enable("ts_ls")
 
       -- HTML
-      lspconfig.html.setup({
+      vim.lsp.config("html", {
+        cmd = { "vscode-html-language-server", "--stdio" },
+        filetypes = { "html" },
+        root_markers = { "package.json", ".git" },
         capabilities = capabilities,
       })
+      vim.lsp.enable("html")
 
       -- CSS
-      lspconfig.cssls.setup({
+      vim.lsp.config("cssls", {
+        cmd = { "vscode-css-language-server", "--stdio" },
+        filetypes = { "css", "scss", "less" },
+        root_markers = { "package.json", ".git" },
         capabilities = capabilities,
       })
+      vim.lsp.enable("cssls")
 
       -- Tailwind CSS with custom class regex for cva/cx
-      lspconfig.tailwindcss.setup({
+      vim.lsp.config("tailwindcss", {
+        cmd = { "tailwindcss-language-server", "--stdio" },
+        filetypes = { "html", "css", "javascript", "javascriptreact", "typescript", "typescriptreact" },
+        root_markers = { "tailwind.config.js", "tailwind.config.ts", ".git" },
         capabilities = capabilities,
         settings = {
           tailwindCSS = {
@@ -109,16 +124,25 @@ return {
           },
         },
       })
+      vim.lsp.enable("tailwindcss")
 
       -- JSON
-      lspconfig.jsonls.setup({
+      vim.lsp.config("jsonls", {
+        cmd = { "vscode-json-language-server", "--stdio" },
+        filetypes = { "json", "jsonc" },
+        root_markers = { ".git" },
         capabilities = capabilities,
       })
+      vim.lsp.enable("jsonls")
 
       -- Prisma
-      lspconfig.prismals.setup({
+      vim.lsp.config("prismals", {
+        cmd = { "prisma-language-server", "--stdio" },
+        filetypes = { "prisma" },
+        root_markers = { "package.json", ".git" },
         capabilities = capabilities,
       })
+      vim.lsp.enable("prismals")
     end,
   },
 }
