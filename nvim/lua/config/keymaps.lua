@@ -4,7 +4,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Disable arrow keys in all modes to force using hjkl
+-- ============================================================================
+-- DISABLED KEYS: Disable arrow keys to force hjkl
+-- ============================================================================
 
 -- Normal mode
 vim.keymap.set('n', '<Up>', '<Nop>', { noremap = true, silent = true })
@@ -24,84 +26,110 @@ vim.keymap.set('v', '<Down>', '<Nop>', { noremap = true, silent = true })
 vim.keymap.set('v', '<Left>', '<Nop>', { noremap = true, silent = true })
 vim.keymap.set('v', '<Right>', '<Nop>', { noremap = true, silent = true })
 
--- Command mode: Allow arrow keys for history navigation (Up/Down) and cursor movement (Left/Right)
+-- ============================================================================
+-- NAVIGATION: Window and buffer navigation
+-- ============================================================================
 
--- Better window navigation
+-- Window navigation (Ctrl + hjkl)
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
 vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to top window' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
 
--- Terminal mode mappings
+-- Terminal window navigation
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = 'Move to left window from terminal' })
-vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move to bottom window from terminal' })
-vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move to top window from terminal' })
-vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move to right window from terminal' })
+vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = 'Move to left window' })
+vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move to bottom window' })
+vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move to top window' })
+vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move to right window' })
 
--- Stay in indent mode
+-- Buffer switching
+vim.keymap.set('n', '<leader><leader>', '<C-^>', { desc = 'Toggle last buffer' })
+
+-- ============================================================================
+-- EDITING: Text manipulation in visual mode
+-- ============================================================================
+
+-- Indentation
 vim.keymap.set('v', '<', '<gv', { desc = 'Indent left' })
 vim.keymap.set('v', '>', '>gv', { desc = 'Indent right' })
 
--- Move text up and down
+-- Move text up/down
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move text down' })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move text up' })
 
--- Better paste
-vim.keymap.set('v', 'p', '"_dP', { desc = 'Paste without yanking' })
+-- Paste without yanking
+vim.keymap.set('v', 'p', '"_dP', { desc = 'Paste without copying' })
 
--- Clear highlights
+-- ============================================================================
+-- GENERAL: Basic commands
+-- ============================================================================
+
+-- Clear search highlights
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear highlights' })
 
--- Save file
-vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file' })
+-- ============================================================================
+-- LEADER KEYMAPS (Organized by function with consistent mnemonics)
+-- ============================================================================
 
--- Quit
-vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit' })
+-- [F]ILE OPERATIONS (f = file, w = write, q = quit)
+vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file (write)' })
+vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit editor' })
 
--- File explorer help (nvim-tree)
+-- [F]IND/SEARCH (f = find, ff = files, fg = grep, fb = buffers, fd = diagnostics)
+-- Telescope keymaps are set in plugins/navigation.lua
+-- <leader>ff - Find files
+-- <leader>fg - Live grep
+-- <leader>fb - Find buffers
+-- <leader>fd - Find diagnostics
+-- <leader>fc - Find changed files (git)
+-- <leader>fh - Help tags
+
+-- [E]XPLORER/TREE (e = explorer)
+vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
 vim.keymap.set('n', '<leader>eh', function()
   print([[
-nvim-tree commands:
-  <leader>e   - Toggle tree
-  <leader>ef  - Find current file in tree
-
-In tree:
-  Enter  - Open file/folder
-  o      - Open file/folder
-  a      - Create file/folder
-  r      - Rename
-  d      - Delete
-  x      - Cut
-  c      - Copy
-  p      - Paste
-  R      - Refresh
-  H      - Toggle hidden files
+  nvim-tree in-tree commands:
+    Enter   - Open file/folder
+    o       - Open file/folder
+    a       - Create file/folder
+    r       - Rename
+    d       - Delete
+    x       - Cut
+    c       - Copy
+    p       - Paste
+    R       - Refresh
+    H       - Toggle hidden files
   ]])
-end, { desc = 'nvim-tree help' })
+end, { desc = 'Show file explorer help' })
 
--- Splits
+-- [S]PLITS & WINDOWS (s = split, r = resize)
 vim.keymap.set('n', '<leader>sh', '<cmd>split<CR>', { desc = 'Horizontal split' })
 vim.keymap.set('n', '<leader>sv', '<cmd>vsplit<CR>', { desc = 'Vertical split' })
 
--- Resize windows quickly (Space + r + hjkl)
-vim.keymap.set('n', '<leader>rh', '<cmd>vertical resize -5<CR>', { desc = 'Decrease window width' })
-vim.keymap.set('n', '<leader>rl', '<cmd>vertical resize +5<CR>', { desc = 'Increase window width' })
-vim.keymap.set('n', '<leader>rj', '<cmd>resize -3<CR>', { desc = 'Decrease window height' })
-vim.keymap.set('n', '<leader>rk', '<cmd>resize +3<CR>', { desc = 'Increase window height' })
+-- [R]ESIZE WINDOWS (r = resize, h/l = width, j/k = height)
+vim.keymap.set('n', '<leader>rh', '<cmd>vertical resize -5<CR>', { desc = 'Decrease width' })
+vim.keymap.set('n', '<leader>rl', '<cmd>vertical resize +5<CR>', { desc = 'Increase width' })
+vim.keymap.set('n', '<leader>rj', '<cmd>resize -3<CR>', { desc = 'Decrease height' })
+vim.keymap.set('n', '<leader>rk', '<cmd>resize +3<CR>', { desc = 'Increase height' })
 
--- Toggle line numbers
+-- [T]OGGLE UI (t = toggle)
 vim.keymap.set('n', '<leader>tn', function()
-  if vim.o.number then
-    vim.o.number = false
-    print('Line numbers: OFF')
-  else
+  if not vim.o.number and not vim.o.relativenumber then
     vim.o.number = true
-    print('Line numbers: ON')
+    vim.o.relativenumber = true
+    print('Line numbers: RELATIVE')
+  elseif vim.o.number and vim.o.relativenumber then
+    vim.o.number = true
+    vim.o.relativenumber = false
+    print('Line numbers: NORMAL')
+  else
+    vim.o.number = false
+    vim.o.relativenumber = false
+    print('Line numbers: OFF')
   end
-end, { desc = 'Toggle line numbers' })
+end, { desc = 'Toggle line numbers (cycle)' })
 
--- Toggle mouse support
 vim.keymap.set('n', '<leader>tm', function()
   if vim.o.mouse == 'a' then
     vim.o.mouse = ''
@@ -110,26 +138,29 @@ vim.keymap.set('n', '<leader>tm', function()
     vim.o.mouse = 'a'
     print('Mouse: ON')
   end
-end, { desc = 'Toggle mouse' })
+end, { desc = 'Toggle mouse support' })
 
-vim.keymap.set('n', '<leader><leader>', '<C-^>', { desc = 'Toggle last buffer' })
+-- [O]PEN/OUTPUT (o = open)
+-- <leader>ot - Toggle floating terminal (toggleterm)
+-- <leader>oh - Toggle horizontal terminal (toggleterm)
 
--- Diagnostics
-vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Show diagnostics list (current file)' })
-vim.keymap.set('n', '<leader>da', vim.diagnostic.setqflist, { desc = 'All diagnostics (project)' })
-vim.keymap.set('n', '<leader>D', vim.diagnostic.open_float, { desc = 'Show diagnostic details' })
+-- [D]IAGNOSTICS (d = diagnostics)
+vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostics list (buffer)' })
+vim.keymap.set('n', '<leader>D', vim.diagnostic.open_float, { desc = 'Diagnostic details (float)' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
 
--- Load all project files for full LSP scan (on-demand)
+-- [C]ODE & LSP (c = code: cr = rename, ca = actions, cf = format, li = lsp info)
+-- Note: Most LSP keymaps are set in plugins/lsp.lua
+-- <leader>cr - Code rename
+-- <leader>ca - Code actions
+-- <leader>cf - Code format
+-- <leader>li - LSP info
+
 vim.keymap.set('n', '<leader>la', function()
   print('Loading all project files...')
-
-  -- Find all relevant files (respects .gitignore)
-  -- Includes: TS, TSX, JS, JSX, HTML, CSS, JSON, Prisma
-  local files = vim.fn.systemlist(
-    'rg --files -g "*.{ts,tsx,js,jsx,html,css,scss,json,prisma}" 2>/dev/null'
-  )
+  local find_cmd = "find . -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.html' -o -name '*.css' -o -name '*.scss' -o -name '*.json' -o -name '*.prisma' \\) 2>/dev/null | grep -v node_modules | grep -v .git | grep -v coverage | grep -v dist | grep -v build"
+  local files = vim.fn.systemlist(find_cmd)
 
   if #files == 0 then
     print('No files found')
@@ -138,14 +169,12 @@ vim.keymap.set('n', '<leader>la', function()
 
   print(string.format('Found %d files. Loading in batches...', #files))
 
-  -- Load files in batches to avoid "too many open files" error
   local batch_size = 50
   local total = #files
   local loaded = 0
 
   local function load_batch(start_idx)
     local end_idx = math.min(start_idx + batch_size - 1, total)
-
     for i = start_idx, end_idx do
       local bufnr = vim.fn.bufadd(files[i])
       if bufnr > 0 then
@@ -155,34 +184,56 @@ vim.keymap.set('n', '<leader>la', function()
     end
 
     if end_idx < total then
-      -- Schedule next batch
       vim.defer_fn(function()
         load_batch(end_idx + 1)
       end, 100)
     else
-      -- All done
       vim.defer_fn(function()
-        print(string.format('Loaded %d/%d files. LSP scanning complete. Use <leader>fd', loaded, total))
+        print(string.format('Loaded %d/%d files. LSP scanning complete.', loaded, total))
       end, 1000)
     end
   end
 
-  -- Start loading
   load_batch(1)
-end, { desc = 'Load all project files (scan)' })
+end, { desc = 'Load all project files (LSP scan)' })
 
--- Cheatsheet: Show all keybindings interactively with Telescope
+-- [G]IT (g = git)
+-- <leader>gg - Git status (Neogit)
+-- <leader>gc - Git commit
+-- <leader>gp - Git push
+-- <leader>gl - Git pull
+-- <leader>gs - Git stash
+-- <leader>gd - Diffview open
+-- <leader>gD - Diffview close
+-- <leader>gh - Git history
+-- <leader>hp - Preview hunk
+-- <leader>hs - Stage hunk
+-- <leader>hu - Undo hunk
+-- <leader>hr - Reset hunk
+-- <leader>hb - Blame line
+-- <leader>hd - Diff hunk
+-- ]h / [h - Next/previous hunk
+
+-- [A]I ASSISTANTS (a = ai/assistant)
+-- <leader>aa - Toggle Claude Code
+-- <leader>as - Send selection to Claude
+-- <leader>ar - Resume Claude conversation
+-- <leader>am - Select Claude model
+-- <leader>ad - Accept diffs
+-- <leader>ax - Stop Claude server
+
+-- [H]ELP & REFERENCE (? = help, ch = cheatsheet)
 vim.keymap.set('n', '<leader>?', function()
   require('telescope.builtin').keymaps({
-    prompt_title = 'Cheatsheet - Todos los Keybindings',
+    prompt_title = 'Cheatsheet - All Keybindings',
     layout_config = {
       height = 0.9,
       width = 0.9,
     },
   })
-end, { desc = 'Cheatsheet (all keybindings)' })
+end, { desc = 'Show all keybindings' })
 
--- Vim Cheatsheet: Native Vim commands for programmers
 vim.keymap.set('n', '<leader>ch', function()
   require('config.vim-cheatsheet').toggle()
-end, { desc = 'Vim Cheatsheet (native commands)' })
+end, { desc = 'Vim cheatsheet (native commands)' })
+

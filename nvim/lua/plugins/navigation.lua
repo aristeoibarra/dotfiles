@@ -6,13 +6,11 @@ return {
     branch = "0.1.x",
     dependencies = {
       "nvim-lua/plenary.nvim",
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-        cond = function()
-          return vim.fn.executable("make") == 1
-        end,
-      },
+      -- telescope-fzf-native DISABLED - native Telescope is sufficient
+      -- {
+      --   "nvim-telescope/telescope-fzf-native.nvim",
+      --   enabled = false,
+      -- },
     },
     config = function()
       require("telescope").setup({
@@ -58,8 +56,8 @@ return {
         },
       })
 
-      -- Load fzf extension
-      pcall(require("telescope").load_extension, "fzf")
+      -- Load fzf extension (disabled - not necessary)
+      -- pcall(require("telescope").load_extension, "fzf")
 
       -- Keymaps
       local builtin = require("telescope.builtin")
@@ -173,12 +171,13 @@ return {
 
         filters = {
           dotfiles = false,
-          custom = { "^.git$" },
+          git_ignored = true,  -- Respect .gitignore
+          custom = { "^.git$", "^node_modules$", "^.next$", "^dist$", "^build$", "^coverage$" },
         },
 
         actions = {
           open_file = {
-            quit_on_open = false,
+            quit_on_open = true,
             window_picker = {
               enable = true,
             },
@@ -195,9 +194,8 @@ return {
         },
       })
 
-      -- Keymap
+      -- Keymaps
       vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
-      vim.keymap.set("n", "<leader>ef", "<cmd>NvimTreeFindFile<CR>", { desc = "Find file in tree" })
     end,
   },
 }

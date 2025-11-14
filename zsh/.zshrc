@@ -31,7 +31,6 @@ command -v fd > /dev/null && export FZF_DEFAULT_COMMAND='fd --type f --hidden --
 
 # Standalone plugins (install with brew)
 [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7d8590"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
@@ -41,17 +40,27 @@ git_branch() {
   git branch 2>/dev/null | grep "^*" | cut -d" " -f2
 }
 
-# Prompt configuration
+# Prompt configuration - Enable substitution FIRST
+setopt PROMPT_SUBST
+
+# Configure prompts
 if [ -n "$TMUX" ]; then
   PROMPT='%F{#a6a69c}$(tmux display-message -p "#S")%f %F{#7aa89f}❯%f '
+  RPROMPT='%F{cyan}$(git_branch)%f'
 else
   PROMPT='❯ '
+  RPROMPT='%F{cyan}$(git_branch)%f'
 fi
-RPROMPT='%F{cyan}$(git_branch)%f'
 
 # Editor aliases
 alias vim='nvim' vi='nvim'
 alias lg='lazygit' zshrc='nvim ~/.zshrc' zshreload='source ~/.zshrc'
+
+# Minimal ls with directory indicators and colors (Kanagawa theme)
+export LSCOLORS="gxfxcxdxdxegedabagacad"
+alias ls='ls -FG'
+alias ll='ls -lhFG'
+alias la='ls -lhaFG'
 
 # Git aliases
 alias gs='git status -sb' gp='git push' gl='git pull' gc='git clone'

@@ -1,6 +1,6 @@
 -- Basic Neovim options
 
--- Line numbers (hidden by default)
+-- Line numbers (hidden by default, can toggle with <leader>tn)
 vim.opt.number = false
 vim.opt.relativenumber = false
 
@@ -18,7 +18,7 @@ vim.opt.incsearch = true
 
 -- UI
 vim.opt.termguicolors = true
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "no"
 vim.opt.scrolloff = 8
 vim.opt.cursorline = true
 vim.opt.wrap = true
@@ -27,7 +27,7 @@ vim.opt.breakindent = true -- Maintain indentation on wrapped lines
 vim.opt.showbreak = "↪ " -- Show indicator for wrapped lines
 vim.opt.cmdheight = 1
 vim.opt.mouse = "" -- Disable mouse by default (use <leader>tm to toggle)
-vim.opt.laststatus = 0 -- Disable statusline by default (use <leader>ts to toggle)
+vim.opt.laststatus = 0 -- Statusline hidden by default (toggle with <leader>ts)
 
 -- Files
 vim.opt.swapfile = false
@@ -53,6 +53,9 @@ vim.opt.conceallevel = 2
 
 -- Disable intro message
 vim.opt.shortmess:append("I")
+
+-- Line spacing (reduce if too much space between lines)
+vim.opt.linespace = 0
 
 -- Diagnostics (inline error display)
 vim.diagnostic.config({

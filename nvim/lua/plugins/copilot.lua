@@ -5,9 +5,10 @@ return {
     "github/copilot.vim",
     lazy = false,
     config = function()
-      -- Enable Copilot for all filetypes by default
+      -- Enable Copilot for all filetypes except Claude Code terminal
       vim.g.copilot_filetypes = {
         ["*"] = true,
+        claudecode = false,  -- Disable in Claude Code terminal to avoid interference
       }
 
       -- Disable default Tab mapping to avoid conflicts

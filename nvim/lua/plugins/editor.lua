@@ -24,23 +24,44 @@ return {
         spacing = 3,
       },
       spec = {
-        -- Descriptive groups for learning
-        { "<leader>f", group = "Find" },
-        { "<leader>g", group = "Git" },
-        { "<leader>h", group = "Git Hunks" },
-        { "<leader>a", group = "AI Assistants" },
-        { "<leader>o", group = "Obsidian Notes" },
-        { "<leader>d", group = "Diagnostics" },
-        { "<leader>t", group = "Toggle UI" },
-        { "<leader>s", group = "Splits" },
-        { "<leader>r", group = "Resize" },
-        { "<leader>c", group = "Code/Cheatsheet" },
-        { "<leader>e", group = "Explorer" },
-        { "<leader>l", group = "LSP Utils" },
-        { "g", group = "Go to (Navigation)" },
-        { "]", group = "Next" },
-        { "[", group = "Previous" },
-      },
+        -- File operations
+        { "<leader>w", group = "file" },
+        { "<leader>q", group = "file" },
+
+        -- File explorer
+        { "<leader>e", group = "explorer" },
+        { "<leader>eh", desc = "Show nvim-tree help" },
+
+        -- Window management
+        { "<leader>s", group = "split" },
+        { "<leader>sh", desc = "Horizontal split" },
+        { "<leader>sv", desc = "Vertical split" },
+
+        -- Resize windows
+        { "<leader>r", group = "resize" },
+        { "<leader>rh", desc = "Decrease window width" },
+        { "<leader>rl", desc = "Increase window width" },
+        { "<leader>rj", desc = "Decrease window height" },
+        { "<leader>rk", desc = "Increase window height" },
+
+        -- Toggles
+        { "<leader>t", group = "toggle" },
+        { "<leader>tn", desc = "Toggle line numbers" },
+        { "<leader>tm", desc = "Toggle mouse support" },
+
+        -- Diagnostics
+        { "<leader>d", group = "diagnostics" },
+        { "<leader>da", desc = "Diagnostics (all project)" },
+        { "<leader>D", desc = "Diagnostic details" },
+
+        -- LSP & Code
+        { "<leader>l", group = "lsp" },
+        { "<leader>la", desc = "Load all project files" },
+
+        -- Help & Reference
+        { "<leader>?", desc = "Show all keybindings" },
+        { "<leader>ch", desc = "Vim cheatsheet" },
+      }
     },
   },
 
