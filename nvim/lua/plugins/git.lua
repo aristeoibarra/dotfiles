@@ -16,6 +16,15 @@ return {
           changedelete = { text = "~" },
           untracked = { text = "┆" },
         },
+        -- Current line blame (toggle with <leader>hB)
+        current_line_blame = false,  -- Off by default
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = "eol",  -- End of line
+          delay = 500,  -- 500ms delay before showing
+          ignore_whitespace = true,
+        },
+        current_line_blame_formatter = " <author>, <author_time:%Y-%m-%d> - <summary>",
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
 
@@ -53,7 +62,8 @@ return {
           map("n", "<leader>hr", gs.reset_hunk, { desc = "Reset hunk" })
           map("n", "<leader>hb", function()
             gs.blame_line({ full = true })
-          end, { desc = "Blame line" })
+          end, { desc = "Blame line (popup)" })
+          map("n", "<leader>hB", gs.toggle_current_line_blame, { desc = "Toggle blame (inline)" })
           map("n", "<leader>hd", gs.diffthis, { desc = "Diff hunk" })
         end,
       })

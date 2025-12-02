@@ -9,11 +9,15 @@ TERM = "xterm-256color"
 [window]
 decorations = "none"
 opacity = 1
-padding.x = 0
-padding.y = 0
+padding.x = 15
+padding.y = 12
+option_as_alt = "Both"
 
 [font]
-size = 19.0
+size = 18.0
+
+[font.offset]
+y = 2
 
 [font.normal]
 family = "JetBrainsMono Nerd Font Mono"
@@ -21,6 +25,9 @@ style = "Regular"
 
 [mouse]
 hide_when_typing = true
+
+[selection]
+save_to_clipboard = false
 
 [[keyboard.bindings]]
 key = "Return"

@@ -36,12 +36,7 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to top window' })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
 
--- Terminal window navigation
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h', { desc = 'Move to left window' })
-vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move to bottom window' })
-vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move to top window' })
-vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move to right window' })
+-- Terminal keymaps are defined in plugins/terminal.lua
 
 -- Buffer switching
 vim.keymap.set('n', '<leader><leader>', '<C-^>', { desc = 'Toggle last buffer' })
@@ -113,8 +108,8 @@ vim.keymap.set('n', '<leader>rl', '<cmd>vertical resize +5<CR>', { desc = 'Incre
 vim.keymap.set('n', '<leader>rj', '<cmd>resize -3<CR>', { desc = 'Decrease height' })
 vim.keymap.set('n', '<leader>rk', '<cmd>resize +3<CR>', { desc = 'Increase height' })
 
--- [T]OGGLE UI (t = toggle)
-vim.keymap.set('n', '<leader>tn', function()
+-- [U]I TOGGLES (u = ui)
+vim.keymap.set('n', '<leader>un', function()
   if not vim.o.number and not vim.o.relativenumber then
     vim.o.number = true
     vim.o.relativenumber = true
@@ -130,7 +125,7 @@ vim.keymap.set('n', '<leader>tn', function()
   end
 end, { desc = 'Toggle line numbers (cycle)' })
 
-vim.keymap.set('n', '<leader>tm', function()
+vim.keymap.set('n', '<leader>um', function()
   if vim.o.mouse == 'a' then
     vim.o.mouse = ''
     print('Mouse: OFF')
@@ -140,9 +135,9 @@ vim.keymap.set('n', '<leader>tm', function()
   end
 end, { desc = 'Toggle mouse support' })
 
--- [O]PEN/OUTPUT (o = open)
--- <leader>ot - Toggle floating terminal (toggleterm)
--- <leader>oh - Toggle horizontal terminal (toggleterm)
+vim.keymap.set('n', '<leader>uw', function()
+  vim.o.wrap = not vim.o.wrap
+end, { desc = 'Toggle line wrap (for Tailwind)' })
 
 -- [D]IAGNOSTICS (d = diagnostics)
 vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostics list (buffer)' })
@@ -159,7 +154,7 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnosti
 
 vim.keymap.set('n', '<leader>la', function()
   print('Loading all project files...')
-  local find_cmd = "find . -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.html' -o -name '*.css' -o -name '*.scss' -o -name '*.json' -o -name '*.prisma' \\) 2>/dev/null | grep -v node_modules | grep -v .git | grep -v coverage | grep -v dist | grep -v build"
+  local find_cmd = "fd -e ts -e tsx -e js -e jsx -e html -e css -e scss -e json -e prisma --type f --hidden --exclude node_modules --exclude .git --exclude coverage --exclude dist --exclude build"
   local files = vim.fn.systemlist(find_cmd)
 
   if #files == 0 then
@@ -213,14 +208,6 @@ end, { desc = 'Load all project files (LSP scan)' })
 -- <leader>hb - Blame line
 -- <leader>hd - Diff hunk
 -- ]h / [h - Next/previous hunk
-
--- [A]I ASSISTANTS (a = ai/assistant)
--- <leader>aa - Toggle Claude Code
--- <leader>as - Send selection to Claude
--- <leader>ar - Resume Claude conversation
--- <leader>am - Select Claude model
--- <leader>ad - Accept diffs
--- <leader>ax - Stop Claude server
 
 -- [H]ELP & REFERENCE (? = help, ch = cheatsheet)
 vim.keymap.set('n', '<leader>?', function()

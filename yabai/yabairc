@@ -1,16 +1,16 @@
 #!/usr/bin/env sh
 
-# BSP layout (pure tiling)
-yabai -m config layout bsp
+# Stack layout (fullscreen by default, toggle to BSP with Alt+m)
+yabai -m config layout stack
 
-# Zero padding - fullscreen windows
-yabai -m config top_padding    0
-yabai -m config bottom_padding 0
-yabai -m config left_padding   0
-yabai -m config right_padding  0
+# Padding for ergonomics (optimized for 27" @ 82 PPI)
+yabai -m config top_padding    16
+yabai -m config bottom_padding 12
+yabai -m config left_padding   12
+yabai -m config right_padding  12
 
-# No gaps between windows
-yabai -m config window_gap     0
+# Gap for visual separation in splits
+yabai -m config window_gap     12
 
 # No borders or visual shadows
 yabai -m config window_border off
@@ -23,10 +23,8 @@ yabai -m config mouse_action1 none
 yabai -m config mouse_action2 none
 yabai -m config mouse_drop_action swap
 
-# Subtle opacity to distinguish active window
-yabai -m config window_opacity on
-yabai -m config active_window_opacity 1.0
-yabai -m config normal_window_opacity 0.95
+# Opacity disabled for better Eye-Care compatibility (27" monitor optimization)
+yabai -m config window_opacity off
 
 # Instant animations (requires SIP disabled)
 yabai -m config window_animation_duration 0.0

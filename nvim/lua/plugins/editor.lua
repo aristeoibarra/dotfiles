@@ -6,7 +6,7 @@ return {
     event = "VeryLazy",
     opts = {
       preset = "helix",
-      delay = 300,
+      delay = 300, -- Balanced delay for advanced users (responsive but not intrusive)
       icons = {
         breadcrumb = "",
         separator = " ",
@@ -44,10 +44,15 @@ return {
         { "<leader>rj", desc = "Decrease window height" },
         { "<leader>rk", desc = "Increase window height" },
 
-        -- Toggles
-        { "<leader>t", group = "toggle" },
-        { "<leader>tn", desc = "Toggle line numbers" },
-        { "<leader>tm", desc = "Toggle mouse support" },
+        -- Terminal
+        { "<leader>t", group = "terminal" },
+
+        -- UI Toggles
+        { "<leader>u", group = "ui" },
+        { "<leader>un", desc = "Toggle line numbers" },
+        { "<leader>um", desc = "Toggle mouse support" },
+        { "<leader>uw", desc = "Toggle line wrap" },
+        { "<leader>uS", desc = "Toggle statusline" },
 
         -- Diagnostics
         { "<leader>d", group = "diagnostics" },

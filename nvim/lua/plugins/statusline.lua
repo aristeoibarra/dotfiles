@@ -18,7 +18,7 @@ return {
             },
             ignore_focus = {},
             always_divide_middle = true,
-            globalstatus = false,
+            globalstatus = true, -- Single statusline for all windows (27" optimization)
             refresh = {
               statusline = 1000,
               tabline = 1000,
@@ -161,8 +161,8 @@ return {
         end
       end, {})
 
-      -- Create keymap for toggle
-      vim.keymap.set("n", "<leader>ts", "<cmd>ToggleStatusline<cr>", {
+      -- Create keymap for toggle (uS = UI -> Statusline)
+      vim.keymap.set("n", "<leader>uS", "<cmd>ToggleStatusline<cr>", {
         noremap = true,
         silent = true,
         desc = "Toggle statusline visibility",

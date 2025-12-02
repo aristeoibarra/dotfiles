@@ -15,10 +15,39 @@ return {
     config = function()
       require("telescope").setup({
         defaults = {
+          -- Disable mouse (keyboard only)
+          mouse_enabled = false,
+          -- Optimized layout for 27" monitor (1920x1080)
+          layout_strategy = "horizontal",
+          layout_config = {
+            width = 0.95,
+            height = 0.95, -- Use full vertical space on 27"
+            preview_width = 0.50, -- 50% balanced preview (consistent with FZF)
+            horizontal = {
+              preview_cutoff = 120,
+            },
+          },
           mappings = {
             i = {
               ["<C-j>"] = "move_selection_next",
               ["<C-k>"] = "move_selection_previous",
+              -- Scroll preview window
+              ["<C-u>"] = "preview_scrolling_up",
+              ["<C-d>"] = "preview_scrolling_down",
+              -- Disable arrow keys
+              ["<Up>"] = false,
+              ["<Down>"] = false,
+              ["<Left>"] = false,
+              ["<Right>"] = false,
+            },
+            n = {
+              ["<C-u>"] = "preview_scrolling_up",
+              ["<C-d>"] = "preview_scrolling_down",
+              -- Disable arrow keys
+              ["<Up>"] = false,
+              ["<Down>"] = false,
+              ["<Left>"] = false,
+              ["<Right>"] = false,
             },
           },
           file_ignore_patterns = { "node_modules", ".git/" },
@@ -143,7 +172,7 @@ return {
         sync_root_with_cwd = true,
 
         view = {
-          width = 30,
+          width = 40, -- Wider for 27" monitor (1920px width)
           side = "left",
           number = false,
           relativenumber = false,
