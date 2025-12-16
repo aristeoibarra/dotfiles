@@ -88,6 +88,10 @@ tn() {
   tmux new-session -s "$session_name"
 }
 
+# System utilities
+alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+alias ndb='nextdns-blocker'
+
 # Disable arrow keys (force vi mode / Ctrl+R usage) - must be AFTER plugin loading
 bindkey -M vicmd '^[[A' undefined-key
 bindkey -M vicmd '^[[B' undefined-key

@@ -228,10 +228,19 @@ return {
         shell = vim.o.shell,
         auto_scroll = true,
 
+        -- Disable winbar to avoid duplicate with lualine extension
+        winbar = {
+          enabled = false,
+        },
+
         on_open = function(term)
-          -- Set buffer-local options
+          -- Optimize terminal performance
           vim.opt_local.signcolumn = "no"
           vim.opt_local.foldcolumn = "0"
+          vim.opt_local.cursorline = false
+          vim.opt_local.relativenumber = false
+          vim.opt_local.number = false
+          vim.opt_local.scrolloff = 0
 
           -- Store current state globally for navigation
           vim.g.toggleterm_last_direction = term.direction
@@ -241,6 +250,9 @@ return {
 
           -- Exit terminal mode with Escape
           vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", opts)
+
+          -- Space sin delay en terminal (bypass leader key timeout)
+          vim.keymap.set("t", "<Space>", "<Space>", { buffer = term.bufnr, nowait = true })
 
           -- Window navigation from terminal
           vim.keymap.set("t", "<C-h>", "<C-\\><C-n><C-w>h", opts)
