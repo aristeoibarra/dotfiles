@@ -1,12 +1,36 @@
--- Snippet engine with modular snippet organization
+-- Snippet engine with friendly-snippets
 return {
   {
     "L3MON4D3/LuaSnip",
     version = "v2.*",
     build = "make install_jsregexp",
+    dependencies = {
+      "rafamadriz/friendly-snippets",
+    },
     config = function()
-      -- Load snippets from modular files
-      require("snippets")
+      local luasnip = require("luasnip")
+
+      -- Load friendly-snippets
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      -- Snippet navigation keymaps
+      vim.keymap.set({ "i", "s" }, "<C-k>", function()
+        if luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        end
+      end, { silent = true, desc = "Snippet expand or jump" })
+
+      vim.keymap.set({ "i", "s" }, "<C-j>", function()
+        if luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        end
+      end, { silent = true, desc = "Snippet jump back" })
+
+      vim.keymap.set({ "i", "s" }, "<C-l>", function()
+        if luasnip.choice_active() then
+          luasnip.change_choice(1)
+        end
+      end, { silent = true, desc = "Snippet next choice" })
     end,
   },
 }

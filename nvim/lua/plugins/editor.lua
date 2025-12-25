@@ -1,75 +1,5 @@
 -- Editor enhancement plugins
 return {
-  -- Which-key: Show keybindings (ultra minimal)
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = {
-      preset = "helix",
-      delay = 300, -- Balanced delay for advanced users (responsive but not intrusive)
-      icons = {
-        breadcrumb = "",
-        separator = " ",
-        group = "",
-        mappings = false,
-      },
-      win = {
-        border = "none",
-        padding = { 0, 1 },
-        wo = {
-          winblend = 0,
-        },
-      },
-      layout = {
-        spacing = 3,
-      },
-      spec = {
-        -- File operations
-        { "<leader>w", group = "file" },
-        { "<leader>q", group = "file" },
-
-        -- File explorer
-        { "<leader>e", group = "explorer" },
-        { "<leader>eh", desc = "Show nvim-tree help" },
-
-        -- Window management
-        { "<leader>s", group = "split" },
-        { "<leader>sh", desc = "Horizontal split" },
-        { "<leader>sv", desc = "Vertical split" },
-
-        -- Resize windows
-        { "<leader>r", group = "resize" },
-        { "<leader>rh", desc = "Decrease window width" },
-        { "<leader>rl", desc = "Increase window width" },
-        { "<leader>rj", desc = "Decrease window height" },
-        { "<leader>rk", desc = "Increase window height" },
-
-        -- Terminal
-        { "<leader>t", group = "terminal" },
-
-        -- UI Toggles
-        { "<leader>u", group = "ui" },
-        { "<leader>un", desc = "Toggle line numbers" },
-        { "<leader>um", desc = "Toggle mouse support" },
-        { "<leader>uw", desc = "Toggle line wrap" },
-        { "<leader>uS", desc = "Toggle statusline" },
-
-        -- Diagnostics
-        { "<leader>d", group = "diagnostics" },
-        { "<leader>da", desc = "Diagnostics (all project)" },
-        { "<leader>D", desc = "Diagnostic details" },
-
-        -- LSP & Code
-        { "<leader>l", group = "lsp" },
-        { "<leader>la", desc = "Load all project files" },
-
-        -- Help & Reference
-        { "<leader>?", desc = "Show all keybindings" },
-        { "<leader>ch", desc = "Vim cheatsheet" },
-      }
-    },
-  },
-
   -- Treesitter: Better syntax highlighting
   {
     "nvim-treesitter/nvim-treesitter",
@@ -130,12 +60,21 @@ return {
           javascript = { "template_string" },
           java = false, -- Don't check treesitter on java
         },
+        fast_wrap = {
+          map = "<M-e>",
+          chars = { "{", "[", "(", '"', "'" },
+          pattern = [=[[%'%"%>%]%)%}%,]]=],
+          end_key = "$",
+          before_key = "h",
+          after_key = "l",
+          cursor_pos_before = true,
+          keys = "qwertyuiopzxcvbnmasdfghjkl",
+          manual_position = true,
+          highlight = "Search",
+          highlight_grey = "Comment",
+        },
       })
-
-      -- Integration with nvim-cmp
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-      local cmp = require("cmp")
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+      -- Note: blink.cmp handles completion, no cmp integration needed
     end,
   },
 

@@ -23,9 +23,6 @@ shift + cmd - l : yabai -m window --resize right:50:0 || yabai -m window --resiz
 # Toggle fullscreen
 alt - f : yabai -m window --toggle zoom-fullscreen
 
-# Toggle floating
-alt - t : yabai -m window --toggle float && yabai -m window --grid 4:4:1:1:2:2
-
 # Balance windows
 alt - e : yabai -m space --balance
 

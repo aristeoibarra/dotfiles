@@ -12,7 +12,8 @@ export PATH="/opt/homebrew/bin:$PATH"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# Completion system
+# Completion system (include Homebrew completions)
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 autoload -Uz compinit && compinit -C
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
@@ -30,13 +31,22 @@ export KEYTIMEOUT=1
 
 # FZF configuration (optimized for 27" monitor @ 1920x1080)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# =============================================================================
+# KANAGAWA DRAGON COLORS
+# =============================================================================
+# Background: #181616 | Foreground: #c5c9c5
+# Red: #c4746e | Green: #8a9a7b | Yellow: #c4b28a | Blue: #8ba4b0
+# Bright Blue: #7fb4ca | Magenta: #938aa9 | Cyan: #7aa89f | Gray: #a6a69c
+# =============================================================================
+
 export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
   --preview-window=right:50%:wrap \
   --bind=ctrl-p:toggle-preview \
   --bind=J:down,K:up \
   --bind=ctrl-j:preview-down,ctrl-k:preview-up \
   --bind=ctrl-d:preview-page-down,ctrl-u:preview-page-up \
-  --color=fg:#c5c9c5,bg:#181616,hl:#7fb4ca,fg+:#c5c9c5,bg+:#2d4f67,hl+:#7dcfff"
+  --color=fg:#c5c9c5,bg:#181616,hl:#7fb4ca,fg+:#c5c9c5,bg+:#223249,hl+:#7fb4ca \
+  --color=info:#8a9a7b,prompt:#c4746e,pointer:#c4b28a,marker:#8a9a7b,spinner:#938aa9"
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {} 2>/dev/null | head -100' --preview-window=right:50%:wrap --bind 'enter:execute(nvim {})+abort'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window=up:3:wrap"
 export FZF_ALT_C_OPTS="--preview 'ls -la {}' --preview-window=right:50%:wrap"
@@ -46,20 +56,12 @@ command -v fd > /dev/null && export FZF_ALT_C_COMMAND='fd --type d --hidden --fo
 # Standalone plugins (install with brew)
 [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#7d8590"
+# Autosuggestions (dimmed gray from Kanagawa Dragon)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#625e5a"
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
-# Git branch function (ultra minimal)
-git_branch() {
-  git branch 2>/dev/null | grep "^*" | cut -d" " -f2
-}
-
-# Prompt configuration - Enable substitution FIRST
-setopt PROMPT_SUBST
-
-# Minimal prompt (session name visible in tmux status bar)
-PROMPT='%F{#7aa89f}❯%f '
-RPROMPT='%F{cyan}$(git_branch)%f'
+# Starship prompt
+eval "$(starship init zsh)"
 
 # Editor aliases
 alias vim='nvim' vi='nvim'
@@ -105,3 +107,12 @@ bindkey -M emacs '^[[A' undefined-key
 bindkey -M emacs '^[[B' undefined-key
 bindkey -M emacs '^[[C' undefined-key
 bindkey -M emacs '^[[D' undefined-key
+
+# nextdns-blocker shell completion
+eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
+
+# opencode
+export PATH=/Users/aristeoibarra/.opencode/bin:$PATH
+
+# Zoxide (smart cd replacement)
+eval "$(zoxide init zsh)"

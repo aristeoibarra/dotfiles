@@ -29,7 +29,8 @@ hide_when_typing = true
 [selection]
 save_to_clipboard = false
 
+
 [[keyboard.bindings]]
 key = "Return"
 mods = "Shift"
-chars = "\n"
+chars = "\u001b\r"

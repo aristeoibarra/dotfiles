@@ -5,36 +5,18 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- ============================================================================
--- DISABLED KEYS: Disable arrow keys to force hjkl
+-- ARROW KEYS: Enabled for multicursor plugin and general use
 -- ============================================================================
-
--- Normal mode
-vim.keymap.set('n', '<Up>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('n', '<Down>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('n', '<Left>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('n', '<Right>', '<Nop>', { noremap = true, silent = true })
-
--- Insert mode
-vim.keymap.set('i', '<Up>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('i', '<Down>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('i', '<Left>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('i', '<Right>', '<Nop>', { noremap = true, silent = true })
-
--- Visual mode
-vim.keymap.set('v', '<Up>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('v', '<Down>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('v', '<Left>', '<Nop>', { noremap = true, silent = true })
-vim.keymap.set('v', '<Right>', '<Nop>', { noremap = true, silent = true })
+-- Arrow keys are now used by multicursor.nvim:
+--   <Up>/<Down>  - Add cursor above/below
+--   <Left>/<Right> - Navigate between cursors
 
 -- ============================================================================
 -- NAVIGATION: Window and buffer navigation
 -- ============================================================================
 
--- Window navigation (Ctrl + hjkl)
-vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })
-vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to bottom window' })
-vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to top window' })
-vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right window' })
+-- Window navigation (Ctrl + hjkl) handled by vim-tmux-navigator plugin
+-- See: plugins/tmux-navigator.lua for seamless Neovim <-> Tmux navigation
 
 -- Terminal keymaps are defined in plugins/terminal.lua
 
@@ -81,12 +63,11 @@ vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit editor' })
 -- <leader>fh - Help tags
 
 -- [E]XPLORER/TREE (e = explorer)
-vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
+-- <leader>e defined in plugins/navigation.lua
 vim.keymap.set('n', '<leader>eh', function()
   print([[
-  nvim-tree in-tree commands:
+  NvimTree commands:
     Enter   - Open file/folder
-    o       - Open file/folder
     a       - Create file/folder
     r       - Rename
     d       - Delete

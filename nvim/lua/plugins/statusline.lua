@@ -1,172 +1,261 @@
--- Statusline: Minimal lualine configuration with toggle (hidden by default)
+-- Statusline: Minimalist Gentleman-style with incline.nvim
+-- Mode-only statusline + floating filename
+
+-- Mode abbreviations
+local mode_map = {
+  ["NORMAL"] = "N",
+  ["O-PENDING"] = "N?",
+  ["INSERT"] = "I",
+  ["VISUAL"] = "V",
+  ["V-BLOCK"] = "VB",
+  ["V-LINE"] = "VL",
+  ["V-REPLACE"] = "VR",
+  ["REPLACE"] = "R",
+  ["COMMAND"] = "!",
+  ["SHELL"] = "SH",
+  ["TERMINAL"] = "T",
+  ["EX"] = "X",
+  ["S-BLOCK"] = "SB",
+  ["S-LINE"] = "SL",
+  ["SELECT"] = "S",
+  ["CONFIRM"] = "Y?",
+  ["MORE"] = "M",
+}
+
+-- Mode component with formatting
+local mode_component = {
+  "mode",
+  fmt = function(s)
+    return mode_map[s] or s
+  end,
+}
+
+-- OpenCode adapter info (for AI chat buffers)
+local function opencode_status()
+  local ok, opencode = pcall(require, "opencode")
+  if not ok then
+    return nil
+  end
+  -- Check if we're in an opencode buffer
+  local bufname = vim.fn.bufname()
+  if bufname:match("opencode") or vim.bo.filetype == "opencode" then
+    return " AI"
+  end
+  return nil
+end
+
 return {
+  -- =========================================================================
+  -- LUALINE: Minimalist statusline (Gentleman-style)
+  -- =========================================================================
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
+    event = "VeryLazy",
     config = function()
-      -- Configuration for lualine
-      local function setup_lualine()
-        require("lualine").setup({
-          options = {
-            icons_enabled = true,
-            theme = "kanagawa",
-            component_separators = { left = "│", right = "│" },
-            section_separators = { left = "", right = "" },
-            disabled_filetypes = {
-              statusline = { "NvimTree", "DiffviewFiles", "Neogit", "neo-tree" },
-              winbar = {},
-            },
-            ignore_focus = {},
-            always_divide_middle = true,
-            globalstatus = true, -- Single statusline for all windows (27" optimization)
-            refresh = {
-              statusline = 1000,
-              tabline = 1000,
-              winbar = 1000,
-            },
+      require("lualine").setup({
+        options = {
+          icons_enabled = true,
+          theme = "kanagawa",
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
+          disabled_filetypes = {
+            statusline = {},
+            winbar = {},
           },
+          globalstatus = true,
+        },
 
-          -- Left section: mode + branch + file
-          sections = {
-            lualine_a = {
-              {
-                "mode",
-                fmt = function(str)
-                  return str:sub(1, 1)  -- Single letter (N, I, V, etc)
-                end,
-              },
-            },
-            lualine_b = {
-              {
-                "branch",
-                icon = "",
-                fmt = function(str)
-                  return str:sub(1, 20)  -- Limit branch name to 20 chars
-                end,
-              },
-              {
-                "diff",
-                symbols = { added = " ", modified = " ", removed = " " },
-                cond = function()
-                  return vim.fn.winwidth(0) > 80
-                end,
-              },
-            },
-            lualine_c = {
-              {
+        -- Full statusline
+        sections = {
+          lualine_a = { mode_component },
+          lualine_b = { "branch", "diff" },
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = { "diagnostics", "filetype" },
+          lualine_y = { "progress" },
+          lualine_z = { "location" },
+        },
+
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = { { "filename", path = 1 } },
+          lualine_x = { "filetype" },
+          lualine_y = {},
+          lualine_z = {},
+        },
+
+        -- Extensions for contextual statuslines
+        extensions = {
+          "quickfix",
+          -- NvimTree extension
+          {
+            filetypes = { "NvimTree" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
                 function()
-                  local filepath = vim.fn.expand("%:p")  -- Full path
-                  local cwd = vim.fn.getcwd()
-
-                  -- Make path relative to cwd
-                  if filepath:sub(1, #cwd) == cwd then
-                    filepath = filepath:sub(#cwd + 2)  -- Remove cwd and the separator
-                  end
-
-                  -- Get modified indicator
-                  local modified = vim.bo.modified and " [+]" or ""
-                  local readonly = vim.bo.readonly and " [-]" or ""
-
-                  return filepath .. modified .. readonly
-                end,
-                cond = function()
-                  return vim.fn.winwidth(0) > 80
+                  return " Explorer"
                 end,
               },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
             },
-
-            -- Right section: LSP + filetype + position
-            lualine_x = {
-              {
-                "diagnostics",
-                symbols = { error = "E", warn = "W", info = "I", hint = "H" },
-                cond = function()
-                  return vim.fn.winwidth(0) > 80
-                end,
-              },
-              {
+          },
+          -- Terminal extension
+          {
+            filetypes = { "toggleterm", "terminal" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
                 function()
-                  local clients = vim.lsp.get_clients({ bufnr = 0 })
-                  if #clients == 0 then
-                    return ""
-                  end
-
-                  -- Show only count of active servers with a compact icon
-                  return "󰌘 " .. #clients
-                end,
-                cond = function()
-                  return vim.fn.winwidth(0) > 80
+                  return " Terminal"
                 end,
               },
-              {
-                "filetype",
-                fmt = function(str)
-                  return str:upper():sub(1, 2)  -- 2-char filetype (TS, JS, PY, etc)
-                end,
-              },
-            },
-            lualine_y = {
-              {
-                "progress",
-                fmt = function(str)
-                  return str:sub(1, 3)  -- Show percentage (999)
-                end,
-              },
-            },
-            lualine_z = {
-              {
-                "location",
-                fmt = function()
-                  local line = vim.fn.line(".")
-                  local col = vim.fn.col(".")
-                  return string.format("%d:%d", line, col)
-                end,
-              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
             },
           },
-
-          -- Inactive statusline (for other windows)
-          inactive_sections = {
-            lualine_a = {},
-            lualine_b = {},
-            lualine_c = { { "filename", path = 1 } },
-            lualine_x = { "filetype" },
-            lualine_y = {},
-            lualine_z = {},
+          -- Neogit extension
+          {
+            filetypes = { "NeogitStatus", "NeogitCommitMessage" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return " Git"
+                end,
+              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
+            },
           },
+          -- Diffview extension
+          {
+            filetypes = { "DiffviewFiles", "DiffviewFileHistory" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return " Diff"
+                end,
+              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
+            },
+          },
+          -- Trouble extension
+          {
+            filetypes = { "Trouble" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return " Diagnostics"
+                end,
+              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
+            },
+          },
+          -- Telescope extension
+          {
+            filetypes = { "TelescopePrompt" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return " Search"
+                end,
+              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
+            },
+          },
+          -- Lazy extension
+          {
+            filetypes = { "lazy" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return "󰒲 Lazy"
+                end,
+              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
+            },
+          },
+          -- Mason extension
+          {
+            filetypes = { "mason" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return " Mason"
+                end,
+              },
+              lualine_c = {},
+              lualine_x = {},
+              lualine_y = {},
+              lualine_z = {},
+            },
+          },
+          -- Help extension
+          {
+            filetypes = { "help" },
+            sections = {
+              lualine_a = { mode_component },
+              lualine_b = {
+                function()
+                  return "󰋖 Help"
+                end,
+              },
+              lualine_c = {
+                function()
+                  return vim.fn.expand("%:t")
+                end,
+              },
+              lualine_x = {},
+              lualine_y = { "progress" },
+              lualine_z = { "location" },
+            },
+          },
+        },
+      })
 
-          -- No tabline
-          tabline = {},
-
-          -- No winbar
-          winbar = {},
-          inactive_winbar = {},
-
-          extensions = { "nvim-tree", "toggleterm" },
-        })
-      end
-
-      -- Only setup lualine if laststatus is not 0 (i.e., not hidden)
-      if vim.opt.laststatus:get() ~= 0 then
-        setup_lualine()
-      end
-
-      -- Toggle command - setup/teardown lualine based on laststatus
-      vim.api.nvim_create_user_command("ToggleStatusline", function()
-        if vim.opt.laststatus:get() == 0 then
-          vim.opt.laststatus = 2
-          setup_lualine()
+      -- Toggle command to completely hide/show statusline
+      vim.api.nvim_create_user_command("StatuslineToggle", function()
+        if vim.o.laststatus == 0 then
+          -- Show statusline
+          vim.o.laststatus = 3
+          require("lualine").hide({ unhide = true })
         else
-          vim.opt.laststatus = 0
+          -- Completely hide statusline
+          vim.o.laststatus = 0
+          require("lualine").hide()
         end
       end, {})
 
-      -- Create keymap for toggle (uS = UI -> Statusline)
-      vim.keymap.set("n", "<leader>uS", "<cmd>ToggleStatusline<cr>", {
-        noremap = true,
-        silent = true,
-        desc = "Toggle statusline visibility",
+      vim.keymap.set("n", "<leader>uS", "<cmd>StatuslineToggle<cr>", {
+        desc = "Toggle statusline (minimal/full)",
       })
     end,
   },
+
 }

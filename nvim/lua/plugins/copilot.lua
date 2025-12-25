@@ -1,29 +1,62 @@
--- GitHub Copilot AI Assistant
+-- GitHub Copilot (Lua version - más configurable)
 return {
-  -- Official GitHub Copilot plugin (inline suggestions)
   {
-    "github/copilot.vim",
-    lazy = false,
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
     config = function()
-      -- Enable Copilot for all filetypes except Claude Code terminal
-      vim.g.copilot_filetypes = {
-        ["*"] = true,
-        claudecode = false,  -- Disable in Claude Code terminal to avoid interference
-      }
+      require("copilot").setup({
+        -- Panel de sugerencias (ver múltiples opciones)
+        panel = {
+          enabled = true,
+          auto_refresh = true,
+          keymap = {
+            jump_prev = "[[",
+            jump_next = "]]",
+            accept = "<CR>",
+            refresh = "gr",
+            open = "<M-CR>", -- Alt+Enter abre panel
+          },
+          layout = {
+            position = "right",
+            ratio = 0.4,
+          },
+        },
 
-      -- Disable default Tab mapping to avoid conflicts
-      vim.g.copilot_no_tab_map = true
-      vim.g.copilot_assume_mapped = true
+        -- Sugerencias inline (ghost text)
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<C-j>",           -- Igual que tenías
+            accept_word = "<C-Right>",  -- Aceptar solo una palabra
+            accept_line = "<C-l>",      -- Aceptar solo una línea
+            next = "<M-]>",             -- Siguiente sugerencia
+            prev = "<M-[>",             -- Anterior sugerencia
+            dismiss = "<C-x>",          -- Descartar
+          },
+        },
 
-      -- Custom keymaps for better control
-      vim.keymap.set("i", "<C-J>", 'copilot#Accept("\\<CR>")', {
-        expr = true,
-        replace_keycodes = false,
-        desc = "Accept Copilot suggestion",
+        -- Filetypes donde Copilot está deshabilitado
+        filetypes = {
+          yaml = false,
+          markdown = false,
+          help = false,
+          gitcommit = false,
+          gitrebase = false,
+          hgcommit = false,
+          svn = false,
+          cvs = false,
+          ["."] = false,
+        },
+
+        -- Copilot node command
+        copilot_node_command = "node",
+
+        -- Servidor LSP
+        server_opts_overrides = {},
       })
-      vim.keymap.set("i", "<M-]>", "<Plug>(copilot-next)", { desc = "Next Copilot suggestion" })
-      vim.keymap.set("i", "<M-[>", "<Plug>(copilot-previous)", { desc = "Previous Copilot suggestion" })
-      vim.keymap.set("i", "<C-x>", "<Plug>(copilot-dismiss)", { desc = "Dismiss Copilot" })
     end,
   },
 }

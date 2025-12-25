@@ -33,7 +33,7 @@ return {
         handlers = {
           function(server_name)
             local lspconfig = require("lspconfig")
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
 
             if server_name == "tailwindcss" then
               lspconfig[server_name].setup({
@@ -60,21 +60,8 @@ return {
         },
       })
 
-      -- Auto-install on startup
-      local mr = require("mason-registry")
-      if not mr.is_installed("typescript-language-server") then
-        vim.cmd("MasonInstall typescript-language-server html-lsp css-lsp tailwindcss-language-server json-lsp prisma-language-server emmet-ls")
-      end
-
-      -- Install formatters and linters automatically
-      require("mason-tool-installer").setup({
-        ensure_installed = {
-          "prettier", -- Formatter for web dev
-          "stylua", -- Lua formatter
-          "eslint_d", -- Fast ESLint (NEW)
-          "stylelint", -- CSS linter (NEW)
-        },
-      })
+      -- Note: mason-tool-installer is configured in formatting.lua
+      -- This avoids duplicate configuration
     end,
   },
 
@@ -84,10 +71,10 @@ return {
     dependencies = {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",
+      "saghen/blink.cmp",
     },
     config = function()
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
       local lsp_utils = require("utils.lsp")
 
       -- Setup diagnostics
