@@ -33,7 +33,7 @@ check_dependencies() {
     echo -e "${BLUE}Checking dependencies...${NC}"
     local missing=0
 
-    local deps=("nvim" "alacritty" "yabai" "skhd" "tmux" "zsh")
+    local deps=("nvim" "alacritty" "yabai" "skhd" "tmux" "zsh" "code")
     for dep in "${deps[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
             echo -e "${YELLOW}  Warning: $dep not found${NC}"
@@ -47,7 +47,7 @@ check_dependencies() {
         echo -e "\n${RED}ERROR: $missing dependencies missing.${NC}"
         echo -e "${BLUE}Install them with Homebrew:${NC}"
         echo -e "${BLUE}  brew install neovim tmux zsh${NC}"
-        echo -e "${BLUE}  brew install --cask alacritty${NC}"
+        echo -e "${BLUE}  brew install --cask alacritty visual-studio-code${NC}"
         echo -e "${BLUE}  brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd${NC}\n"
 
         if [ "$SKIP_VALIDATION" = false ]; then
@@ -119,6 +119,35 @@ create_symlink "$DOTFILES_DIR/yabai" "$CONFIG_DIR/yabai" "Yabai"
 create_symlink "$DOTFILES_DIR/skhd" "$CONFIG_DIR/skhd" "skhd"
 create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc" "Zsh"
+
+# VS Code configuration
+VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
+if [ -d "$HOME/Library/Application Support/Code" ]; then
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY RUN]${NC} Would create: $VSCODE_USER_DIR"
+    else
+        mkdir -p "$VSCODE_USER_DIR"
+        mkdir -p "$VSCODE_USER_DIR/snippets"
+    fi
+    create_symlink "$DOTFILES_DIR/vscode/settings.json" "$VSCODE_USER_DIR/settings.json" "VS Code settings"
+    create_symlink "$DOTFILES_DIR/vscode/keybindings.json" "$VSCODE_USER_DIR/keybindings.json" "VS Code keybindings"
+
+    # Install VS Code extensions
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY RUN]${NC} Would install VS Code extensions from extensions.txt"
+    else
+        echo -e "${BLUE}Installing VS Code extensions...${NC}"
+        while IFS= read -r extension || [ -n "$extension" ]; do
+            if [ -n "$extension" ]; then
+                code --install-extension "$extension" --force > /dev/null 2>&1 && \
+                    echo -e "${GREEN}  ✓${NC} $extension" || \
+                    echo -e "${YELLOW}  ⚠${NC} $extension (failed)"
+            fi
+        done < "$DOTFILES_DIR/vscode/extensions.txt"
+    fi
+else
+    echo -e "${YELLOW}VS Code not installed, skipping VS Code config${NC}"
+fi
 
 if [ "$DRY_RUN" = true ]; then
     echo -e "\n${YELLOW}DRY RUN complete. Run without --dry-run to apply changes.${NC}"

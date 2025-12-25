@@ -44,6 +44,8 @@ echo -e "${BLUE}Searching for backups...${NC}"
 backups_found=0
 
 # Check each configuration
+VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
+
 configs=(
     "$CONFIG_DIR/nvim.backup:$CONFIG_DIR/nvim:Neovim"
     "$CONFIG_DIR/alacritty.backup:$CONFIG_DIR/alacritty:Alacritty"
@@ -52,6 +54,8 @@ configs=(
     "$CONFIG_DIR/skhd.backup:$CONFIG_DIR/skhd:skhd"
     "$HOME/.tmux.conf.backup:$HOME/.tmux.conf:Tmux"
     "$HOME/.zshrc.backup:$HOME/.zshrc:Zsh"
+    "$VSCODE_USER_DIR/settings.json.backup:$VSCODE_USER_DIR/settings.json:VS Code settings"
+    "$VSCODE_USER_DIR/keybindings.json.backup:$VSCODE_USER_DIR/keybindings.json:VS Code keybindings"
 )
 
 for config in "${configs[@]}"; do
@@ -71,6 +75,8 @@ if [ $backups_found -eq 0 ]; then
     echo -e "  ~/.config/skhd.backup"
     echo -e "  ~/.tmux.conf.backup"
     echo -e "  ~/.zshrc.backup"
+    echo -e "  ~/Library/Application Support/Code/User/settings.json.backup"
+    echo -e "  ~/Library/Application Support/Code/User/keybindings.json.backup"
     exit 1
 fi
 

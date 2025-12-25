@@ -1,0 +1,14 @@
+[
+  {
+    "key": "shift shift",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "alt+[IntlBackslash]",
+    "command": "workbench.action.splitEditor"
+  },
+  {
+    "key": "ctrl+alt+cmd+[Minus]",
+    "command": "-workbench.action.splitEditor"
+  }
+]
