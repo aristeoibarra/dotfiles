@@ -20,9 +20,19 @@ mouse-hide-while-typing = true
 
 # Clipboard
 copy-on-select = false
+clipboard-read = allow
+clipboard-write = allow
+clipboard-paste-protection = false
+clipboard-paste-bracketed-safe = false
+
+# Image support
+image-storage-limit = 320000000
 
 # macOS specific
 macos-option-as-alt = true
+
+# Keybindings
+keybind = super+v=paste_from_clipboard
 
 # =============================================================================
 # KANAGAWA DRAGON COLORS
@@ -57,3 +67,4 @@ palette = 12=#7fb4ca
 palette = 13=#938aa9
 palette = 14=#7aa89f
 palette = 15=#c5c9c5
+keybind = shift+enter=text:\x1b\r
