@@ -3,24 +3,24 @@
 # Stack layout (fullscreen by default, toggle to BSP with Alt+m)
 yabai -m config layout stack
 
-# Padding for ergonomics (optimized for 27" @ 82 PPI)
-yabai -m config top_padding    16
-yabai -m config bottom_padding 12
-yabai -m config left_padding   12
-yabai -m config right_padding  12
+# Padding (8px works for both laptop and external monitor)
+yabai -m config top_padding    8
+yabai -m config bottom_padding 8
+yabai -m config left_padding   8
+yabai -m config right_padding  8
 
 # Gap for visual separation in splits
-yabai -m config window_gap     12
+yabai -m config window_gap     8
 
 # No borders or visual shadows
 yabai -m config window_border off
-yabai -m config mouse_follows_focus off
+yabai -m config mouse_follows_focus on
 yabai -m config focus_follows_mouse off
 
-# Disable mouse completely (keyboard only)
+# Mouse actions (fn + click to move/resize)
 yabai -m config mouse_modifier fn
-yabai -m config mouse_action1 none
-yabai -m config mouse_action2 none
+yabai -m config mouse_action1 move
+yabai -m config mouse_action2 resize
 yabai -m config mouse_drop_action swap
 
 # Opacity disabled for better Eye-Care compatibility (27" monitor optimization)
