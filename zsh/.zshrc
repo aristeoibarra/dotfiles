@@ -55,6 +55,7 @@ command -v fd > /dev/null && export FZF_ALT_C_COMMAND='fd --type d --hidden --fo
 
 # Standalone plugins (install with brew)
 [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Autosuggestions (dimmed gray from Kanagawa Dragon)
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#625e5a"
