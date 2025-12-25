@@ -25,7 +25,7 @@ return {
             },
           },
         },
-        theme = "dragon", -- Load dragon variant
+        theme = "dragon",
         background = {
           dark = "dragon",
           light = "lotus",
@@ -33,7 +33,6 @@ return {
       })
       vim.cmd.colorscheme("kanagawa-dragon")
 
-      -- Force terminal colors to match Kanagawa Dragon
       local colors = require("kanagawa.colors").setup({ theme = "dragon" }).palette
       vim.g.terminal_color_0 = colors.sumiInk0
       vim.g.terminal_color_1 = colors.sakuraRed

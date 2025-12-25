@@ -1,0 +1,175 @@
+#!/bin/bash
+# Theme switcher for Kanagawa variants (wave, dragon, lotus)
+# Usage: theme [wave|dragon|lotus]
+
+set -e
+
+DOTFILES="$HOME/dotfiles"
+THEME="${1:-}"
+
+# Capitalize theme name for comments
+capitalize() {
+  echo "$1" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}'
+}
+THEME_CAP=$(capitalize "$THEME")
+
+# Validate theme
+if [[ ! "$THEME" =~ ^(wave|dragon|lotus)$ ]]; then
+  CURRENT=$(grep 'palette = "kanagawa_' "$DOTFILES/starship/starship.toml" 2>/dev/null | sed 's/.*kanagawa_//' | sed 's/"//')
+  echo "Usage: theme [wave|dragon|lotus]"
+  echo ""
+  echo "Current theme: ${CURRENT:-unknown}"
+  exit 1
+fi
+
+echo "Switching to Kanagawa $THEME..."
+
+# =============================================================================
+# COLOR DEFINITIONS
+# =============================================================================
+case "$THEME" in
+  wave)
+    BG="#1F1F28"; FG="#DCD7BA"; SELECTION="#2D4F67"
+    RED="#C34043"; GREEN="#76946A"; YELLOW="#C0A36E"; BLUE="#7E9CD8"
+    BRIGHT_BLUE="#7FB4CA"; MAGENTA="#957FB8"; CYAN="#6A9589"; GRAY="#727169"
+    # Alacritty specific
+    ALA_BLACK="#090618"; ALA_WHITE="#C8C093"
+    ALA_BRIGHT_BLACK="#727169"; ALA_BRIGHT_RED="#E82424"; ALA_BRIGHT_GREEN="#98BB6C"
+    ALA_BRIGHT_YELLOW="#E6C384"; ALA_BRIGHT_MAGENTA="#938AA9"; ALA_BRIGHT_CYAN="#7AA89F"; ALA_BRIGHT_WHITE="#DCD7BA"
+    # FZF suggestion
+    AUTOSUGGEST="#54546D"
+    ;;
+  dragon)
+    BG="#181616"; FG="#c5c9c5"; SELECTION="#223249"
+    RED="#c4746e"; GREEN="#8a9a7b"; YELLOW="#c4b28a"; BLUE="#8ba4b0"
+    BRIGHT_BLUE="#7fb4ca"; MAGENTA="#a292a3"; CYAN="#8ea4a2"; GRAY="#a6a69c"
+    # Alacritty specific
+    ALA_BLACK="#0d0c0c"; ALA_WHITE="#c8c093"
+    ALA_BRIGHT_BLACK="#a6a69c"; ALA_BRIGHT_RED="#e46876"; ALA_BRIGHT_GREEN="#87a987"
+    ALA_BRIGHT_YELLOW="#e6c384"; ALA_BRIGHT_MAGENTA="#938aa9"; ALA_BRIGHT_CYAN="#7aa89f"; ALA_BRIGHT_WHITE="#c5c9c5"
+    AUTOSUGGEST="#625e5a"
+    ;;
+  lotus)
+    BG="#f2ecbc"; FG="#545464"; SELECTION="#c9cbd1"
+    RED="#c84053"; GREEN="#6f894e"; YELLOW="#77713f"; BLUE="#4d699b"
+    BRIGHT_BLUE="#6693bf"; MAGENTA="#b35b79"; CYAN="#597b75"; GRAY="#8a8980"
+    # Alacritty specific
+    ALA_BLACK="#1f1f28"; ALA_WHITE="#545464"
+    ALA_BRIGHT_BLACK="#8a8980"; ALA_BRIGHT_RED="#d7474b"; ALA_BRIGHT_GREEN="#6e915f"
+    ALA_BRIGHT_YELLOW="#836f4a"; ALA_BRIGHT_MAGENTA="#a64c72"; ALA_BRIGHT_CYAN="#5e857a"; ALA_BRIGHT_WHITE="#43436c"
+    AUTOSUGGEST="#8a8980"
+    ;;
+esac
+
+# =============================================================================
+# NEOVIM
+# =============================================================================
+NVIM_FILE="$DOTFILES/nvim/lua/plugins/ui.lua"
+if [[ -f "$NVIM_FILE" ]]; then
+  sed -i '' -E "s/theme = \"(wave|dragon|lotus)\"/theme = \"$THEME\"/" "$NVIM_FILE"
+  sed -i '' -E "s/dark = \"(wave|dragon|lotus)\"/dark = \"$THEME\"/" "$NVIM_FILE"
+  sed -i '' -E "s/colorscheme\(\"kanagawa-(wave|dragon|lotus)\"\)/colorscheme(\"kanagawa-$THEME\")/" "$NVIM_FILE"
+  sed -i '' -E "s/setup\(\{ theme = \"(wave|dragon|lotus)\" \}\)/setup({ theme = \"$THEME\" })/" "$NVIM_FILE"
+  echo "  Neovim updated"
+fi
+
+# =============================================================================
+# STARSHIP
+# =============================================================================
+STARSHIP_FILE="$DOTFILES/starship/starship.toml"
+if [[ -f "$STARSHIP_FILE" ]]; then
+  # Update palette reference
+  sed -i '' -E "s/palette = \"kanagawa_(wave|dragon|lotus)\"/palette = \"kanagawa_$THEME\"/" "$STARSHIP_FILE"
+  # Update palette section header
+  sed -i '' -E "s/\[palettes\.kanagawa_(wave|dragon|lotus)\]/[palettes.kanagawa_$THEME]/" "$STARSHIP_FILE"
+  # Update comment
+  sed -i '' -E "s/Kanagawa (Wave|Dragon|Lotus) Theme/Kanagawa $THEME_CAP Theme/" "$STARSHIP_FILE"
+  # Update colors
+  sed -i '' -E "s/^text = \"#[0-9A-Fa-f]+\"/text = \"$FG\"/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^subtext = \"#[0-9A-Fa-f]+\".*/subtext = \"$GRAY\"  # Gray (Kanagawa $THEME_CAP)/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^green = \"#[0-9A-Fa-f]+\"/green = \"$GREEN\"/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^blue = \"#[0-9A-Fa-f]+\"/blue = \"$BLUE\"/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^cyan = \"#[0-9A-Fa-f]+\"/cyan = \"$CYAN\"/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^red = \"#[0-9A-Fa-f]+\"/red = \"$RED\"/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^yellow = \"#[0-9A-Fa-f]+\"/yellow = \"$YELLOW\"/" "$STARSHIP_FILE"
+  sed -i '' -E "s/^mauve = \"#[0-9A-Fa-f]+\"/mauve = \"$MAGENTA\"/" "$STARSHIP_FILE"
+  echo "  Starship updated"
+fi
+
+# =============================================================================
+# TMUX
+# =============================================================================
+TMUX_FILE="$DOTFILES/tmux/.tmux.conf"
+if [[ -f "$TMUX_FILE" ]]; then
+  sed -i '' -E "s/@kanagawa-theme '(wave|dragon|lotus)'/@kanagawa-theme '$THEME'/" "$TMUX_FILE"
+  echo "  Tmux updated"
+fi
+
+# =============================================================================
+# ALACRITTY
+# =============================================================================
+ALACRITTY_FILE="$DOTFILES/alacritty/alacritty.toml"
+ALACRITTY_THEME="$DOTFILES/alacritty/kanagawa-$THEME.toml"
+
+# Create theme file if it doesn't exist
+cat > "$ALACRITTY_THEME" << EOF
+[colors.primary]
+foreground = "$FG"
+background = "$BG"
+
+[colors.cursor]
+text = "$BG"
+cursor = "$ALA_WHITE"
+
+[colors.selection]
+text = "$ALA_WHITE"
+background = "$SELECTION"
+
+[colors.normal]
+black = "$ALA_BLACK"
+red = "$RED"
+green = "$GREEN"
+yellow = "$YELLOW"
+blue = "$BLUE"
+magenta = "$MAGENTA"
+cyan = "$CYAN"
+white = "$ALA_WHITE"
+
+[colors.bright]
+black = "$ALA_BRIGHT_BLACK"
+red = "$ALA_BRIGHT_RED"
+green = "$ALA_BRIGHT_GREEN"
+yellow = "$ALA_BRIGHT_YELLOW"
+blue = "$BRIGHT_BLUE"
+magenta = "$ALA_BRIGHT_MAGENTA"
+cyan = "$ALA_BRIGHT_CYAN"
+white = "$ALA_BRIGHT_WHITE"
+EOF
+
+if [[ -f "$ALACRITTY_FILE" ]]; then
+  sed -i '' -E "s/kanagawa-(wave|dragon|lotus)\.toml/kanagawa-$THEME.toml/" "$ALACRITTY_FILE"
+  echo "  Alacritty updated"
+fi
+
+# =============================================================================
+# ZSH (FZF colors)
+# =============================================================================
+ZSHRC_FILE="$DOTFILES/zsh/.zshrc"
+if [[ -f "$ZSHRC_FILE" ]]; then
+  # Update FZF colors
+  sed -i '' -E "s/--color=fg:#[0-9A-Fa-f]+,bg:#[0-9A-Fa-f]+,hl:#[0-9A-Fa-f]+,fg\+:#[0-9A-Fa-f]+,bg\+:#[0-9A-Fa-f]+,hl\+:#[0-9A-Fa-f]+/--color=fg:$FG,bg:$BG,hl:$BRIGHT_BLUE,fg+:$FG,bg+:$SELECTION,hl+:$BRIGHT_BLUE/" "$ZSHRC_FILE"
+  sed -i '' -E "s/--color=info:#[0-9A-Fa-f]+,prompt:#[0-9A-Fa-f]+,pointer:#[0-9A-Fa-f]+,marker:#[0-9A-Fa-f]+,spinner:#[0-9A-Fa-f]+/--color=info:$GREEN,prompt:$RED,pointer:$YELLOW,marker:$GREEN,spinner:$MAGENTA/" "$ZSHRC_FILE"
+  # Update autosuggest color
+  sed -i '' -E "s/ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=\"fg=#[0-9A-Fa-f]+\"/ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=\"fg=$AUTOSUGGEST\"/" "$ZSHRC_FILE"
+  # Update comment header
+  THEME_UPPER=$(echo "$THEME" | tr '[:lower:]' '[:upper:]')
+  sed -i '' -E "s/KANAGAWA (WAVE|DRAGON|LOTUS) COLORS/KANAGAWA $THEME_UPPER COLORS/" "$ZSHRC_FILE"
+  echo "  Zsh/FZF updated"
+fi
+
+echo ""
+echo "Done! To apply changes:"
+echo "  - Alacritty: Restart terminal"
+echo "  - Neovim: Restart nvim"
+echo "  - Tmux: prefix + r"
+echo "  - Zsh: source ~/.zshrc"

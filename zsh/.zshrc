@@ -6,7 +6,7 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
-export PATH="/opt/homebrew/bin:$PATH"
+export PATH="$HOME/dotfiles/bin:/opt/homebrew/bin:$PATH"
 
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
@@ -46,7 +46,7 @@ export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
   --bind=ctrl-j:preview-down,ctrl-k:preview-up \
   --bind=ctrl-d:preview-page-down,ctrl-u:preview-page-up \
   --color=fg:#c5c9c5,bg:#181616,hl:#7fb4ca,fg+:#c5c9c5,bg+:#223249,hl+:#7fb4ca \
-  --color=info:#8a9a7b,prompt:#c4746e,pointer:#c4b28a,marker:#8a9a7b,spinner:#938aa9"
+  --color=info:#8a9a7b,prompt:#c4746e,pointer:#c4b28a,marker:#8a9a7b,spinner:#a292a3"
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {} 2>/dev/null | head -100' --preview-window=right:50%:wrap --bind 'enter:execute(nvim {})+abort'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window=up:3:wrap"
 export FZF_ALT_C_OPTS="--preview 'ls -la {}' --preview-window=right:50%:wrap"

@@ -17,11 +17,11 @@ right_format = """$cmd_duration"""
 text = "#c5c9c5"
 subtext = "#a6a69c"  # Gray (Kanagawa Dragon)
 green = "#8a9a7b"
-blue = "#7fb4ca"
-cyan = "#7aa89f"
+blue = "#8ba4b0"
+cyan = "#8ea4a2"
 red = "#c4746e"
 yellow = "#c4b28a"
-mauve = "#938aa9"
+mauve = "#a292a3"
 
 [character]
 success_symbol = "[❯](cyan)"
