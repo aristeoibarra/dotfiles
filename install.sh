@@ -114,6 +114,7 @@ create_config_dir
 echo -e "${BLUE}Creating symlinks...${NC}"
 create_symlink "$DOTFILES_DIR/nvim" "$CONFIG_DIR/nvim" "Neovim"
 create_symlink "$DOTFILES_DIR/alacritty" "$CONFIG_DIR/alacritty" "Alacritty"
+create_symlink "$DOTFILES_DIR/ghostty" "$CONFIG_DIR/ghostty" "Ghostty"
 create_symlink "$DOTFILES_DIR/yabai" "$CONFIG_DIR/yabai" "Yabai"
 create_symlink "$DOTFILES_DIR/skhd" "$CONFIG_DIR/skhd" "skhd"
 create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"

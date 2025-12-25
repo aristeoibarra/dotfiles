@@ -1,4 +1,4 @@
--- GitHub Copilot (Lua version - más configurable)
+-- GitHub Copilot (Lua version - more configurable)
 return {
   {
     "zbirenbaum/copilot.lua",
@@ -6,7 +6,7 @@ return {
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
-        -- Panel de sugerencias (ver múltiples opciones)
+        -- Suggestion panel (view multiple options)
         panel = {
           enabled = true,
           auto_refresh = true,
@@ -15,7 +15,7 @@ return {
             jump_next = "]]",
             accept = "<CR>",
             refresh = "gr",
-            open = "<M-CR>", -- Alt+Enter abre panel
+            open = "<M-CR>",
           },
           layout = {
             position = "right",
@@ -23,22 +23,22 @@ return {
           },
         },
 
-        -- Sugerencias inline (ghost text)
+        -- Inline suggestions (ghost text)
         suggestion = {
           enabled = true,
           auto_trigger = true,
           debounce = 75,
           keymap = {
-            accept = "<C-j>",           -- Igual que tenías
-            accept_word = "<C-Right>",  -- Aceptar solo una palabra
-            accept_line = "<C-l>",      -- Aceptar solo una línea
-            next = "<M-]>",             -- Siguiente sugerencia
-            prev = "<M-[>",             -- Anterior sugerencia
-            dismiss = "<C-x>",          -- Descartar
+            accept = "<C-j>",
+            accept_word = "<C-Right>",
+            accept_line = "<C-l>",
+            next = "<M-]>",
+            prev = "<M-[>",
+            dismiss = "<C-x>",
           },
         },
 
-        -- Filetypes donde Copilot está deshabilitado
+        -- Filetypes where Copilot is disabled
         filetypes = {
           yaml = false,
           markdown = false,
@@ -51,10 +51,8 @@ return {
           ["."] = false,
         },
 
-        -- Copilot node command
         copilot_node_command = "node",
 
-        -- Servidor LSP
         server_opts_overrides = {},
       })
     end,

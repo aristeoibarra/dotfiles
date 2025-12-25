@@ -113,7 +113,7 @@ bindkey -M emacs '^[[D' undefined-key
 eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
 
 # opencode
-export PATH=/Users/aristeoibarra/.opencode/bin:$PATH
+export PATH=$HOME/.opencode/bin:$PATH
 
 # Zoxide (smart cd replacement)
 eval "$(zoxide init zsh)"

@@ -47,6 +47,7 @@ backups_found=0
 configs=(
     "$CONFIG_DIR/nvim.backup:$CONFIG_DIR/nvim:Neovim"
     "$CONFIG_DIR/alacritty.backup:$CONFIG_DIR/alacritty:Alacritty"
+    "$CONFIG_DIR/ghostty.backup:$CONFIG_DIR/ghostty:Ghostty"
     "$CONFIG_DIR/yabai.backup:$CONFIG_DIR/yabai:Yabai"
     "$CONFIG_DIR/skhd.backup:$CONFIG_DIR/skhd:skhd"
     "$HOME/.tmux.conf.backup:$HOME/.tmux.conf:Tmux"

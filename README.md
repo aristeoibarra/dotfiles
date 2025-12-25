@@ -6,6 +6,7 @@ My personal dotfiles for macOS.
 
 - **[Neovim](https://neovim.io/)** - Modern and extensible text editor
 - **[Alacritty](https://alacritty.org/)** - GPU-accelerated terminal emulator
+- **[Ghostty](https://ghostty.org/)** - Fast, native terminal emulator
 - **[Yabai](https://github.com/koekeishiya/yabai)** - Tiling window manager for macOS
 - **[skhd](https://github.com/koekeishiya/skhd)** - Hotkey daemon for macOS
 - **[Tmux](https://github.com/tmux/tmux)** - Terminal multiplexer
@@ -17,9 +18,10 @@ My personal dotfiles for macOS.
 dotfiles/
 ├── nvim/          # Neovim configuration
 ├── alacritty/     # Alacritty configuration
+├── ghostty/       # Ghostty configuration
 ├── yabai/         # Yabai configuration
 ├── skhd/          # skhd configuration
-├── tmux/          # Tmux configuration (pure, no plugins)
+├── tmux/          # Tmux configuration
 │   └── .tmux.conf
 ├── zsh/           # Zsh configuration (no Oh My Zsh)
 │   └── .zshrc
@@ -62,6 +64,7 @@ mv ~/.zshrc ~/.zshrc.backup
 # Create symlinks
 ln -sf ~/dotfiles/nvim ~/.config/nvim
 ln -sf ~/dotfiles/alacritty ~/.config/alacritty
+ln -sf ~/dotfiles/ghostty ~/.config/ghostty
 ln -sf ~/dotfiles/yabai ~/.config/yabai
 ln -sf ~/dotfiles/skhd ~/.config/skhd
 ln -sf ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf

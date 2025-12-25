@@ -152,6 +152,44 @@ if [[ -f "$ALACRITTY_FILE" ]]; then
 fi
 
 # =============================================================================
+# GHOSTTY
+# =============================================================================
+GHOSTTY_FILE="$DOTFILES/ghostty/config"
+if [[ -f "$GHOSTTY_FILE" ]]; then
+  # Update comment header
+  THEME_UPPER=$(echo "$THEME" | tr '[:lower:]' '[:upper:]')
+  sed -i '' -E "s/KANAGAWA (WAVE|DRAGON|LOTUS) COLORS/KANAGAWA $THEME_UPPER COLORS/" "$GHOSTTY_FILE"
+
+  # Update colors (Ghostty uses #RRGGBB format)
+  sed -i '' -E "s/^background = #[0-9A-Fa-f]+$/background = $BG/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^foreground = #[0-9A-Fa-f]+$/foreground = $FG/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^cursor-color = #[0-9A-Fa-f]+$/cursor-color = $ALA_WHITE/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^cursor-text = #[0-9A-Fa-f]+$/cursor-text = $BG/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^selection-background = #[0-9A-Fa-f]+$/selection-background = $SELECTION/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^selection-foreground = #[0-9A-Fa-f]+$/selection-foreground = $ALA_WHITE/" "$GHOSTTY_FILE"
+
+  # Update palette colors
+  sed -i '' -E "s/^palette = 0=#[0-9A-Fa-f]+$/palette = 0=$ALA_BLACK/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 1=#[0-9A-Fa-f]+$/palette = 1=$RED/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 2=#[0-9A-Fa-f]+$/palette = 2=$GREEN/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 3=#[0-9A-Fa-f]+$/palette = 3=$YELLOW/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 4=#[0-9A-Fa-f]+$/palette = 4=$BLUE/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 5=#[0-9A-Fa-f]+$/palette = 5=$MAGENTA/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 6=#[0-9A-Fa-f]+$/palette = 6=$CYAN/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 7=#[0-9A-Fa-f]+$/palette = 7=$ALA_WHITE/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 8=#[0-9A-Fa-f]+$/palette = 8=$ALA_BRIGHT_BLACK/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 9=#[0-9A-Fa-f]+$/palette = 9=$ALA_BRIGHT_RED/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 10=#[0-9A-Fa-f]+$/palette = 10=$ALA_BRIGHT_GREEN/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 11=#[0-9A-Fa-f]+$/palette = 11=$ALA_BRIGHT_YELLOW/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 12=#[0-9A-Fa-f]+$/palette = 12=$BRIGHT_BLUE/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 13=#[0-9A-Fa-f]+$/palette = 13=$ALA_BRIGHT_MAGENTA/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 14=#[0-9A-Fa-f]+$/palette = 14=$ALA_BRIGHT_CYAN/" "$GHOSTTY_FILE"
+  sed -i '' -E "s/^palette = 15=#[0-9A-Fa-f]+$/palette = 15=$ALA_BRIGHT_WHITE/" "$GHOSTTY_FILE"
+
+  echo "  Ghostty updated"
+fi
+
+# =============================================================================
 # ZSH (FZF colors)
 # =============================================================================
 ZSHRC_FILE="$DOTFILES/zsh/.zshrc"
@@ -170,6 +208,7 @@ fi
 echo ""
 echo "Done! To apply changes:"
 echo "  - Alacritty: Restart terminal"
+echo "  - Ghostty: Restart terminal (or Cmd+Shift+,)"
 echo "  - Neovim: Restart nvim"
 echo "  - Tmux: prefix + r"
 echo "  - Zsh: source ~/.zshrc"

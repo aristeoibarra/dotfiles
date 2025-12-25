@@ -59,6 +59,7 @@ echo -e "\n${BLUE}Removing symlinks...${NC}"
 # Remove each configuration
 remove_symlink "$CONFIG_DIR/nvim" "Neovim"
 remove_symlink "$CONFIG_DIR/alacritty" "Alacritty"
+remove_symlink "$CONFIG_DIR/ghostty" "Ghostty"
 remove_symlink "$CONFIG_DIR/yabai" "Yabai"
 remove_symlink "$CONFIG_DIR/skhd" "skhd"
 remove_symlink "$HOME/.tmux.conf" "Tmux"
