@@ -26,6 +26,10 @@ style = "Regular"
 [mouse]
 hide_when_typing = true
 
+[cursor]
+style.shape = "Block"
+style.blinking = "Off"
+
 [selection]
 save_to_clipboard = false
 

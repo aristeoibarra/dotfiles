@@ -18,16 +18,6 @@ term = xterm-256color
 # Mouse
 mouse-hide-while-typing = true
 
-# Clipboard
-copy-on-select = false
-clipboard-read = allow
-clipboard-write = allow
-clipboard-paste-protection = false
-clipboard-paste-bracketed-safe = false
-
-# Image support
-image-storage-limit = 320000000
-
 # macOS specific
 macos-option-as-alt = true
 
@@ -41,6 +31,7 @@ background = #181616
 foreground = #c5c9c5
 
 # Cursor
+cursor-style = block
 cursor-color = #c8c093
 cursor-text = #181616
 
