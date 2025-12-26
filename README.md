@@ -1,79 +1,203 @@
 # Dotfiles
 
-My personal dotfiles for macOS.
+My personal dotfiles for macOS, optimized for a keyboard-centric, minimal development workflow.
 
 ## Tools
 
-- **[Neovim](https://neovim.io/)** - Modern and extensible text editor
+### Core
+
+- **[Neovim](https://neovim.io/)** - Modern extensible text editor with Lua configuration and Lazy.nvim plugin manager
 - **[Alacritty](https://alacritty.org/)** - GPU-accelerated terminal emulator
-- **[Ghostty](https://ghostty.org/)** - Fast, native terminal emulator
+- **[Ghostty](https://ghostty.org/)** - Fast, native terminal emulator (alternative)
 - **[Yabai](https://github.com/koekeishiya/yabai)** - Tiling window manager for macOS
 - **[skhd](https://github.com/koekeishiya/skhd)** - Hotkey daemon for macOS
-- **[Tmux](https://github.com/tmux/tmux)** - Terminal multiplexer
-- **[Zsh](https://www.zsh.org/)** - Shell with standalone plugins (no Oh My Zsh), autosuggestions, and fzf integration
+- **[Tmux](https://github.com/tmux/tmux)** - Terminal multiplexer with TPM plugins
+- **[Zsh](https://www.zsh.org/)** - Shell with standalone plugins (no Oh My Zsh)
+- **[Starship](https://starship.rs/)** - Fast, customizable shell prompt
+
+### Optional
+
+- **[VS Code](https://code.visualstudio.com/)** - Secondary editor with Kanagawa theme and 18+ extensions
+- **[OpenCode](https://github.com/opencode-ai/opencode)** - Code assistant with MCP integration
+
+## Theme
+
+All tools use the **Kanagawa** color scheme with three variants:
+
+- **Dragon** (default) - Dark, warm tones
+- **Wave** - Dark blue tones
+- **Lotus** - Light theme
+
+Switch themes across all tools with:
+
+```bash
+~/dotfiles/bin/theme dragon  # or wave, lotus
+```
+
+This synchronizes colors in Neovim, Starship, Tmux, Alacritty, Ghostty, and FZF.
 
 ## Structure
 
 ```
 dotfiles/
-├── nvim/          # Neovim configuration
-├── alacritty/     # Alacritty configuration
-├── ghostty/       # Ghostty configuration
-├── yabai/         # Yabai configuration
-├── skhd/          # skhd configuration
-├── tmux/          # Tmux configuration
-│   └── .tmux.conf
-├── zsh/           # Zsh configuration (no Oh My Zsh)
-│   └── .zshrc
-├── macos/         # macOS system optimizations
-│   ├── disable-animations.sh
-│   └── enable-animations.sh
-├── install.sh     # Installation script
-└── README.md      # This file
+├── nvim/                      # Neovim configuration
+│   ├── init.lua               # Entry point
+│   └── lua/
+│       ├── config/            # Core settings (options, keymaps, autocmds)
+│       └── plugins/           # 38+ plugin configurations
+│
+├── alacritty/                 # Terminal emulator
+│   ├── alacritty.toml         # Main config
+│   └── kanagawa-*.toml        # Theme variants
+│
+├── ghostty/                   # Alternative terminal
+│   └── config                 # Kanagawa Dragon theme
+│
+├── yabai/                     # Tiling window manager
+│   └── yabairc                # Stack layout, padding, app exclusions
+│
+├── skhd/                      # Hotkey daemon
+│   └── skhdrc                 # Window navigation and management
+│
+├── tmux/                      # Terminal multiplexer
+│   ├── .tmux.conf             # Config with plugins
+│   └── tmux-swap-and-follow.sh
+│
+├── zsh/                       # Shell configuration
+│   └── .zshrc                 # Plugins, FZF, Vi mode, aliases
+│
+├── starship/                  # Shell prompt
+│   └── starship.toml          # Kanagawa theme with git/node info
+│
+├── vscode/                    # VS Code (optional)
+│   ├── settings.json          # Editor settings
+│   ├── keybindings.json       # Custom bindings
+│   └── extensions.txt         # Extension list
+│
+├── opencode/                  # Code assistant
+│   └── opencode.json          # Theme and MCP config
+│
+├── bin/                       # Utility scripts
+│   └── theme                  # Theme switcher
+│
+├── macos/                     # macOS optimizations
+│   ├── disable-animations.sh  # Remove all UI animations
+│   ├── enable-animations.sh   # Restore animations
+│   └── optimize-display.sh    # 27" monitor optimization
+│
+├── install.sh                 # Installation with validation
+├── restore.sh                 # Restore from backups
+├── uninstall.sh               # Remove symlinks
+└── README.md
 ```
+
+## Key Bindings
+
+### Yabai/skhd (Window Management)
+
+| Binding | Action |
+|---------|--------|
+| `Alt + h/j/k/l` | Focus window left/down/up/right |
+| `Shift + Alt + h/j/k/l` | Swap window in direction |
+| `Shift + Cmd + h/j/k/l` | Resize window |
+| `Alt + f` | Toggle fullscreen |
+| `Alt + e` | Balance windows |
+| `Alt + m` | Toggle layout (stack/bsp) |
+| `Alt + w` | Close window |
+| `Shift + Alt + r` | Restart yabai and skhd |
+
+### Tmux
+
+| Binding | Action |
+|---------|--------|
+| `Ctrl + Space` | Prefix key |
+| `Prefix + c` | New window |
+| `Prefix + v` | Vertical split |
+| `Prefix + h` | Horizontal split |
+| `Alt + 1-9` | Switch to window |
+| `Prefix + g` | Floating scratch terminal |
+| `Prefix + [` | Copy mode (vi keys) |
+
+### Neovim
+
+| Binding | Action |
+|---------|--------|
+| `Space` | Leader key |
+| `Leader + ff` | Find files (Telescope) |
+| `Leader + fg` | Live grep |
+| `Leader + e` | File explorer |
+| `gd` | Go to definition |
+| `K` | Hover documentation |
+| `Leader + ca` | Code actions |
+| `Leader + rn` | Rename symbol |
 
 ## Installation
 
-### Option 1: Full installation
+### Prerequisites
 
 ```bash
-# Clone the repository
-git clone https://github.com/aristeoibarra/dotfiles.git ~/dotfiles
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Run installation script
+# Core tools
+brew install neovim tmux starship fzf fd lazygit
+brew install --cask alacritty
+brew install koekeishiya/formulae/yabai
+brew install koekeishiya/formulae/skhd
+
+# Zsh plugins (standalone)
+brew install zsh-autosuggestions zsh-syntax-highlighting
+
+# FZF key bindings
+$(brew --prefix)/opt/fzf/install
+
+# Nerd Font
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+### Yabai SIP Configuration
+
+Yabai requires partially disabling System Integrity Protection:
+
+1. Boot into Recovery Mode:
+   - Apple Silicon: Hold power button until "Loading startup options"
+   - Intel: Hold `Cmd + R` during boot
+
+2. Open Terminal and run:
+   ```bash
+   csrutil enable --without debug --without fs
+   ```
+
+3. Reboot and configure sudoers:
+   ```bash
+   echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa" | sudo tee /private/etc/sudoers.d/yabai
+   ```
+
+4. Start services:
+   ```bash
+   yabai --start-service
+   skhd --start-service
+   ```
+
+### Install Dotfiles
+
+```bash
+git clone https://github.com/aristeoibarra/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
 
-The `install.sh` script does the following:
-- Creates backups of your existing configurations (if they exist)
-- Creates symlinks from `~/.config/` to `~/dotfiles/`
-- Preserves your previous configurations with `.backup` extension
+The installer:
+- Validates all dependencies
+- Creates backups of existing configs
+- Creates symlinks to `~/.config/`
+- Installs VS Code extensions (if VS Code is installed)
 
-### Option 2: Manual installation
-
-If you prefer to install manually:
-
-```bash
-# Create backups (optional)
-mv ~/.config/nvim ~/.config/nvim.backup
-mv ~/.config/alacritty ~/.config/alacritty.backup
-mv ~/.zshrc ~/.zshrc.backup
-# ... etc
-
-# Create symlinks
-ln -sf ~/dotfiles/nvim ~/.config/nvim
-ln -sf ~/dotfiles/alacritty ~/.config/alacritty
-ln -sf ~/dotfiles/ghostty ~/.config/ghostty
-ln -sf ~/dotfiles/yabai ~/.config/yabai
-ln -sf ~/dotfiles/skhd ~/.config/skhd
-ln -sf ~/dotfiles/tmux/.tmux.conf ~/.tmux.conf
-ln -sf ~/dotfiles/zsh/.zshrc ~/.zshrc
-```
+Options:
+- `./install.sh --dry-run` - Preview changes
+- `./install.sh --skip-validation` - Skip dependency check
 
 ## Updating
-
-After cloning or updating the repository:
 
 ```bash
 cd ~/dotfiles
@@ -82,300 +206,122 @@ git pull
 
 Since we use symlinks, changes are reflected automatically.
 
+## macOS Optimizations
+
+```bash
+# Disable all UI animations (instant window management)
+bash ~/dotfiles/macos/disable-animations.sh
+
+# Optimize for 27" 1080p display
+bash ~/dotfiles/macos/optimize-display.sh
+
+# Restore animations
+bash ~/dotfiles/macos/enable-animations.sh
+```
+
 ## Philosophy
 
 **Ultraminimalist setup:**
-- ⚡ Speed over aesthetics
-- ⌨️ Keyboard over mouse
-- 🎯 Function over features
-- 🧘 Zero distractions
-- 🔧 Pure config over plugins
+
+- Speed over aesthetics
+- Keyboard over mouse
+- Function over features
+- Zero distractions
+- Pure config over plugins
 
 ### Design Decisions
 
-**Why Neovim over VSCode?**
-- Instant startup time (~50ms vs 2-3s)
-- Runs in terminal (integrates with tmux workflow)
-- Modal editing = less hand movement, more speed
-- Infinite customization with Lua
-- Lower memory footprint (~50MB vs 500MB+)
+**Why Neovim?**
+- 50ms startup (vs 2-3s for VS Code)
+- Modal editing, less hand movement
+- Runs in terminal, integrates with tmux
+- 50MB memory (vs 500MB+)
 
-**Why Alacritty over iTerm2/Kitty?**
-- GPU-accelerated (consistently smooth scrolling)
-- Minimal config file (TOML, not XML/JSON)
-- Cross-platform (Linux/macOS/Windows)
-- No tabs/splits (tmux handles this better)
-- Zero bloat, zero menus
+**Why Alacritty/Ghostty?**
+- GPU-accelerated, smooth scrolling
+- Minimal config, zero bloat
+- No tabs/splits (tmux handles this)
 
-**Why Yabai over Rectangle/Amethyst?**
-- True tiling window manager (like i3 for macOS)
-- Fully keyboard-driven (no clicking)
-- Binary Space Partitioning layout
-- Scriptable with shell commands
-- Zero UI, zero distractions
-
-**Why Tmux without plugins?**
-- Pure configuration is stable (plugins break)
-- Faster startup without plugin manager
-- Less maintenance overhead
-- Built-in features are enough for most use cases
-- No external dependencies
+**Why Yabai?**
+- True tiling (like i3 for macOS)
+- Fully keyboard-driven
+- Zero UI distractions
 
 **Why Zsh without Oh My Zsh?**
 - OMZ adds 200ms+ startup time
 - Standalone plugins via Homebrew are faster
-- More control over what loads
-- Easier to debug issues
-- Less magic, more transparency
+- More control, easier debugging
 
-**Why this stack for web development?**
-- Optimized for React/Next.js/TypeScript workflow
-- LSP provides IDE-like features in terminal
-- Copilot + Claude = dual AI assistance
-- Format on save with Prettier + ESLint
-- Tailwind intellisense with custom class regex
-- Fast feedback loop (no context switching)
+**Why Tmux with plugins?**
+- Session persistence (resurrect)
+- Vim navigation integration
+- Kanagawa theme consistency
 
 ## Restoring Previous Configuration
 
-If you need to restore your previous dotfiles:
-
 ```bash
-cd ~/dotfiles
 ./restore.sh
 ```
 
-This will restore all backed-up configurations from `.backup` files.
+This restores all backed-up configurations from `.backup` files.
 
-## Notes
-
-- Configurations optimized for macOS
-- No Oh My Zsh (standalone plugins via Homebrew)
-- No Tmux plugins (pure configuration)
-- **Yabai requires partially disabling SIP** (see Prerequisites below)
-- Optional: Disable macOS animations with `bash ~/dotfiles/macos/disable-animations.sh`
-
-## Prerequisites
+## Uninstalling
 
 ```bash
-# Install Homebrew (if you don't have it)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-# Install core tools
-brew install neovim
-brew install --cask alacritty
-brew install koekeishiya/formulae/yabai
-brew install koekeishiya/formulae/skhd
-brew install tmux
-
-# Install Zsh plugins (standalone, no Oh My Zsh)
-brew install zsh-autosuggestions
-brew install zsh-syntax-highlighting
-
-# Install fzf (fuzzy finder)
-brew install fzf
-$(brew --prefix)/opt/fzf/install
-
-# Install fd (for better fzf performance)
-brew install fd
-
-# Install lazygit (optional, for git TUI)
-brew install lazygit
-
-# Optional: Disable macOS animations
-bash ~/dotfiles/macos/disable-animations.sh
+./uninstall.sh
 ```
 
-### Disabling SIP for Yabai (Required)
-
-Yabai requires **partially disabling System Integrity Protection (SIP)** to enable window management features with instant animations.
-
-**IMPORTANT:** Only disable the specific SIP features needed, not the entire protection.
-
-#### Steps to Disable SIP (Partially)
-
-1. **Reboot into Recovery Mode:**
-   - **Apple Silicon (M1/M2/M3):** Shut down your Mac, then press and hold the power button until "Loading startup options" appears. Click Options, then Continue.
-   - **Intel Mac:** Restart and hold `Cmd + R` during boot.
-
-2. **Open Terminal** from the Utilities menu in Recovery Mode.
-
-3. **Disable only debug assertions** (required for yabai):
-   ```bash
-   csrutil enable --without debug --without fs
-   ```
-
-4. **Reboot your Mac** normally.
-
-5. **Verify SIP status:**
-   ```bash
-   csrutil status
-   ```
-
-   You should see something like:
-   ```
-   System Integrity Protection status: unknown (Custom Configuration).
-
-   Configuration:
-       Apple Internal: enabled
-       Kext Signing: enabled
-       Filesystem Protections: disabled
-       Debugging Restrictions: disabled
-       ...
-   ```
-
-6. **Load yabai scripting addition** (one-time setup):
-   ```bash
-   echo "$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d " " -f 1) $(which yabai) --load-sa" | sudo tee /private/etc/sudoers.d/yabai
-   ```
-
-7. **Start yabai service:**
-   ```bash
-   yabai --start-service
-   skhd --start-service
-   ```
-
-**Security Note:** This configuration maintains most SIP protections while allowing yabai to function. If you want to re-enable full SIP later, boot into Recovery Mode and run `csrutil enable`.
+Removes symlinks but preserves backups. Run `./restore.sh` to restore previous configuration.
 
 ## Troubleshooting
 
-### Neovim Issues
+### Neovim
 
-**Plugins not loading or errors on startup**
 ```bash
-# Sync all plugins
-nvim
-:Lazy sync
+# Sync plugins
+nvim +:Lazy sync
 
-# If that doesn't work, clean install
-rm -rf ~/.local/share/nvim
-nvim
-:Lazy sync
+# Clean install
+rm -rf ~/.local/share/nvim && nvim +:Lazy sync
+
+# Install LSP servers
+nvim +:Mason
+
+# Authenticate Copilot
+nvim +:Copilot auth
 ```
 
-**LSP not working (no autocomplete/errors)**
+### Yabai/skhd
+
 ```bash
-# Open Neovim and install LSP servers
-nvim
-:Mason
-
-# Press 'i' to install missing servers
-# Or run: :MasonInstall typescript-language-server html-language-server
-```
-
-**Copilot not working**
-```bash
-# Authenticate with GitHub
-nvim
-:Copilot auth
-
-# Follow the browser authentication flow
-```
-
-### Yabai/Window Management Issues
-
-**Yabai not tiling windows**
-```bash
-# Check if yabai is running
+# Check scripting addition
 yabai --check-sa
 
-# If it fails, you likely need to disable SIP (see Prerequisites)
-# Restart yabai
+# Restart services
 yabai --restart-service
-```
-
-**skhd keybindings not working**
-```bash
-# Restart skhd
 skhd --restart-service
-
-# Check if it's running
-ps aux | grep skhd
 
 # Grant Accessibility permissions in System Settings > Privacy & Security
 ```
 
-### Tmux Issues
+### Tmux
 
-**Tmux not starting automatically**
 ```bash
-# Check if tmux is installed
-which tmux
+# Reload config
+tmux source ~/.tmux.conf
 
-# Reload zsh config
-source ~/.zshrc
-
-# If auto-attach is annoying in SSH, it's already disabled for SSH sessions
+# Install plugins (prefix + I)
 ```
 
-**Copy/paste not working in tmux**
-```bash
-# macOS clipboard integration requires reattach-to-user-namespace (optional)
-brew install reattach-to-user-namespace
+### Fonts/Colors
 
-# Or use prefix + v to enter copy mode, then y to copy
-```
-
-### Terminal Issues
-
-**Fonts look broken (squares/missing icons)**
 ```bash
 # Install Nerd Fonts
 brew install --cask font-jetbrains-mono-nerd-font
 
-# Restart Alacritty
-# Check Alacritty config: alacritty/alacritty.toml
-```
-
-**Colors look wrong**
-```bash
-# Make sure your terminal supports true color
-# Alacritty does by default
-
-# Check if $TERM is set correctly
+# Check terminal color support
 echo $TERM  # Should be: xterm-256color or alacritty
 ```
-
-### Installation Issues
-
-**Dependencies missing after install**
-```bash
-# The installer now validates dependencies and will stop if something is missing
-# Install missing dependencies, then run ./install.sh again
-
-# To bypass validation (not recommended):
-./install.sh --skip-validation
-```
-
-**Symlinks not created**
-```bash
-# Check if ~/.config exists
-ls -la ~/.config
-
-# Run installer again (it will backup existing configs)
-./install.sh
-```
-
-**Want to go back to previous config**
-```bash
-# Restore from backups
-./restore.sh
-
-# Or manually
-mv ~/.config/nvim.backup ~/.config/nvim
-# etc...
-```
-
-## Uninstalling
-
-To remove these dotfiles:
-
-```bash
-cd ~/dotfiles
-./uninstall.sh
-```
-
-This will remove all symlinks but preserve your backups. Run `./restore.sh` afterwards to restore your previous configuration.
 
 ## License
 
