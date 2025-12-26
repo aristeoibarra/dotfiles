@@ -53,13 +53,13 @@ export FZF_ALT_C_OPTS="--preview 'ls -la {}' --preview-window=right:50%:wrap"
 command -v fd > /dev/null && export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 command -v fd > /dev/null && export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 
+# Autosuggestions config (MUST be before loading plugin)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#625e5a"
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
 # Standalone plugins (install with brew)
 [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ] && source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# Autosuggestions (dimmed gray from Kanagawa Dragon)
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#625e5a"
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 # Starship prompt
 eval "$(starship init zsh)"
@@ -98,19 +98,10 @@ tn() {
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
 alias ndb='nextdns-blocker'
 
-# Disable arrow keys (force vi mode / Ctrl+R usage) - must be AFTER plugin loading
-bindkey -M vicmd '^[[A' undefined-key
-bindkey -M vicmd '^[[B' undefined-key
-bindkey -M vicmd '^[[C' undefined-key
-bindkey -M vicmd '^[[D' undefined-key
-bindkey -M viins '^[[A' undefined-key
-bindkey -M viins '^[[B' undefined-key
-bindkey -M viins '^[[C' undefined-key
-bindkey -M viins '^[[D' undefined-key
-bindkey -M emacs '^[[A' undefined-key
-bindkey -M emacs '^[[B' undefined-key
-bindkey -M emacs '^[[C' undefined-key
-bindkey -M emacs '^[[D' undefined-key
+# Arrow keys for autosuggestions
+bindkey '^[[C' forward-char      # Right arrow - accept full suggestion
+bindkey '^[OC' forward-char      # Right arrow (alternate escape sequence)
+bindkey '^[[1;5C' forward-word   # Ctrl+Right - accept word
 
 # nextdns-blocker shell completion
 eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"

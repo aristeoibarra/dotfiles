@@ -21,6 +21,10 @@ mouse-hide-while-typing = true
 # macOS specific
 macos-option-as-alt = true
 
+# Clipboard (allow programs to read clipboard for image paste)
+clipboard-read = allow
+clipboard-write = allow
+
 # Keybindings
 keybind = super+v=paste_from_clipboard
 
