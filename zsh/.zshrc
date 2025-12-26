@@ -6,7 +6,7 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
-export PATH="$HOME/dotfiles/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$HOME/.opencode/bin:/opt/homebrew/bin:$PATH"
 
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
@@ -65,8 +65,11 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 eval "$(starship init zsh)"
 
 # Editor aliases
-alias vim='nvim' vi='nvim'
-alias lg='lazygit' zshrc='nvim ~/.zshrc' zshreload='source ~/.zshrc'
+alias vim='nvim'
+alias vi='nvim'
+alias lg='lazygit'
+alias zshrc='nvim ~/.zshrc'
+alias zshreload='source ~/.zshrc'
 
 # Minimal ls with directory indicators and colors (Kanagawa theme)
 export LSCOLORS="gxfxcxdxdxegedabagacad"
@@ -111,9 +114,6 @@ bindkey -M emacs '^[[D' undefined-key
 
 # nextdns-blocker shell completion
 eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
-
-# opencode
-export PATH=$HOME/.opencode/bin:$PATH
 
 # Zoxide (smart cd replacement)
 eval "$(zoxide init zsh)"

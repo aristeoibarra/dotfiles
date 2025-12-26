@@ -30,7 +30,7 @@ return {
           { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
           { icon = " ", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
           { icon = " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
-          { icon = " ", key = "c", desc = "Config", action = ":e ~/.config/nvim/init.lua" },
+          { icon = " ", key = "c", desc = "Config", action = function() vim.cmd("e " .. vim.fn.stdpath("config") .. "/init.lua") end },
           { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
           { icon = " ", key = "q", desc = "Quit", action = ":qa" },
         },
@@ -75,6 +75,6 @@ return {
   },
   keys = {
     { "<leader>n", function() Snacks.notifier.show_history() end, desc = "Notification History" },
-    { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss Notifications" },
+    { "<leader>ud", function() Snacks.notifier.hide() end, desc = "Dismiss Notifications" },
   },
 }

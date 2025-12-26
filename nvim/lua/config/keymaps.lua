@@ -106,16 +106,6 @@ vim.keymap.set('n', '<leader>un', function()
   end
 end, { desc = 'Toggle line numbers (cycle)' })
 
-vim.keymap.set('n', '<leader>um', function()
-  if vim.o.mouse == 'a' then
-    vim.o.mouse = ''
-    print('Mouse: OFF')
-  else
-    vim.o.mouse = 'a'
-    print('Mouse: ON')
-  end
-end, { desc = 'Toggle mouse support' })
-
 vim.keymap.set('n', '<leader>uw', function()
   vim.o.wrap = not vim.o.wrap
 end, { desc = 'Toggle line wrap (for Tailwind)' })

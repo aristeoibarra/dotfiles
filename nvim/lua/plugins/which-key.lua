@@ -48,7 +48,8 @@ return {
       -- UI Toggles
       { "<leader>u", group = "ui" },
       { "<leader>un", desc = "Toggle line numbers" },
-      { "<leader>um", desc = "Toggle mouse support" },
+      { "<leader>ud", desc = "Dismiss notifications" },
+      { "<leader>um", desc = "Toggle Markdown Render" },
       { "<leader>uw", desc = "Toggle line wrap" },
       { "<leader>uS", desc = "Toggle statusline" },
 
