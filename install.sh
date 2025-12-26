@@ -149,6 +149,15 @@ else
     echo -e "${YELLOW}VS Code not installed, skipping VS Code config${NC}"
 fi
 
+# Warp terminal theme
+WARP_THEMES_DIR="$HOME/.warp/themes"
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[DRY RUN]${NC} Would create: $WARP_THEMES_DIR"
+else
+    mkdir -p "$WARP_THEMES_DIR"
+fi
+create_symlink "$DOTFILES_DIR/warp/themes/kanagawa-dragon.yaml" "$WARP_THEMES_DIR/kanagawa-dragon.yaml" "Warp theme"
+
 if [ "$DRY_RUN" = true ]; then
     echo -e "\n${YELLOW}DRY RUN complete. Run without --dry-run to apply changes.${NC}"
 else

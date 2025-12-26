@@ -19,6 +19,7 @@ My personal dotfiles for macOS, optimized for a keyboard-centric, minimal develo
 
 - **[VS Code](https://code.visualstudio.com/)** - Secondary editor with Kanagawa theme and 18+ extensions
 - **[OpenCode](https://github.com/opencode-ai/opencode)** - Code assistant with MCP integration
+- **[Warp](https://www.warp.dev/)** - Modern terminal with AI features and Kanagawa theme
 
 ## Theme
 
@@ -73,6 +74,10 @@ dotfiles/
 │   ├── settings.json          # Editor settings
 │   ├── keybindings.json       # Custom bindings
 │   └── extensions.txt         # Extension list
+│
+├── warp/                      # Warp terminal (optional)
+│   └── themes/
+│       └── kanagawa-dragon.yaml
 │
 ├── opencode/                  # Code assistant
 │   └── opencode.json          # Theme and MCP config
@@ -192,6 +197,7 @@ The installer:
 - Creates backups of existing configs
 - Creates symlinks to `~/.config/`
 - Installs VS Code extensions (if VS Code is installed)
+- Installs Warp theme to `~/.warp/themes/`
 
 Options:
 - `./install.sh --dry-run` - Preview changes
