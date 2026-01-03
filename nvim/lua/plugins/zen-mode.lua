@@ -28,7 +28,7 @@ return {
           showcmd = false,
           laststatus = 0, -- No statusline in zen mode
         },
-        tmux = { enabled = true }, -- Hide tmux status
+        tmux = { enabled = false }, -- Keep tmux status visible
         alacritty = {
           enabled = false, -- Keep current font settings
         },
@@ -42,9 +42,6 @@ return {
         vim.opt.signcolumn = "no"
         vim.opt.cursorline = false
         vim.opt.cmdheight = 0
-
-        -- Hide tmux status bar
-        vim.fn.system("tmux set status off")
       end,
       on_close = function()
         -- Restore UI
@@ -54,9 +51,6 @@ return {
         vim.opt.signcolumn = "yes"
         vim.opt.cursorline = true
         vim.opt.cmdheight = 1
-
-        -- Show tmux status bar
-        vim.fn.system("tmux set status on")
       end,
     },
   },

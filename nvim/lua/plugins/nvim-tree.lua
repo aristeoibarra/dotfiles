@@ -6,7 +6,22 @@ return {
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
+    local function on_attach(bufnr)
+      local api = require("nvim-tree.api")
+
+      -- Default mappings
+      api.config.mappings.default_on_attach(bufnr)
+
+      -- Disable arrow keys
+      local opts = { buffer = bufnr, noremap = true, silent = true }
+      vim.keymap.set("n", "<Up>", "<Nop>", opts)
+      vim.keymap.set("n", "<Down>", "<Nop>", opts)
+      vim.keymap.set("n", "<Left>", "<Nop>", opts)
+      vim.keymap.set("n", "<Right>", "<Nop>", opts)
+    end
+
     require("nvim-tree").setup({
+      on_attach = on_attach,
       disable_netrw = true,
       hijack_netrw = true,
       hijack_cursor = true,
