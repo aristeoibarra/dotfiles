@@ -33,7 +33,6 @@ return {
           json = { "prettier" },
           jsonc = { "prettier" },
           yaml = { "prettier" },
-          markdown = { "prettier" },
           lua = { "stylua" },
         },
 

@@ -28,26 +28,6 @@ return {
       nvim_cmp = false, -- Using blink.cmp
       min_chars = 2,
     },
-    -- Templates configuration
-    templates = {
-      subdir = "templates",
-      date_format = "%Y-%m-%d",
-      time_format = "%H:%M",
-      substitutions = {
-        yesterday = function()
-          return os.date("%Y-%m-%d", os.time() - 86400)
-        end,
-        tomorrow = function()
-          return os.date("%Y-%m-%d", os.time() + 86400)
-        end,
-      },
-    },
-    -- Daily notes
-    daily_notes = {
-      folder = "daily",
-      date_format = "%Y-%m-%d",
-      template = nil,
-    },
     -- Note naming
     note_id_func = function(title)
       local suffix = ""
@@ -59,6 +39,10 @@ return {
       return suffix
     end,
     legacy_commands = false,
+    -- Disable automatic frontmatter
+    frontmatter = {
+      enabled = false,
+    },
   },
   init = function()
     vim.opt.conceallevel = 2
@@ -69,9 +53,6 @@ return {
     { "<leader>Os", "<cmd>Obsidian search<cr>", desc = "Obsidian: Search vault" },
     { "<leader>On", "<cmd>Obsidian new<cr>", desc = "Obsidian: New note" },
     { "<leader>Ow", "<cmd>Obsidian workspace<cr>", desc = "Obsidian: Switch workspace" },
-    { "<leader>Od", "<cmd>Obsidian today<cr>", desc = "Obsidian: Daily note" },
-    { "<leader>Oy", "<cmd>Obsidian yesterday<cr>", desc = "Obsidian: Yesterday note" },
-    { "<leader>Ot", "<cmd>Obsidian template<cr>", desc = "Obsidian: Insert template" },
     { "<leader>Ol", "<cmd>Obsidian links<cr>", desc = "Obsidian: Show links" },
     { "<leader>Ob", "<cmd>Obsidian backlinks<cr>", desc = "Obsidian: Show backlinks" },
     { "<leader>Or", "<cmd>Obsidian rename<cr>", desc = "Obsidian: Rename note" },
