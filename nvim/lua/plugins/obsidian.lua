@@ -28,25 +28,6 @@ return {
       nvim_cmp = false, -- Using blink.cmp
       min_chars = 2,
     },
-    -- Callbacks for keymaps inside notes
-    callbacks = {
-      enter_note = function(client, note)
-        -- Follow link under cursor
-        vim.keymap.set("n", "gf", function()
-          return require("obsidian").util.gf_passthrough()
-        end, { buffer = note.bufnr, expr = true, desc = "Obsidian follow link" })
-
-        -- Toggle checkbox
-        vim.keymap.set("n", "<leader>Oc", function()
-          return require("obsidian").util.toggle_checkbox()
-        end, { buffer = note.bufnr, desc = "Toggle checkbox" })
-
-        -- Smart action (follow link or toggle checkbox)
-        vim.keymap.set("n", "<CR>", function()
-          return require("obsidian").util.smart_action()
-        end, { buffer = note.bufnr, expr = true, desc = "Obsidian smart action" })
-      end,
-    },
     -- Templates configuration
     templates = {
       subdir = "templates",
@@ -77,22 +58,24 @@ return {
       end
       return suffix
     end,
-    legacy_commands = true,
+    legacy_commands = false,
   },
   init = function()
     vim.opt.conceallevel = 2
   end,
   keys = {
     -- Using <leader>O to avoid conflict with OpenCode (<leader>o)
-    { "<leader>Of", "<cmd>ObsidianQuickSwitch<cr>", desc = "Obsidian: Find notes" },
-    { "<leader>Os", "<cmd>ObsidianSearch<cr>", desc = "Obsidian: Search vault" },
-    { "<leader>On", "<cmd>ObsidianNew<cr>", desc = "Obsidian: New note" },
-    { "<leader>Ow", "<cmd>ObsidianWorkspace<cr>", desc = "Obsidian: Switch workspace" },
-    { "<leader>Od", "<cmd>ObsidianToday<cr>", desc = "Obsidian: Daily note" },
-    { "<leader>Oy", "<cmd>ObsidianYesterday<cr>", desc = "Obsidian: Yesterday note" },
-    { "<leader>Ot", "<cmd>ObsidianTemplate<cr>", desc = "Obsidian: Insert template" },
-    { "<leader>Ol", "<cmd>ObsidianLinks<cr>", desc = "Obsidian: Show links" },
-    { "<leader>Ob", "<cmd>ObsidianBacklinks<cr>", desc = "Obsidian: Show backlinks" },
-    { "<leader>Or", "<cmd>ObsidianRename<cr>", desc = "Obsidian: Rename note" },
+    { "<leader>Of", "<cmd>Obsidian quick_switch<cr>", desc = "Obsidian: Find notes" },
+    { "<leader>Os", "<cmd>Obsidian search<cr>", desc = "Obsidian: Search vault" },
+    { "<leader>On", "<cmd>Obsidian new<cr>", desc = "Obsidian: New note" },
+    { "<leader>Ow", "<cmd>Obsidian workspace<cr>", desc = "Obsidian: Switch workspace" },
+    { "<leader>Od", "<cmd>Obsidian today<cr>", desc = "Obsidian: Daily note" },
+    { "<leader>Oy", "<cmd>Obsidian yesterday<cr>", desc = "Obsidian: Yesterday note" },
+    { "<leader>Ot", "<cmd>Obsidian template<cr>", desc = "Obsidian: Insert template" },
+    { "<leader>Ol", "<cmd>Obsidian links<cr>", desc = "Obsidian: Show links" },
+    { "<leader>Ob", "<cmd>Obsidian backlinks<cr>", desc = "Obsidian: Show backlinks" },
+    { "<leader>Or", "<cmd>Obsidian rename<cr>", desc = "Obsidian: Rename note" },
+    { "<leader>Oc", "<cmd>Obsidian toggle_checkbox<cr>", desc = "Obsidian: Toggle checkbox", ft = "markdown" },
+    { "gf", "<cmd>Obsidian follow_link<cr>", desc = "Obsidian: Follow link", ft = "markdown" },
   },
 }

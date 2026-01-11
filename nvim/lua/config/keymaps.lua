@@ -5,11 +5,12 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- ============================================================================
--- ARROW KEYS: Enabled for multicursor plugin and general use
+-- ARROW KEYS: Disabled to enforce hjkl navigation
 -- ============================================================================
--- Arrow keys are now used by multicursor.nvim:
---   <Up>/<Down>  - Add cursor above/below
---   <Left>/<Right> - Navigate between cursors
+vim.keymap.set({ 'n', 'i', 'v' }, '<Up>', '<Nop>', { desc = 'Disabled' })
+vim.keymap.set({ 'n', 'i', 'v' }, '<Down>', '<Nop>', { desc = 'Disabled' })
+vim.keymap.set({ 'n', 'i', 'v' }, '<Left>', '<Nop>', { desc = 'Disabled' })
+vim.keymap.set({ 'n', 'i', 'v' }, '<Right>', '<Nop>', { desc = 'Disabled' })
 
 -- ============================================================================
 -- NAVIGATION: Window and buffer navigation
