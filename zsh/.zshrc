@@ -96,15 +96,12 @@ tn() {
 
 # System utilities
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
-alias ndb='nextdns-blocker'
 
 # Arrow keys for autosuggestions
 bindkey '^[[C' forward-char      # Right arrow - accept full suggestion
 bindkey '^[OC' forward-char      # Right arrow (alternate escape sequence)
 bindkey '^[[1;5C' forward-word   # Ctrl+Right - accept word
 
-# nextdns-blocker shell completion
-eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
 
 # Zoxide (smart cd replacement)
 eval "$(zoxide init zsh)"

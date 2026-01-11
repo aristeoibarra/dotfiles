@@ -20,6 +20,7 @@ My personal dotfiles for macOS, optimized for a keyboard-centric, minimal develo
 - **[VS Code](https://code.visualstudio.com/)** - Secondary editor with Kanagawa theme and 18+ extensions
 - **[OpenCode](https://github.com/opencode-ai/opencode)** - Code assistant with MCP integration
 - **[Warp](https://www.warp.dev/)** - Modern terminal with AI features and Kanagawa theme
+- **[Mole](https://github.com/tw93/mole)** - macOS cleanup and optimization tool
 
 ## Theme
 
@@ -81,6 +82,9 @@ dotfiles/
 │
 ├── opencode/                  # Code assistant
 │   └── opencode.json          # Theme and MCP config
+│
+├── mole/                      # macOS cleanup tool
+│   └── README.md              # Installation and commands
 │
 ├── bin/                       # Utility scripts
 │   └── theme                  # Theme switcher

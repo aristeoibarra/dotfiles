@@ -18,7 +18,9 @@ vim.opt.incsearch = true
 
 -- UI
 vim.opt.termguicolors = true
-vim.opt.signcolumn = "yes:2" -- Wider signcolumn for 27" (more diagnostics visible)
+vim.opt.signcolumn = "yes" -- Single signcolumn
+vim.opt.foldcolumn = "0" -- No fold column
+vim.opt.numberwidth = 2 -- Minimum width for line numbers
 vim.opt.scrolloff = 16
 vim.opt.cursorline = true
 vim.opt.wrap = true

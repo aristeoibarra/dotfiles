@@ -43,9 +43,9 @@ return {
       timeout = 3000,
     },
 
-    -- Input (better vim.ui.input)
+    -- Input (disabled - use native cmdline for confirmations)
     input = {
-      enabled = true,
+      enabled = false,
     },
 
     -- Picker (for other plugins)

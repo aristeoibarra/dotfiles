@@ -47,3 +47,10 @@ shift + alt - r : yabai --restart-service; skhd --restart-service
 
 # Focus space: usa ctrl+número nativo de macOS (activar en System Settings)
 # Move to space: requiere SIP deshabilitado o arrastrar manualmente con Mission Control
+
+# ============================================
+# APPS
+# ============================================
+
+# Obsidian - vault personal
+alt - o : open "obsidian://open?vault=aristeo"
