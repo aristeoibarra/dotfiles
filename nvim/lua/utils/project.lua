@@ -12,7 +12,7 @@ local CACHE_TTL = 300  -- 5 minutes
 
 function M.detect_project_type(force_refresh)
   local cwd = vim.fn.getcwd()
-  local now = vim.loop.now()
+  local now = vim.uv.now()
 
   -- Check cache validity
   if not force_refresh and detection_cache[cwd] and cache_timestamp[cwd] then

@@ -23,51 +23,59 @@ return {
     },
     spec = {
       -- File operations
-      { "<leader>w", group = "file" },
-      { "<leader>q", group = "file" },
+      { "<leader>w", desc = "Save file" },
+      { "<leader>q", desc = "Quit" },
+
+      -- Find/Search
+      { "<leader>f", group = "find" },
 
       -- File explorer
       { "<leader>e", group = "explorer" },
-      { "<leader>eh", desc = "Show nvim-tree help" },
 
       -- Window management
       { "<leader>s", group = "split" },
-      { "<leader>sh", desc = "Horizontal split" },
-      { "<leader>sv", desc = "Vertical split" },
 
       -- Resize windows
       { "<leader>r", group = "resize" },
-      { "<leader>rh", desc = "Decrease window width" },
-      { "<leader>rl", desc = "Increase window width" },
-      { "<leader>rj", desc = "Decrease window height" },
-      { "<leader>rk", desc = "Increase window height" },
 
       -- Terminal
       { "<leader>t", group = "terminal" },
 
       -- UI Toggles
       { "<leader>u", group = "ui" },
-      { "<leader>un", desc = "Toggle line numbers" },
-      { "<leader>ud", desc = "Dismiss notifications" },
-      { "<leader>um", desc = "Toggle Markdown Render" },
-      { "<leader>uw", desc = "Toggle line wrap" },
-      { "<leader>uS", desc = "Toggle statusline" },
 
       -- Diagnostics
-      { "<leader>d", group = "diagnostics" },
-      { "<leader>da", desc = "Diagnostics (all project)" },
-      { "<leader>D", desc = "Diagnostic details" },
+      { "<leader>d", desc = "Diagnostics list" },
+      { "<leader>D", desc = "Diagnostic float" },
 
       -- LSP & Code
       { "<leader>l", group = "lsp" },
-      { "<leader>la", desc = "Load all project files" },
+      { "<leader>c", group = "code" },
+
+      -- Git
+      { "<leader>g", group = "git" },
+      { "<leader>h", group = "hunk" },
+
+      -- Harpoon
+      { "<leader>m", group = "harpoon" },
+
+      -- Multicursor
+      { "<leader>M", group = "multicursor" },
+
+      -- DAP/Debug
+      { "<leader>b", desc = "Toggle breakpoint" },
 
       -- OpenCode
       { "<leader>o", group = "opencode" },
 
+      -- Obsidian
+      { "<leader>O", group = "obsidian" },
+
+      -- Zen mode
+      { "<leader>z", desc = "Zen mode" },
+
       -- Help & Reference
-      { "<leader>?", desc = "Show all keybindings" },
-      { "<leader>ch", desc = "Vim cheatsheet" },
+      { "<leader>?", desc = "All keybindings" },
     },
   },
 }

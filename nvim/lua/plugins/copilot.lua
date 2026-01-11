@@ -5,15 +5,6 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
-      -- Silence "filetype rejected" notifications
-      local orig_notify = vim.notify
-      vim.notify = function(msg, ...)
-        if type(msg) == "string" and msg:match("rejected by config") then
-          return
-        end
-        return orig_notify(msg, ...)
-      end
-
       require("copilot").setup({
         -- Suggestion panel (view multiple options)
         panel = {

@@ -87,31 +87,6 @@ function M.log_lsp_status()
 end
 
 -- ============================================================================
--- SETUP HELPERS
--- ============================================================================
-
--- Setup server with fallback if not installed
-function M.setup_server_safe(server_name, config)
-  if not M.is_server_installed(server_name) then
-    M.log_warn(string.format("LSP server '%s' not installed. Install with :Mason", server_name))
-    return false
-  end
-
-  local ok, err = pcall(function()
-    vim.lsp.config(server_name, config)
-    vim.lsp.enable(server_name)
-  end)
-
-  if not ok then
-    M.log_error(string.format("Failed to setup '%s': %s", server_name, err))
-    return false
-  end
-
-  M.log_info(string.format("LSP '%s' configured successfully", server_name))
-  return true
-end
-
--- ============================================================================
 -- KEYMAPS
 -- ============================================================================
 

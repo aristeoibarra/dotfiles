@@ -40,7 +40,7 @@ return {
         format_on_save = function(bufnr)
           -- Don't format very large files (>1MB)
           local max_filesize = 1024 * 1024
-          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
+          local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
           if ok and stats and stats.size > max_filesize then
             return
           end

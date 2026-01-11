@@ -44,13 +44,13 @@ return {
         vim.opt.cmdheight = 0
       end,
       on_close = function()
-        -- Restore UI
-        vim.opt.laststatus = 2
+        -- Restore UI (match options.lua defaults)
+        vim.opt.laststatus = 3
         vim.opt.number = true
         vim.opt.relativenumber = true
         vim.opt.signcolumn = "yes"
         vim.opt.cursorline = true
-        vim.opt.cmdheight = 1
+        vim.opt.cmdheight = 0 -- noice.nvim handles cmdline
       end,
     },
   },

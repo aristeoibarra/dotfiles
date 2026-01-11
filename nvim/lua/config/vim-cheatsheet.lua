@@ -264,14 +264,14 @@ function M.toggle()
   if not buf or not vim.api.nvim_buf_is_valid(buf) then
     buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(cheatsheet_content, "\n"))
-    vim.api.nvim_buf_set_option(buf, "modifiable", false)
-    vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
-    vim.api.nvim_buf_set_option(buf, "bufhidden", "hide")
-    vim.api.nvim_buf_set_option(buf, "filetype", "cheatsheet")
+    vim.bo[buf].modifiable = false
+    vim.bo[buf].buftype = "nofile"
+    vim.bo[buf].bufhidden = "hide"
+    vim.bo[buf].filetype = "cheatsheet"
 
     -- Keymaps para cerrar
-    vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-    vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = buf, silent = true })
+    vim.keymap.set("n", "<Esc>", "<cmd>close<CR>", { buffer = buf, silent = true })
   end
 
   -- Calcular tamaño de ventana flotante
@@ -294,8 +294,8 @@ function M.toggle()
   })
 
   -- Opciones de ventana
-  vim.api.nvim_win_set_option(win, "wrap", false)
-  vim.api.nvim_win_set_option(win, "cursorline", true)
+  vim.wo[win].wrap = false
+  vim.wo[win].cursorline = true
 end
 
 return M
