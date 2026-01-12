@@ -5,20 +5,9 @@ return {
   -- ============================================================================
   {
     "stevearc/conform.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    lazy = false,
     config = function()
       local conform = require("conform")
-
-      -- Prettier formatter configuration
-      conform.formatters.prettier = {
-        command = "prettier",
-        args = { "--stdin-filepath", "$FILENAME", "--config-precedence", "prefer-file" },
-        stdin = true,
-        condition = function(ctx)
-          -- Check if prettier is available
-          return vim.fn.executable("prettier") == 1
-        end,
-      }
 
       conform.setup({
         formatters_by_ft = {
@@ -35,39 +24,68 @@ return {
           yaml = { "prettier" },
           lua = { "stylua" },
         },
-
-        -- Format on save (async not supported in format_on_save, must be false)
-        format_on_save = function(bufnr)
-          -- Don't format very large files (>1MB)
-          local max_filesize = 1024 * 1024
-          local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(bufnr))
-          if ok and stats and stats.size > max_filesize then
-            return
-          end
-
-          return {
-            timeout_ms = 500,
-            lsp_fallback = true,
-            async = false,     -- Conform requires async=false for format_on_save
-          }
-        end,
-
-        -- Default format options for all formatters
-        default_format_opts = {
-          lsp_fallback = true,
-          async = true,
-          timeout_ms = 500,
+        format_on_save = {
+          timeout_ms = 10000,
+          lsp_format = "never",
         },
+        notify_on_error = true,
+        notify_no_formatters = true,
       })
 
-      -- Manual formatting keymap (improved)
-      vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-        conform.format({
-          async = true,
-          timeout_ms = 500,
-          lsp_fallback = true,
-        })
-      end, { desc = "Format file or range" })
+      -- Función para formatear con prettier directamente
+      local function format_with_prettier()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local ft = vim.bo[bufnr].filetype
+
+        -- Mapeo de filetype a parser de prettier
+        local parsers = {
+          json = "json",
+          jsonc = "json",
+          javascript = "babel",
+          typescript = "typescript",
+          javascriptreact = "babel",
+          typescriptreact = "typescript",
+          css = "css",
+          scss = "scss",
+          less = "less",
+          html = "html",
+          yaml = "yaml",
+        }
+
+        local parser = parsers[ft]
+        if not parser then
+          -- Usar conform para otros filetypes (como lua con stylua)
+          require("conform").format({ timeout_ms = 10000, lsp_format = "never" })
+          return
+        end
+
+        local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+        local content = table.concat(lines, "\n")
+
+        local result = vim.fn.system("prettier --parser " .. parser, content)
+
+        if vim.v.shell_error ~= 0 then
+          vim.notify("Prettier error", vim.log.levels.ERROR)
+          return
+        end
+
+        local new_lines = vim.split(result, "\n", { trimempty = false })
+        if new_lines[#new_lines] == "" then
+          table.remove(new_lines)
+        end
+
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, new_lines)
+      end
+
+      -- Keymap para formatear
+      vim.keymap.set({ "n", "v" }, "<leader>cf", format_with_prettier, { desc = "Format file" })
+
+      -- Format on save
+      vim.api.nvim_create_autocmd("BufWritePre", {
+        group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true }),
+        pattern = { "*.json", "*.js", "*.ts", "*.jsx", "*.tsx", "*.css", "*.scss", "*.html", "*.yaml", "*.yml" },
+        callback = format_with_prettier,
+      })
     end,
   },
 

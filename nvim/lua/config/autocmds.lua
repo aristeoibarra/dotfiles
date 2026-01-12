@@ -13,11 +13,20 @@ autocmd("TextYankPost", {
   desc = "Highlight when yanking text",
 })
 
--- Remove trailing whitespace on save
+-- Remove trailing whitespace on save (exclude files handled by formatters)
 autocmd("BufWritePre", {
   group = augroup("trim_whitespace", { clear = true }),
   pattern = "*",
   callback = function()
+    -- Skip filetypes that are handled by conform/prettier
+    local dominated_by_formatter = {
+      json = true, jsonc = true, javascript = true, typescript = true,
+      javascriptreact = true, typescriptreact = true, css = true,
+      scss = true, less = true, html = true, yaml = true, lua = true,
+    }
+    if dominated_by_formatter[vim.bo.filetype] then
+      return
+    end
     local save_cursor = vim.fn.getpos(".")
     vim.cmd([[%s/\s\+$//e]])
     vim.fn.setpos(".", save_cursor)

@@ -1,10 +1,15 @@
 -- Noice.nvim - Modern UI for cmdline, messages, and notifications
 return {
   "folke/noice.nvim",
-  event = "VeryLazy",
+  lazy = false,
+  priority = 900,
   dependencies = {
     "MunifTanjim/nui.nvim",
   },
+  config = function(_, opts)
+    vim.opt.cmdheight = 0 -- Hide cmdline, noice handles it
+    require("noice").setup(opts)
+  end,
   opts = {
     cmdline = {
       enabled = true,

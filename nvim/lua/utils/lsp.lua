@@ -114,9 +114,7 @@ function M.setup_keymaps(bufnr)
     -- Refactoring
     { "n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename symbol" } },
     { "n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" } },
-    { "n", "<leader>cf", function()
-      vim.lsp.buf.format({ async = true })
-    end, { desc = "Format buffer" } },
+    -- NOTE: <leader>cf is handled by conform.nvim in formatting.lua
   }
 
   for _, keymap in ipairs(keymaps) do

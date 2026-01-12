@@ -51,8 +51,10 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    event = "VeryLazy",
+    lazy = false,
+    priority = 900,
     config = function()
+      vim.opt.laststatus = 3 -- Enable global statusline
       require("lualine").setup({
         options = {
           icons_enabled = true,
