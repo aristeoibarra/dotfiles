@@ -1,4 +1,5 @@
 -- goto-preview: Preview definitions/references in floating window
+-- Note: Some LSP methods not supported by tsserver (declaration, implementation)
 return {
   "rmagatti/goto-preview",
   event = "BufEnter",
@@ -9,18 +10,6 @@ return {
       "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",
       noremap = true,
       desc = "Preview definition",
-    },
-    {
-      "gpD",
-      "<cmd>lua require('goto-preview').goto_preview_declaration()<CR>",
-      noremap = true,
-      desc = "Preview declaration",
-    },
-    {
-      "gpi",
-      "<cmd>lua require('goto-preview').goto_preview_implementation()<CR>",
-      noremap = true,
-      desc = "Preview implementation",
     },
     {
       "gpy",
