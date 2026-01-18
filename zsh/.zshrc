@@ -71,11 +71,17 @@ alias lg='lazygit'
 alias zshrc='nvim ~/.zshrc'
 alias zshreload='source ~/.zshrc'
 
-# Minimal ls with directory indicators and colors (Kanagawa theme)
-export LSCOLORS="gxfxcxdxdxegedabagacad"
-alias ls='ls -FG'
-alias ll='ls -lhFG'
-alias la='ls -lhaFG'
+# Modern ls with eza (icons + git status)
+alias ls='eza --icons'
+alias ll='eza -l --icons --git'
+alias la='eza -la --icons --git'
+alias lt='eza -la --icons --git --tree --level=2'
+
+# Modern CLI tools (bat, rg, fd)
+alias cat='bat --paging=never'
+alias catp='bat'  # with pager
+alias grep='rg'
+alias find='fd'
 
 # Git aliases
 alias gs='git status -sb' gp='git push' gl='git pull' gc='git clone'
