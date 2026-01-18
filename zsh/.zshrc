@@ -105,3 +105,4 @@ bindkey '^[[1;5C' forward-word   # Ctrl+Right - accept word
 
 # Zoxide (smart cd replacement)
 eval "$(zoxide init zsh)"
+

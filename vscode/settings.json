@@ -90,8 +90,9 @@
     "editorOverviewRuler.findMatchForeground": "#0000",
     "editorGroup.border": "#00000000",
     "editorGroupHeader.border": "#00000000",
-    "sideBar.border": "#00000000",
+    "sideBar.border": "#2a2a37",
     "panel.border": "#00000000",
+    "activityBar.border": "#2a2a37",
     "editorGutter.modifiedBackground": "#6c708040",
     "editorGutter.addedBackground": "#a6e3a140",
     "editorGutter.deletedBackground": "#f3868840",
@@ -197,5 +198,7 @@
   "terminal.integrated.stickyScroll.enabled": false,
   "workbench.statusBar.visible": false,
   "github.copilot.nextEditSuggestions.enabled": true,
-  "chat.viewSessions.orientation": "stacked"
+  "chat.viewSessions.orientation": "stacked",
+  "chat.commandCenter.enabled": false,
+  "workbench.layoutControl.enabled": false
 }
