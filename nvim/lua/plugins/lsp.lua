@@ -110,7 +110,10 @@ return {
       -- Load all project files for full LSP scanning (from keymaps.lua)
       vim.api.nvim_create_user_command("LspLoadAll", function()
         lsp_utils.log_info("Loading all project files for LSP scan...")
-        local find_cmd = "find . -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.js' -o -name '*.jsx' -o -name '*.html' -o -name '*.css' -o -name '*.scss' -o -name '*.json' -o -name '*.prisma' \\) 2>/dev/null | grep -v node_modules | grep -v .git | grep -v coverage | grep -v dist | grep -v build"
+        local extensions = { "ts", "tsx", "js", "jsx", "html", "css", "scss", "json", "prisma" }
+        local ext_flags = table.concat(vim.tbl_map(function(e) return "-e " .. e end, extensions), " ")
+        local excludes = "--exclude node_modules --exclude .git --exclude coverage --exclude dist --exclude build --exclude .next --exclude .turbo"
+        local find_cmd = string.format("fd %s --type f --hidden %s", ext_flags, excludes)
         local files = vim.fn.systemlist(find_cmd)
 
         if #files == 0 then

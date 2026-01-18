@@ -10,6 +10,7 @@ NC='\033[0m' # No Color
 # Parse arguments
 DRY_RUN=false
 SKIP_VALIDATION=false
+INSTALL_DEPS=false
 
 for arg in "$@"; do
     case $arg in
@@ -20,6 +21,9 @@ for arg in "$@"; do
         --skip-validation)
             SKIP_VALIDATION=true
             ;;
+        --install-deps)
+            INSTALL_DEPS=true
+            ;;
     esac
 done
 
@@ -28,27 +32,221 @@ echo -e "${BLUE}Installing dotfiles...${NC}\n"
 CONFIG_DIR="$HOME/.config"
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+
+# Core (required)
+CORE_DEPS=("nvim" "tmux" "zsh" "yabai" "skhd")
+
+# Terminals (at least one required)
+TERMINAL_DEPS=("alacritty" "ghostty")
+
+# Modern CLI tools (required for full functionality)
+CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship")
+
+# Optional
+OPTIONAL_DEPS=("code")
+
+# Homebrew packages mapping (command:brew_package)
+get_brew_package() {
+    case "$1" in
+        nvim) echo "neovim" ;;
+        tmux) echo "tmux" ;;
+        zsh) echo "zsh" ;;
+        yabai) echo "koekeishiya/formulae/yabai" ;;
+        skhd) echo "koekeishiya/formulae/skhd" ;;
+        alacritty) echo "--cask alacritty" ;;
+        ghostty) echo "--cask ghostty" ;;
+        bat) echo "bat" ;;
+        rg) echo "ripgrep" ;;
+        fd) echo "fd" ;;
+        eza) echo "eza" ;;
+        fzf) echo "fzf" ;;
+        zoxide) echo "zoxide" ;;
+        lazygit) echo "lazygit" ;;
+        jq) echo "jq" ;;
+        starship) echo "starship" ;;
+        code) echo "--cask visual-studio-code" ;;
+        *) echo "$1" ;;
+    esac
+}
+
+# Zsh plugins (Homebrew)
+ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting")
+
+# Fonts
+FONTS=("font-jetbrains-mono-nerd-font")
+
+# Install dependencies with Homebrew
+install_dependencies() {
+    echo -e "${BLUE}Installing dependencies with Homebrew...${NC}\n"
+
+    # Check if Homebrew is installed
+    if ! command -v brew &> /dev/null; then
+        echo -e "${RED}Homebrew not found. Install it first:${NC}"
+        echo -e '  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        exit 1
+    fi
+
+    # Tap cask-fonts for Nerd Fonts
+    echo -e "${BLUE}Tapping homebrew/cask-fonts...${NC}"
+    brew tap homebrew/cask-fonts 2>/dev/null
+
+    # Install core dependencies
+    echo -e "\n${BLUE}Installing core dependencies...${NC}"
+    for dep in "${CORE_DEPS[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            echo -e "  Installing $(get_brew_package "$dep")..."
+            brew install $(get_brew_package "$dep") 2>/dev/null && \
+                echo -e "${GREEN}  ✓${NC} $dep" || \
+                echo -e "${RED}  ✗${NC} $dep (failed)"
+        else
+            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
+        fi
+    done
+
+    # Install terminals
+    echo -e "\n${BLUE}Installing terminals...${NC}"
+    for dep in "${TERMINAL_DEPS[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            echo -e "  Installing $(get_brew_package "$dep")..."
+            brew install $(get_brew_package "$dep") 2>/dev/null && \
+                echo -e "${GREEN}  ✓${NC} $dep" || \
+                echo -e "${YELLOW}  ⚠${NC} $dep (skipped)"
+        else
+            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
+        fi
+    done
+
+    # Install CLI tools
+    echo -e "\n${BLUE}Installing CLI tools...${NC}"
+    for dep in "${CLI_DEPS[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            echo -e "  Installing $(get_brew_package "$dep")..."
+            brew install $(get_brew_package "$dep") 2>/dev/null && \
+                echo -e "${GREEN}  ✓${NC} $dep" || \
+                echo -e "${RED}  ✗${NC} $dep (failed)"
+        else
+            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
+        fi
+    done
+
+    # Install Zsh plugins
+    echo -e "\n${BLUE}Installing Zsh plugins...${NC}"
+    for plugin in "${ZSH_PLUGINS[@]}"; do
+        if [ ! -f "/opt/homebrew/share/$plugin/$plugin.zsh" ]; then
+            echo -e "  Installing $plugin..."
+            brew install "$plugin" 2>/dev/null && \
+                echo -e "${GREEN}  ✓${NC} $plugin" || \
+                echo -e "${RED}  ✗${NC} $plugin (failed)"
+        else
+            echo -e "${GREEN}  ✓${NC} $plugin (already installed)"
+        fi
+    done
+
+    # Install fonts
+    echo -e "\n${BLUE}Installing fonts...${NC}"
+    for font in "${FONTS[@]}"; do
+        echo -e "  Installing $font..."
+        brew install --cask "$font" 2>/dev/null && \
+            echo -e "${GREEN}  ✓${NC} $font" || \
+            echo -e "${YELLOW}  ⚠${NC} $font (may already be installed)"
+    done
+
+    # Install TPM (Tmux Plugin Manager)
+    echo -e "\n${BLUE}Installing Tmux Plugin Manager...${NC}"
+    if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm 2>/dev/null && \
+            echo -e "${GREEN}  ✓${NC} TPM installed" || \
+            echo -e "${RED}  ✗${NC} TPM (failed)"
+    else
+        echo -e "${GREEN}  ✓${NC} TPM (already installed)"
+    fi
+
+    echo -e "\n${GREEN}Dependencies installed!${NC}\n"
+}
+
 # Check dependencies
 check_dependencies() {
     echo -e "${BLUE}Checking dependencies...${NC}"
     local missing=0
+    local missing_list=()
 
-    local deps=("nvim" "alacritty" "yabai" "skhd" "tmux" "zsh" "code")
-    for dep in "${deps[@]}"; do
+    # Check core
+    echo -e "\n${BLUE}Core:${NC}"
+    for dep in "${CORE_DEPS[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
-            echo -e "${YELLOW}  Warning: $dep not found${NC}"
+            echo -e "${RED}  ✗${NC} $dep"
             ((missing++))
+            missing_list+=("$dep")
         else
             echo -e "${GREEN}  ✓${NC} $dep"
         fi
     done
 
+    # Check terminals (at least one)
+    echo -e "\n${BLUE}Terminals:${NC}"
+    local terminal_found=false
+    for dep in "${TERMINAL_DEPS[@]}"; do
+        if command -v "$dep" &> /dev/null; then
+            echo -e "${GREEN}  ✓${NC} $dep"
+            terminal_found=true
+        else
+            echo -e "${YELLOW}  -${NC} $dep (optional)"
+        fi
+    done
+    if [ "$terminal_found" = false ]; then
+        echo -e "${RED}  ✗ No terminal found (install alacritty or ghostty)${NC}"
+        ((missing++))
+    fi
+
+    # Check CLI tools
+    echo -e "\n${BLUE}CLI Tools:${NC}"
+    for dep in "${CLI_DEPS[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            echo -e "${RED}  ✗${NC} $dep"
+            ((missing++))
+            missing_list+=("$dep")
+        else
+            echo -e "${GREEN}  ✓${NC} $dep"
+        fi
+    done
+
+    # Check Zsh plugins
+    echo -e "\n${BLUE}Zsh Plugins:${NC}"
+    for plugin in "${ZSH_PLUGINS[@]}"; do
+        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ]; then
+            echo -e "${GREEN}  ✓${NC} $plugin"
+        else
+            echo -e "${RED}  ✗${NC} $plugin"
+            ((missing++))
+        fi
+    done
+
+    # Check TPM
+    echo -e "\n${BLUE}Tmux Plugins:${NC}"
+    if [ -d "$HOME/.tmux/plugins/tpm" ]; then
+        echo -e "${GREEN}  ✓${NC} tpm (Tmux Plugin Manager)"
+    else
+        echo -e "${RED}  ✗${NC} tpm (Tmux Plugin Manager)"
+        ((missing++))
+    fi
+
+    # Check optional
+    echo -e "\n${BLUE}Optional:${NC}"
+    for dep in "${OPTIONAL_DEPS[@]}"; do
+        if command -v "$dep" &> /dev/null; then
+            echo -e "${GREEN}  ✓${NC} $dep"
+        else
+            echo -e "${YELLOW}  -${NC} $dep"
+        fi
+    done
+
     if [ $missing -gt 0 ]; then
         echo -e "\n${RED}ERROR: $missing dependencies missing.${NC}"
-        echo -e "${BLUE}Install them with Homebrew:${NC}"
-        echo -e "${BLUE}  brew install neovim tmux zsh${NC}"
-        echo -e "${BLUE}  brew install --cask alacritty visual-studio-code${NC}"
-        echo -e "${BLUE}  brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd${NC}\n"
+        echo -e "${BLUE}Run with --install-deps to install all dependencies:${NC}"
+        echo -e "  ./install.sh --install-deps\n"
 
         if [ "$SKIP_VALIDATION" = false ]; then
             echo -e "${RED}Aborting installation.${NC}"
@@ -58,7 +256,7 @@ check_dependencies() {
             echo -e "${YELLOW}Skipping validation as requested...${NC}\n"
         fi
     else
-        echo -e "${GREEN}All dependencies found!${NC}\n"
+        echo -e "\n${GREEN}All dependencies found!${NC}\n"
     fi
 }
 
@@ -104,6 +302,15 @@ create_symlink() {
     return 0
 }
 
+# =============================================================================
+# MAIN
+# =============================================================================
+
+# Install dependencies if requested
+if [ "$INSTALL_DEPS" = true ]; then
+    install_dependencies
+fi
+
 # Run dependency check
 check_dependencies
 
@@ -119,6 +326,15 @@ create_symlink "$DOTFILES_DIR/yabai" "$CONFIG_DIR/yabai" "Yabai"
 create_symlink "$DOTFILES_DIR/skhd" "$CONFIG_DIR/skhd" "skhd"
 create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc" "Zsh"
+create_symlink "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml" "Starship"
+
+# Tmux scripts
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[DRY RUN]${NC} Would create: $HOME/.tmux"
+else
+    mkdir -p "$HOME/.tmux"
+fi
+create_symlink "$DOTFILES_DIR/tmux/tmux-swap-and-follow.sh" "$HOME/.tmux/tmux-swap-and-follow.sh" "Tmux swap script"
 
 # VS Code configuration
 VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
@@ -165,5 +381,6 @@ else
     echo -e "${BLUE}Next steps:${NC}"
     echo -e "  1. Restart your terminal or run: source ~/.zshrc"
     echo -e "  2. Open Neovim and run: :Lazy sync"
-    echo -e "  3. Restart services: yabai --restart-service && skhd --restart-service"
+    echo -e "  3. Install Tmux plugins: prefix + I"
+    echo -e "  4. Restart services: yabai --restart-service && skhd --restart-service"
 fi

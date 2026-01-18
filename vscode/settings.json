@@ -108,8 +108,6 @@
   "typescript.referencesCodeLens.enabled": true,
   "editor.codeLens": true,
   "workbench.editor.editorActionsLocation": "hidden",
-  "telemetry.enableTelemetry": false,
-  "telemetry.enableCrashReporter": false,
   "telemetry.telemetryLevel": "off",
   "workbench.reduceMotion": "on",
   "eslint.run": "onSave",

@@ -6,7 +6,7 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
-export PATH="$HOME/dotfiles/bin:$HOME/.opencode/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:$HOME/.opencode/bin:/opt/homebrew/bin:$PATH"
 
 # Node Version Manager
 export NVM_DIR="$HOME/.nvm"
@@ -115,7 +115,3 @@ bindkey '^[[1;5C' forward-word   # Ctrl+Right - accept word
 
 # Zoxide (smart cd replacement)
 eval "$(zoxide init zsh)"
-
-
-# nextdns-blocker shell completion
-eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"

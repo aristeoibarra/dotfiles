@@ -142,27 +142,59 @@ dotfiles/
 
 ## Installation
 
-### Prerequisites
+### Quick Start (Automatic)
+
+```bash
+# Clone and install everything
+git clone https://github.com/aristeoibarra/dotfiles.git ~/dotfiles
+cd ~/dotfiles
+./install.sh --install-deps
+```
+
+This installs all dependencies with Homebrew and creates symlinks.
+
+### Manual Prerequisites
+
+If you prefer to install dependencies manually:
 
 ```bash
 # Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Core tools
-brew install neovim tmux starship fzf fd lazygit
-brew install --cask alacritty
-brew install koekeishiya/formulae/yabai
-brew install koekeishiya/formulae/skhd
+brew install neovim tmux zsh starship
+brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd
 
-# Zsh plugins (standalone)
+# Terminals (at least one)
+brew install --cask alacritty ghostty
+
+# Modern CLI tools (required)
+brew install bat ripgrep fd eza fzf zoxide lazygit jq
+
+# Zsh plugins
 brew install zsh-autosuggestions zsh-syntax-highlighting
+
+# Nerd Font
+brew install --cask font-jetbrains-mono-nerd-font
 
 # FZF key bindings
 $(brew --prefix)/opt/fzf/install
 
-# Nerd Font
-brew install --cask font-jetbrains-mono-nerd-font
+# Tmux Plugin Manager
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 ```
+
+### Dependencies
+
+| Category | Tools |
+|----------|-------|
+| Core | nvim, tmux, zsh, yabai, skhd |
+| Terminals | alacritty, ghostty |
+| CLI Tools | bat, rg, fd, eza, fzf, zoxide, lazygit, jq, starship |
+| Zsh Plugins | zsh-autosuggestions, zsh-syntax-highlighting |
+| Fonts | JetBrainsMono Nerd Font |
+| Tmux | TPM (Tmux Plugin Manager) |
+| Optional | VS Code |
 
 ### Yabai SIP Configuration
 
@@ -197,15 +229,30 @@ cd ~/dotfiles
 ```
 
 The installer:
-- Validates all dependencies
-- Creates backups of existing configs
+- Validates all dependencies (core, terminals, CLI tools, plugins)
+- Creates backups of existing configs (`.backup` files)
 - Creates symlinks to `~/.config/`
 - Installs VS Code extensions (if VS Code is installed)
 - Installs Warp theme to `~/.warp/themes/`
 
-Options:
-- `./install.sh --dry-run` - Preview changes
-- `./install.sh --skip-validation` - Skip dependency check
+**Options:**
+
+| Flag | Description |
+|------|-------------|
+| `--install-deps` | Install all dependencies with Homebrew |
+| `--dry-run` | Preview changes without applying |
+| `--skip-validation` | Skip dependency check (not recommended) |
+
+```bash
+# Full automatic setup
+./install.sh --install-deps
+
+# Preview what will be installed
+./install.sh --dry-run
+
+# Install without checking dependencies
+./install.sh --skip-validation
+```
 
 ## Updating
 
@@ -282,6 +329,22 @@ This restores all backed-up configurations from `.backup` files.
 ```
 
 Removes symlinks but preserves backups. Run `./restore.sh` to restore previous configuration.
+
+**Options:**
+
+| Flag | Description |
+|------|-------------|
+| `--remove-deps` | Also uninstall CLI tools (bat, fd, eza, fzf, etc.) |
+
+```bash
+# Remove symlinks only
+./uninstall.sh
+
+# Remove symlinks and CLI tools
+./uninstall.sh --remove-deps
+```
+
+Note: Core tools (neovim, tmux, yabai, skhd) and terminals are NOT removed automatically.
 
 ## Troubleshooting
 
