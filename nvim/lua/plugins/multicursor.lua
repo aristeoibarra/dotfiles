@@ -58,7 +58,7 @@ return {
     map("n", "<leader>MA", mc.alignCursors, { desc = "Multicursor: align" })
 
     -- Split visual selections by regex
-    map("v", "S", mc.splitCursors, { desc = "Split cursors by regex" })
+    map("v", "<leader>Ms", mc.splitCursors, { desc = "Multicursor: split by regex" })
 
     -- Append/insert for each line of visual selections
     map("v", "I", mc.insertVisual, { desc = "Insert at visual" })

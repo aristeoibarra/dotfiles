@@ -62,6 +62,8 @@ return {
       -- Multicursor
       { "<leader>M", group = "multicursor" },
 
+      -- Flash (s and S are mapped directly, no leader)
+
       -- DAP/Debug
       { "<leader>b", desc = "Toggle breakpoint" },
 
