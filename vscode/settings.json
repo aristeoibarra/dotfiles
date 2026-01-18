@@ -40,7 +40,7 @@
   "terminal.integrated.fontSize": 16,
   "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font Mono",
   "typescript.validate.enable": true,
-  "window.titleBarStyle": "custom",
+  "window.titleBarStyle": "native",
   "editor.unicodeHighlight.invisibleCharacters": false,
   "editor.unicodeHighlight.ambiguousCharacters": false,
   "terminal.external.osxExec": "Warp.app",
@@ -181,10 +181,9 @@
   "editor.suggest.showInlineDetails": true,
   "editor.tabCompletion": "on",
   "editor.parameterHints.enabled": true,
-  "workbench.activityBar.location": "top",
   "git.blame.statusBarItem.enabled": false,
   "workbench.preferredDarkColorTheme": "Kanagawa Dragon",
-  "window.customTitleBarVisibility": "windowed",
+  "window.customTitleBarVisibility": "never",
   "editor.stickyScroll.enabled": false,
   "workbench.navigationControl.enabled": false,
   "window.commandCenter": false,
@@ -200,5 +199,6 @@
   "github.copilot.nextEditSuggestions.enabled": true,
   "chat.viewSessions.orientation": "stacked",
   "chat.commandCenter.enabled": false,
-  "workbench.layoutControl.enabled": false
+  "workbench.layoutControl.enabled": false,
+  "workbench.activityBar.location": "hidden"
 }
