@@ -83,6 +83,10 @@ alias catp='bat'  # with pager
 alias grep='rg'
 alias find='fd'
 
+# FZF + bat integration
+alias fzfbat='fzf --preview "bat -n --color=always {}"'
+alias fzfnvim='nvim $(fzf --preview "bat -n --color=always {}")'
+
 # Git aliases
 alias gs='git status -sb' gp='git push' gl='git pull' gc='git clone'
 alias glog='git log --oneline --graph --decorate'

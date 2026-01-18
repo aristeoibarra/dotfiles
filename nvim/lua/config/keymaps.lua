@@ -53,6 +53,17 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear highlights' 
 -- [F]ILE OPERATIONS (f = file, w = write, q = quit)
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file (write)' })
 vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit editor' })
+vim.keymap.set({ 'n', 'i', 'v' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file (Ctrl+S)' })
+
+-- [B]UFFER OPERATIONS
+vim.keymap.set('n', '<leader>bq', function()
+  local current = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
+      vim.api.nvim_buf_delete(buf, { force = false })
+    end
+  end
+end, { desc = 'Close all buffers except current' })
 
 -- [F]IND/SEARCH (f = find, ff = files, fg = grep, fb = buffers, fd = diagnostics)
 -- Telescope keymaps are set in plugins/navigation.lua
@@ -126,7 +137,21 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnosti
 
 vim.keymap.set('n', '<leader>la', function()
   print('Loading all project files...')
-  local find_cmd = "fd -e ts -e tsx -e js -e jsx -e html -e css -e scss -e json -e prisma --type f --hidden --exclude node_modules --exclude .git --exclude coverage --exclude dist --exclude build"
+  local extensions = {
+    -- TypeScript/JavaScript
+    'ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs',
+    -- Styles
+    'css', 'scss', 'sass',
+    -- Markup/Data
+    'html', 'json', 'yaml', 'yml',
+    -- Database/ORM
+    'prisma', 'sql', 'graphql', 'gql',
+    -- Config
+    'env.example', 'env.local.example',
+  }
+  local ext_flags = table.concat(vim.tbl_map(function(e) return '-e ' .. e end, extensions), ' ')
+  local excludes = '--exclude node_modules --exclude .git --exclude coverage --exclude dist --exclude build --exclude .next --exclude .turbo'
+  local find_cmd = string.format('fd %s --type f --hidden %s', ext_flags, excludes)
   local files = vim.fn.systemlist(find_cmd)
 
   if #files == 0 then
@@ -195,4 +220,53 @@ end, { desc = 'Show all keybindings' })
 vim.keymap.set('n', '<leader>ch', function()
   require('config.vim-cheatsheet').toggle()
 end, { desc = 'Vim cheatsheet (native commands)' })
+
+-- ============================================================================
+-- [S]EARCH SELECTED TEXT (visual mode)
+-- ============================================================================
+
+-- Search selected text in project (from current directory)
+vim.keymap.set("v", "<leader>sg", function()
+  local start_pos = vim.fn.getpos("'<")
+  local end_pos = vim.fn.getpos("'>")
+  local lines = vim.fn.getline(start_pos[2], end_pos[2])
+
+  if #lines == 0 then return end
+
+  if #lines == 1 then
+    lines[1] = string.sub(lines[1], start_pos[3], end_pos[3])
+  else
+    lines[1] = string.sub(lines[1], start_pos[3])
+    lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
+  end
+
+  local selected_text = table.concat(lines, "\n")
+  selected_text = vim.fn.escape(selected_text, "\\.*[]^$()+?{}")
+
+  require("telescope.builtin").grep_string({ search = selected_text })
+end, { desc = "Grep selected text" })
+
+-- Search selected text from git root
+vim.keymap.set("v", "<leader>sG", function()
+  local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+  local root = vim.v.shell_error == 0 and git_root ~= "" and git_root or vim.fn.getcwd()
+
+  local start_pos = vim.fn.getpos("'<")
+  local end_pos = vim.fn.getpos("'>")
+  local lines = vim.fn.getline(start_pos[2], end_pos[2])
+
+  if #lines == 0 then return end
+
+  if #lines == 1 then
+    lines[1] = string.sub(lines[1], start_pos[3], end_pos[3])
+  else
+    lines[1] = string.sub(lines[1], start_pos[3])
+    lines[#lines] = string.sub(lines[#lines], 1, end_pos[3])
+  end
+
+  local selected_text = table.concat(lines, "\n")
+  selected_text = vim.fn.escape(selected_text, "\\.*[]^$()+?{}")
+
+  require("telescope.builtin").grep_string({ search = selected_text, cwd = root })
+end, { desc = "Grep selected text (git root)" })
 

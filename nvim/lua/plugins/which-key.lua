@@ -44,6 +44,9 @@ return {
       -- UI Toggles
       { "<leader>u", group = "ui" },
 
+      -- Buffer operations
+      { "<leader>b", group = "buffer" },
+
       -- Diagnostics
       { "<leader>d", desc = "Diagnostics list" },
       { "<leader>D", desc = "Diagnostic float" },
