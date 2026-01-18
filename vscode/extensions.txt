@@ -16,3 +16,4 @@ pkief.material-icon-theme
 pranaygp.vscode-css-peek
 prisma.prisma
 unifiedjs.vscode-mdx
+vscodevim.vim
