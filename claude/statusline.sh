@@ -12,43 +12,64 @@ CYAN='\033[38;2;122;168;159m'       # #7aa89f cyan
 BOLD='\033[1m'
 NC='\033[0m'
 
-# Read JSON from stdin
-input=$(cat)
+# Check jq is installed
+if ! command -v jq &> /dev/null; then
+  echo -e "${ERROR}jq not installed${NC}"
+  exit 1
+fi
+
+# Read JSON from stdin with timeout (2 seconds)
+input=$(timeout 2 cat 2>/dev/null || cat)
+
+# Helper: extract numeric value from JSON, default to 0
+parse_num() {
+  local val
+  val=$(echo "$input" | jq -r "$1 // 0" 2>/dev/null | tr -cd '0-9')
+  echo "${val:-0}"
+}
 
 # Parse basic fields
-MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"')
-DIR=$(echo "$input" | jq -r '.workspace.current_dir // "~"')
-ADDED=$(echo "$input" | jq -r '.cost.total_lines_added // 0')
-REMOVED=$(echo "$input" | jq -r '.cost.total_lines_removed // 0')
+MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"' 2>/dev/null)
+[ -z "$MODEL" ] && MODEL="Claude"
+
+DIR=$(echo "$input" | jq -r '.workspace.current_dir // "~"' 2>/dev/null)
+[ -z "$DIR" ] || [ "$DIR" = "null" ] && DIR="$HOME"
 
 # Context window usage
-CTX_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
-INPUT_TOKENS=$(echo "$input" | jq -r '.context_window.current_usage.input_tokens // 0')
-CACHE_CREATE=$(echo "$input" | jq -r '.context_window.current_usage.cache_creation_input_tokens // 0')
-CACHE_READ=$(echo "$input" | jq -r '.context_window.current_usage.cache_read_input_tokens // 0')
+CTX_SIZE=$(parse_num '.context_window.context_window_size')
+[ "$CTX_SIZE" -eq 0 ] && CTX_SIZE=200000
+
+INPUT_TOKENS=$(parse_num '.context_window.current_usage.input_tokens')
+CACHE_CREATE=$(parse_num '.context_window.current_usage.cache_creation_input_tokens')
+CACHE_READ=$(parse_num '.context_window.current_usage.cache_read_input_tokens')
 
 TOTAL_USED=$((INPUT_TOKENS + CACHE_CREATE + CACHE_READ))
-if [ "$CTX_SIZE" -gt 0 ] 2>/dev/null; then
-  CTX_PERCENT=$((TOTAL_USED * 100 / CTX_SIZE))
-else
-  CTX_PERCENT=0
-fi
+CTX_PERCENT=$((TOTAL_USED * 100 / CTX_SIZE))
 [ "$CTX_PERCENT" -gt 100 ] && CTX_PERCENT=100
 [ "$CTX_PERCENT" -lt 0 ] && CTX_PERCENT=0
 
-# Directory name
-DIR_NAME=$(basename "$DIR")
-
-# Git info
-cd "$DIR" 2>/dev/null
-BRANCH=""
-GIT_DIRTY=""
-if git rev-parse --git-dir > /dev/null 2>&1; then
-  BRANCH=$(git branch --show-current 2>/dev/null)
-  if [[ -n $(git status --porcelain 2>/dev/null) ]]; then
-    GIT_DIRTY="*"
-  fi
+# Directory name (handle ~ and empty)
+if [ "$DIR" = "~" ] || [ -z "$DIR" ]; then
+  DIR_NAME="~"
+else
+  DIR_NAME=$(basename "$DIR" 2>/dev/null || echo "~")
 fi
+
+# Git info (in subshell to avoid changing current directory)
+GIT_INFO=$(
+  cd "$DIR" 2>/dev/null || exit 0
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    branch=$(git branch --show-current 2>/dev/null)
+    dirty=""
+    if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+      dirty="*"
+    fi
+    echo "${branch}${dirty}"
+  fi
+)
+BRANCH="${GIT_INFO%\*}"
+GIT_DIRTY=""
+[[ "$GIT_INFO" == *"*" ]] && GIT_DIRTY="*"
 
 # Model icon
 MODEL_ICON="🤖"
@@ -88,9 +109,6 @@ if [ -n "$BRANCH" ]; then
   LINE+="${SEP}"
   LINE+="${SECONDARY} ${BRANCH}${GIT_DIRTY}${NC}"
 fi
-
-LINE+="${SEP}"
-LINE+="${SUCCESS}+${ADDED}${NC} ${ERROR}-${REMOVED}${NC}"
 
 LINE+="${SEP}"
 LINE+="${MUTED}ctx${NC} ${BAR} ${MUTED}${CTX_PERCENT}%${NC}"
