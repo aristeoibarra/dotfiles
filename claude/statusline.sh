@@ -1,14 +1,12 @@
 #!/bin/bash
 
 # Kanagawa Dragon theme colors (RGB)
-PRIMARY='\033[38;2;127;180;202m'    # #7fb4ca bright blue
 ACCENT='\033[38;2;196;178;138m'     # #c4b28a yellow
 SECONDARY='\033[38;2;139;164;176m'  # #8ba4b0 blue
 MUTED='\033[38;2;166;166;156m'      # #a6a69c gray
 SUCCESS='\033[38;2;138;154;123m'    # #8a9a7b green
 ERROR='\033[38;2;196;116;110m'      # #c4746e red
 PURPLE='\033[38;2;147;138;169m'     # #938aa9 magenta
-CYAN='\033[38;2;122;168;159m'       # #7aa89f cyan
 BOLD='\033[1m'
 NC='\033[0m'
 
@@ -18,58 +16,58 @@ if ! command -v jq &> /dev/null; then
   exit 1
 fi
 
-# Read JSON from stdin with timeout (2 seconds)
-input=$(timeout 2 cat 2>/dev/null || cat)
+# Read JSON from stdin (macOS compatible)
+input=""
+while IFS= read -r -t 2 line || [[ -n "$line" ]]; do
+  input+="$line"
+done
 
-# Helper: extract numeric value from JSON, default to 0
-parse_num() {
-  local val
-  val=$(echo "$input" | jq -r "$1 // 0" 2>/dev/null | tr -cd '0-9')
-  echo "${val:-0}"
-}
+# Parse basic fields (single jq call for performance)
+IFS=$'\t' read -r MODEL DIR < <(echo "$input" | jq -r '[.model.display_name // "Claude", .workspace.current_dir // empty] | @tsv' 2>/dev/null)
+[[ -z "$MODEL" ]] && MODEL="Claude"
+[[ -z "$DIR" ]] && DIR="$HOME"
 
-# Parse basic fields
-MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"' 2>/dev/null)
-[ -z "$MODEL" ] && MODEL="Claude"
-
-DIR=$(echo "$input" | jq -r '.workspace.current_dir // "~"' 2>/dev/null)
-[ -z "$DIR" ] || [ "$DIR" = "null" ] && DIR="$HOME"
-
-# Context window usage
-CTX_SIZE=$(parse_num '.context_window.context_window_size')
-[ "$CTX_SIZE" -eq 0 ] && CTX_SIZE=200000
-
-INPUT_TOKENS=$(parse_num '.context_window.current_usage.input_tokens')
-CACHE_CREATE=$(parse_num '.context_window.current_usage.cache_creation_input_tokens')
-CACHE_READ=$(parse_num '.context_window.current_usage.cache_read_input_tokens')
-
-TOTAL_USED=$((INPUT_TOKENS + CACHE_CREATE + CACHE_READ))
-CTX_PERCENT=$((TOTAL_USED * 100 / CTX_SIZE))
-[ "$CTX_PERCENT" -gt 100 ] && CTX_PERCENT=100
-[ "$CTX_PERCENT" -lt 0 ] && CTX_PERCENT=0
-
-# Directory name (handle ~ and empty)
-if [ "$DIR" = "~" ] || [ -z "$DIR" ]; then
-  DIR_NAME="~"
-else
-  DIR_NAME=$(basename "$DIR" 2>/dev/null || echo "~")
-fi
+# Directory name
+DIR_NAME=$(basename "$DIR" 2>/dev/null || echo "~")
 
 # Git info (in subshell to avoid changing current directory)
 GIT_INFO=$(
   cd "$DIR" 2>/dev/null || exit 0
-  if git rev-parse --git-dir > /dev/null 2>&1; then
-    branch=$(git branch --show-current 2>/dev/null)
-    dirty=""
-    if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
-      dirty="*"
-    fi
-    echo "${branch}${dirty}"
+  git rev-parse --git-dir > /dev/null 2>&1 || exit 0
+
+  branch=$(git branch --show-current 2>/dev/null)
+  [[ -z "$branch" ]] && branch=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+
+  dirty=""
+  [[ -n "$(git status --porcelain 2>/dev/null)" ]] && dirty="*"
+
+  # Get diff stats: staged + unstaged + untracked
+  added=0 deleted=0
+
+  # Tracked files (staged + unstaged changes)
+  if git rev-parse HEAD &>/dev/null; then
+    while IFS=$'\t' read -r a d _; do
+      [[ "$a" =~ ^[0-9]+$ ]] && added=$((added + a))
+      [[ "$d" =~ ^[0-9]+$ ]] && deleted=$((deleted + d))
+    done < <(git diff --numstat HEAD 2>/dev/null)
   fi
+
+  # Untracked files (all lines count as added)
+  while IFS= read -r -d '' file; do
+    lines=$(wc -l < "$file" 2>/dev/null | tr -d ' ')
+    [[ "$lines" =~ ^[0-9]+$ ]] && added=$((added + lines))
+  done < <(git ls-files --others --exclude-standard -z 2>/dev/null)
+
+  echo "${branch}|${dirty}|${added}|${deleted}"
 )
-BRANCH="${GIT_INFO%\*}"
-GIT_DIRTY=""
-[[ "$GIT_INFO" == *"*" ]] && GIT_DIRTY="*"
+BRANCH=$(echo "$GIT_INFO" | cut -d'|' -f1)
+GIT_DIRTY=$(echo "$GIT_INFO" | cut -d'|' -f2)
+GIT_ADDED=$(echo "$GIT_INFO" | cut -d'|' -f3)
+GIT_DELETED=$(echo "$GIT_INFO" | cut -d'|' -f4)
+
+# Ensure numeric values (default to 0)
+[[ ! "$GIT_ADDED" =~ ^[0-9]+$ ]] && GIT_ADDED=0
+[[ ! "$GIT_DELETED" =~ ^[0-9]+$ ]] && GIT_DELETED=0
 
 # Model icon
 MODEL_ICON="🤖"
@@ -78,25 +76,6 @@ case "$MODEL" in
   *Sonnet*) MODEL_ICON="📝" ;;
   *Haiku*) MODEL_ICON="🍃" ;;
 esac
-
-# Progress bar for context
-BAR_WIDTH=8
-FILLED=$((CTX_PERCENT * BAR_WIDTH / 100))
-EMPTY=$((BAR_WIDTH - FILLED))
-
-if [ "$CTX_PERCENT" -ge 80 ]; then
-  BAR_COLOR="$ERROR"
-elif [ "$CTX_PERCENT" -ge 50 ]; then
-  BAR_COLOR="$ACCENT"
-else
-  BAR_COLOR="$SUCCESS"
-fi
-
-BAR="${BAR_COLOR}"
-for ((i=0; i<FILLED; i++)); do BAR+="█"; done
-BAR+="${MUTED}"
-for ((i=0; i<EMPTY; i++)); do BAR+="░"; done
-BAR+="${NC}"
 
 # Build status line
 SEP="${MUTED}  ${NC}"
@@ -108,9 +87,9 @@ LINE+="${ACCENT}󰉋 ${DIR_NAME}${NC}"
 if [ -n "$BRANCH" ]; then
   LINE+="${SEP}"
   LINE+="${SECONDARY} ${BRANCH}${GIT_DIRTY}${NC}"
+  if [ "$GIT_ADDED" -gt 0 ] || [ "$GIT_DELETED" -gt 0 ]; then
+    LINE+=" ${SUCCESS}+${GIT_ADDED}${NC} ${ERROR}-${GIT_DELETED}${NC}"
+  fi
 fi
-
-LINE+="${SEP}"
-LINE+="${MUTED}ctx${NC} ${BAR} ${MUTED}${CTX_PERCENT}%${NC}"
 
 echo -e "$LINE"
