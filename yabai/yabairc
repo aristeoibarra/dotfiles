@@ -55,5 +55,19 @@ yabai -m rule --add app="^Preview$" manage=off
 yabai -m rule --add app="^Simulator$" manage=off
 yabai -m rule --add app="^QuickTime Player$" manage=off
 
+# Spotify: all windows start floating, then manage large ones
+yabai -m rule --add app="^Spotify$" manage=off
+yabai -m signal --add event=window_created app="^Spotify$" action='
+  sleep 0.3
+  window_id=$YABAI_WINDOW_ID
+  w=$(yabai -m query --windows --window $window_id 2>/dev/null | jq -r ".frame.w // 0")
+  if (( $(echo "$w > 500" | bc -l) )); then
+    yabai -m window $window_id --toggle float
+  fi
+'
+
+# Picture-in-Picture windows (Safari, Chrome, etc.)
+yabai -m rule --add title="Picture in Picture" manage=off
+yabai -m rule --add title="^Picture-in-Picture$" manage=off
 
 echo "yabai ultra minimal loaded.."
