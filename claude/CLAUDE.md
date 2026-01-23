@@ -17,8 +17,3 @@ Use modern tools:
 - `fd` instead of `find`
 - `eza` instead of `ls`
 - Editor: `nvim`
-
-## Code Rules
-- Never use `any` in TypeScript - use `unknown` or generics
-- Descriptive names for functions and variables
-- Don't add obvious comments
