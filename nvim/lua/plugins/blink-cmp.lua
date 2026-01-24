@@ -25,6 +25,16 @@ return {
     },
     sources = {
       default = { "lsp", "path", "snippets", "buffer" },
+      per_filetype = {
+        markdown = { "path" },
+      },
+      providers = {
+        snippets = {
+          enabled = function()
+            return not vim.b.disable_snippets
+          end,
+        },
+      },
     },
     completion = {
       accept = {

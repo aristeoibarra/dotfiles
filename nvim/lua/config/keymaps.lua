@@ -134,6 +134,11 @@ vim.keymap.set('n', '<leader>uw', function()
   vim.o.wrap = not vim.o.wrap
 end, { desc = 'Toggle line wrap (for Tailwind)' })
 
+vim.keymap.set('n', '<leader>us', function()
+  vim.b.disable_snippets = not vim.b.disable_snippets
+  vim.notify("Snippets: " .. (vim.b.disable_snippets and "OFF" or "ON"))
+end, { desc = 'Toggle snippets (buffer)' })
+
 -- [D]IAGNOSTICS (d = diagnostics)
 vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostics list (buffer)' })
 vim.keymap.set('n', '<leader>D', vim.diagnostic.open_float, { desc = 'Diagnostic details (float)' })

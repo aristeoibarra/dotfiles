@@ -4,7 +4,7 @@ VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/aristeo"
 TODAY=$(date +%Y-%m-%d)
 DAY_NAME=$(date +%A)
 DAILY_NOTE="$VAULT/daily/$TODAY.md"
-TEMPLATE="$VAULT/template-daily.md"
+TEMPLATE="$VAULT/templates/template-daily.md"
 
 if [[ ! -f "$DAILY_NOTE" ]]; then
   mkdir -p "$VAULT/daily"
