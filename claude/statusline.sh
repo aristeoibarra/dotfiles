@@ -69,18 +69,10 @@ GIT_DELETED=$(echo "$GIT_INFO" | cut -d'|' -f4)
 [[ ! "$GIT_ADDED" =~ ^[0-9]+$ ]] && GIT_ADDED=0
 [[ ! "$GIT_DELETED" =~ ^[0-9]+$ ]] && GIT_DELETED=0
 
-# Model icon
-MODEL_ICON="🤖"
-case "$MODEL" in
-  *Opus*) MODEL_ICON="🎭" ;;
-  *Sonnet*) MODEL_ICON="📝" ;;
-  *Haiku*) MODEL_ICON="🍃" ;;
-esac
-
 # Build status line
 SEP="${MUTED}  ${NC}"
 
-LINE="${BOLD}${PURPLE}${MODEL_ICON} ${MODEL}${NC}"
+LINE="${BOLD}${PURPLE}${MODEL}${NC}"
 LINE+="${SEP}"
 LINE+="${ACCENT}󰉋 ${DIR_NAME}${NC}"
 
