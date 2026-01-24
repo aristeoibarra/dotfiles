@@ -3,10 +3,10 @@
 # ============================================
 
 # Focus windows (hjkl navigation - works in both Stack and BSP)
-alt - h : yabai -m window --focus stack.prev || yabai -m window --focus west || yabai -m window --focus last
-alt - j : yabai -m window --focus stack.next || yabai -m window --focus south
-alt - k : yabai -m window --focus stack.prev || yabai -m window --focus north
-alt - l : yabai -m window --focus stack.next || yabai -m window --focus east || yabai -m window --focus first
+alt - h : id=$(yabai -m query --windows --space | jq -r '[.[] | select(.["is-minimized"] == false)] | sort_by(.id) as $w | ($w | map(select(.["has-focus"] == true)) | .[0].id) as $cur | ($w | to_entries | .[] | select(.value.id == $cur).key) as $idx | $w[(($idx - 1 + ($w | length)) % ($w | length))].id') && (yabai -m window --focus $id 2>/dev/null || osascript -e "tell application \"$(yabai -m query --windows --window $id | jq -r '.app')\" to activate")
+alt - j : id=$(yabai -m query --windows --space | jq -r '[.[] | select(.["is-minimized"] == false)] | sort_by(.id) as $w | ($w | map(select(.["has-focus"] == true)) | .[0].id) as $cur | ($w | to_entries | .[] | select(.value.id == $cur).key) as $idx | $w[(($idx + 1) % ($w | length))].id') && (yabai -m window --focus $id 2>/dev/null || osascript -e "tell application \"$(yabai -m query --windows --window $id | jq -r '.app')\" to activate")
+alt - k : id=$(yabai -m query --windows --space | jq -r '[.[] | select(.["is-minimized"] == false)] | sort_by(.id) as $w | ($w | map(select(.["has-focus"] == true)) | .[0].id) as $cur | ($w | to_entries | .[] | select(.value.id == $cur).key) as $idx | $w[(($idx - 1 + ($w | length)) % ($w | length))].id') && (yabai -m window --focus $id 2>/dev/null || osascript -e "tell application \"$(yabai -m query --windows --window $id | jq -r '.app')\" to activate")
+alt - l : id=$(yabai -m query --windows --space | jq -r '[.[] | select(.["is-minimized"] == false)] | sort_by(.id) as $w | ($w | map(select(.["has-focus"] == true)) | .[0].id) as $cur | ($w | to_entries | .[] | select(.value.id == $cur).key) as $idx | $w[(($idx + 1) % ($w | length))].id') && (yabai -m window --focus $id 2>/dev/null || osascript -e "tell application \"$(yabai -m query --windows --window $id | jq -r '.app')\" to activate")
 
 # Swap windows
 shift + alt - h : yabai -m window --swap west
@@ -32,8 +32,8 @@ alt - m : yabai -m space --layout $(yabai -m query --spaces --space | jq -r 'if 
 # Window navigation (alt-tab only, cmd-tab blocked)
 cmd - tab : return
 cmd + shift - tab : return
-alt - tab : yabai -m window --focus stack.next || yabai -m window --focus stack.first
-alt + shift - tab : yabai -m window --focus stack.prev || yabai -m window --focus stack.last
+alt - tab : id=$(yabai -m query --windows --space | jq -r '[.[] | select(.["is-minimized"] == false)] | sort_by(.id) as $w | ($w | map(select(.["has-focus"] == true)) | .[0].id) as $cur | ($w | to_entries | .[] | select(.value.id == $cur).key) as $idx | $w[(($idx + 1) % ($w | length))].id') && (yabai -m window --focus $id 2>/dev/null || osascript -e "tell application \"$(yabai -m query --windows --window $id | jq -r '.app')\" to activate")
+alt + shift - tab : id=$(yabai -m query --windows --space | jq -r '[.[] | select(.["is-minimized"] == false)] | sort_by(.id) as $w | ($w | map(select(.["has-focus"] == true)) | .[0].id) as $cur | ($w | to_entries | .[] | select(.value.id == $cur).key) as $idx | $w[(($idx - 1 + ($w | length)) % ($w | length))].id') && (yabai -m window --focus $id 2>/dev/null || osascript -e "tell application \"$(yabai -m query --windows --window $id | jq -r '.app')\" to activate")
 
 # Close window
 alt - w : yabai -m window --close
@@ -54,3 +54,6 @@ shift + alt - r : yabai --restart-service; skhd --restart-service
 
 # Obsidian - vault personal
 alt - o : open "obsidian://open?vault=aristeo"
+
+# Daily note en nvim (tmux)
+shift + alt - o : /opt/homebrew/bin/tmux select-window -t daily 2>/dev/null || /opt/homebrew/bin/tmux new-window -n daily "$HOME/dotfiles/tmux/obsidian-daily-open.sh"

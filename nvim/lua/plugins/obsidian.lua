@@ -18,6 +18,14 @@ return {
         path = vim.fn.expand("~/digiin/docs"),
       },
     },
+    daily_notes = {
+      folder = "daily",
+      date_format = "%Y-%m-%d",
+      template = "template-daily.md",
+    },
+    templates = {
+      folder = "",
+    },
     ui = {
       enable = false, -- Use render-markdown.nvim instead
     },

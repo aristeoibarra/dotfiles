@@ -52,7 +52,19 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear highlights' 
 
 -- [F]ILE OPERATIONS (f = file, w = write, q = quit)
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file (write)' })
-vim.keymap.set('n', '<leader>q', '<cmd>q<CR>', { desc = 'Quit editor' })
+vim.keymap.set('n', '<leader>q', function()
+  local buf = vim.api.nvim_get_current_buf()
+  if vim.bo[buf].modified then
+    vim.ui.input({ prompt = "Buffer modified. Close anyway? (y/n): " }, function(input)
+      if input == "y" then
+        vim.cmd('bprevious | bdelete! ' .. buf)
+      end
+    end)
+  else
+    vim.cmd('bprevious | bdelete ' .. buf)
+  end
+end, { desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = 'Quit nvim' })
 vim.keymap.set({ 'n', 'i', 'v' }, '<C-s>', '<cmd>w<CR>', { desc = 'Save file (Ctrl+S)' })
 
 -- [B]UFFER OPERATIONS
