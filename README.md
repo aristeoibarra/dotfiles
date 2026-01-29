@@ -15,6 +15,10 @@ My personal dotfiles for macOS, optimized for a keyboard-centric, minimal develo
 - **[Zsh](https://www.zsh.org/)** - Shell with standalone plugins (no Oh My Zsh)
 - **[Starship](https://starship.rs/)** - Fast, customizable shell prompt
 
+### Browser
+
+- **[Zen Browser](https://zen-browser.app/)** - Privacy-focused Firefox fork with Betterfox configuration
+
 ### Optional
 
 - **[VS Code](https://code.visualstudio.com/)** - Secondary editor with Kanagawa theme and 18+ extensions
@@ -79,6 +83,11 @@ dotfiles/
 ├── warp/                      # Warp terminal (optional)
 │   └── themes/
 │       └── kanagawa-dragon.yaml
+│
+├── zen/                       # Zen Browser
+│   ├── user.js                # Betterfox configuration
+│   └── chrome/
+│       └── userChrome.css     # UI customizations
 │
 ├── opencode/                  # Code assistant
 │   └── opencode.json          # Theme and MCP config
