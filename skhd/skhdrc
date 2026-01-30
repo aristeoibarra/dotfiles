@@ -56,4 +56,4 @@ shift + alt - r : yabai --restart-service; skhd --restart-service
 alt - o : open "obsidian://open?vault=aristeo"
 
 # Daily note en nvim (tmux)
-shift + alt - o : osascript -e 'tell application "Alacritty" to activate' && (/opt/homebrew/bin/tmux select-window -t daily 2>/dev/null || /opt/homebrew/bin/tmux new-window -n daily "$HOME/dotfiles/tmux/obsidian-daily-open.sh")
+shift + alt - o : osascript -e 'tell application "Alacritty" to activate' && (/opt/homebrew/bin/tmux select-window -t obsidian 2>/dev/null || /opt/homebrew/bin/tmux new-window -n obsidian "$HOME/dotfiles/tmux/obsidian-daily-open.sh")

@@ -11,4 +11,5 @@ if [[ ! -f "$DAILY_NOTE" ]]; then
   sed -e "s/{{date}}/$TODAY/g" -e "s/{{date:dddd}}/$DAY_NAME/g" "$TEMPLATE" > "$DAILY_NOTE"
 fi
 
+cd "$VAULT"
 exec /opt/homebrew/bin/nvim "$DAILY_NOTE"

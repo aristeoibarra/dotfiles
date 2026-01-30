@@ -1,4 +1,6 @@
--- Zen Mode: Distraction-free coding optimized for BenQ GW2780 27" 1920x1080
+-- Zen Mode: Distraction-free coding (manual activation only)
+-- For focused writing sessions without any UI
+
 return {
   {
     "folke/zen-mode.nvim",
@@ -8,9 +10,9 @@ return {
     },
     opts = {
       window = {
-        backdrop = 1.0, -- Full backdrop for 27" monitor
-        width = 140, -- Optimized for 27" 1920x1080 (wider for comfortable reading)
-        height = 1, -- 100% height
+        backdrop = 1.0,
+        width = 100,
+        height = 1,
         options = {
           signcolumn = "no",
           number = false,
@@ -26,16 +28,13 @@ return {
           enabled = true,
           ruler = false,
           showcmd = false,
-          laststatus = 0, -- No statusline in zen mode
+          laststatus = 0,
         },
-        tmux = { enabled = false }, -- Keep tmux status visible
-        alacritty = {
-          enabled = false, -- Keep current font settings
-        },
+        tmux = { enabled = false },
+        alacritty = { enabled = false },
         gitsigns = { enabled = false },
       },
-      on_open = function(win)
-        -- Complete UI cleanup
+      on_open = function()
         vim.opt.laststatus = 0
         vim.opt.number = false
         vim.opt.relativenumber = false
@@ -44,13 +43,12 @@ return {
         vim.opt.cmdheight = 0
       end,
       on_close = function()
-        -- Restore UI (match options.lua defaults)
         vim.opt.laststatus = 3
         vim.opt.number = true
         vim.opt.relativenumber = true
         vim.opt.signcolumn = "yes"
         vim.opt.cursorline = true
-        vim.opt.cmdheight = 0 -- noice.nvim handles cmdline
+        vim.opt.cmdheight = 0
       end,
     },
   },
