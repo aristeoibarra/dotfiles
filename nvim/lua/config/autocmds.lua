@@ -62,21 +62,16 @@ autocmd("FileType", {
   desc = "Better wrapping for text files",
 })
 
--- Open images with external application (ultra minimal)
+-- Open images with external application
 autocmd("BufReadPre", {
   group = augroup("open_images_externally", { clear = true }),
   pattern = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.bmp", "*.webp", "*.svg", "*.ico" },
   callback = function(event)
     vim.schedule(function()
-      -- Open with system default app
       vim.fn.jobstart({ "open", event.file }, { detach = true })
-
-      -- Close the buffer and show message
       vim.cmd("bdelete!")
-
-      -- Show clean message
       local filename = vim.fn.fnamemodify(event.file, ":t")
-      print("Opened image: " .. filename)
+      print("Opened: " .. filename)
     end)
   end,
   desc = "Open images with system default app",

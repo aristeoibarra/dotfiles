@@ -54,14 +54,24 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear highlights' 
 vim.keymap.set('n', '<leader>w', '<cmd>w<CR>', { desc = 'Save file (write)' })
 vim.keymap.set('n', '<leader>q', function()
   local buf = vim.api.nvim_get_current_buf()
+  local listed_bufs = vim.tbl_filter(function(b)
+    return vim.bo[b].buflisted
+  end, vim.api.nvim_list_bufs())
+
+  local function close_buf(force)
+    if #listed_bufs > 1 then
+      vim.cmd('bprevious | bdelete' .. (force and '!' or '') .. ' ' .. buf)
+    else
+      vim.cmd('quit' .. (force and '!' or ''))
+    end
+  end
+
   if vim.bo[buf].modified then
     vim.ui.input({ prompt = "Buffer modified. Close anyway? (y/n): " }, function(input)
-      if input == "y" then
-        vim.cmd('bprevious | bdelete! ' .. buf)
-      end
+      if input == "y" then close_buf(true) end
     end)
   else
-    vim.cmd('bprevious | bdelete ' .. buf)
+    close_buf(false)
   end
 end, { desc = 'Close buffer' })
 vim.keymap.set('n', '<leader>Q', '<cmd>qa<CR>', { desc = 'Quit nvim' })

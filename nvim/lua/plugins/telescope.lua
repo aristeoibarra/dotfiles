@@ -43,9 +43,7 @@ return {
                 vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, {
                   "",
                   "",
-                  "  Image file",
-                  "",
-                  "  " .. filename,
+                  "  Image: " .. filename,
                   "",
                   "  Press <Enter> to open",
                   "",
