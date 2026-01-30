@@ -107,6 +107,10 @@ tn() {
 # System utilities
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
 
+# Focus mode (brown noise for concentration)
+alias focus='nohup ffplay -nodisp -loglevel quiet -f lavfi -i "anoisesrc=c=brown" -volume 40 &>/dev/null &'
+alias unfocus='pkill -f "ffplay.*anoisesrc"'
+
 # Arrow keys for autosuggestions
 bindkey '^[[C' forward-char      # Right arrow - accept full suggestion
 bindkey '^[OC' forward-char      # Right arrow (alternate escape sequence)

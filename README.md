@@ -149,6 +149,15 @@ dotfiles/
 | `Leader + ca` | Code actions |
 | `Leader + rn` | Rename symbol |
 
+### Focus Mode
+
+Brown noise for deep work sessions. Requires `mpv`.
+
+| Command | Action |
+|---------|--------|
+| `focus` | Start brown noise in background |
+| `unfocus` | Stop brown noise |
+
 ## Installation
 
 ### Quick Start (Automatic)
@@ -178,7 +187,7 @@ brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd
 brew install --cask alacritty ghostty
 
 # Modern CLI tools (required)
-brew install bat ripgrep fd eza fzf zoxide lazygit jq
+brew install bat ripgrep fd eza fzf zoxide lazygit jq mpv
 
 # Zsh plugins
 brew install zsh-autosuggestions zsh-syntax-highlighting
@@ -199,7 +208,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 |----------|-------|
 | Core | nvim, tmux, zsh, yabai, skhd |
 | Terminals | alacritty, ghostty |
-| CLI Tools | bat, rg, fd, eza, fzf, zoxide, lazygit, jq, starship |
+| CLI Tools | bat, rg, fd, eza, fzf, zoxide, lazygit, jq, mpv, starship |
 | Zsh Plugins | zsh-autosuggestions, zsh-syntax-highlighting |
 | Fonts | JetBrainsMono Nerd Font |
 | Tmux | TPM (Tmux Plugin Manager) |
