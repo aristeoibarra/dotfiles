@@ -51,9 +51,11 @@ mkdir -p ~/.config
 
 # Backup and link
 [ -f ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak
+[ -f ~/.tmux.conf ] && mv ~/.tmux.conf ~/.tmux.conf.bak
 [ -d ~/.config/nvim ] && mv ~/.config/nvim ~/.config/nvim.bak
 
 ln -sf "$DOTFILES/.zshrc" ~/.zshrc
+ln -sf "$DOTFILES/tmux/.tmux.conf" ~/.tmux.conf
 ln -sf "$DOTFILES/nvim" ~/.config/nvim
 
 echo "==> Setting up git..."
