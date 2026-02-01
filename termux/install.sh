@@ -25,7 +25,9 @@ pkg install -y \
     git \
     fzf \
     zsh \
+    tmux \
     openssh \
+    zoxide \
     termux-api
 
 echo "==> Installing zsh plugins..."
@@ -36,7 +38,7 @@ mkdir -p ~/.zsh
     git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh/zsh-syntax-highlighting
 
 echo "==> Installing optional tools..."
-pkg install -y bat ripgrep fd zoxide 2>/dev/null || true
+pkg install -y bat ripgrep fd 2>/dev/null || true
 
 echo "==> Setting up storage..."
 termux-setup-storage || true

@@ -75,3 +75,6 @@ alias ...='cd ../..'
 
 # Zoxide (si está instalado)
 command -v zoxide > /dev/null && eval "$(zoxide init zsh)"
+
+# PATH
+export PATH="$HOME/.local/bin:$PATH"
