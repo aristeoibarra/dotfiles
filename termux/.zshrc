@@ -26,10 +26,10 @@ export FZF_DEFAULT_OPTS="--height 30% --reverse"
 export FZF_CTRL_R_OPTS="--height 30%"
 
 # Plugins
-[ -f "$PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && \
-  source "$PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-[ -f "$PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && \
-  source "$PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+[ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ] && \
+  source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+[ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] && \
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # Prompt (minimal, no starship - faster startup)
 autoload -Uz vcs_info

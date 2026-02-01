@@ -25,10 +25,15 @@ pkg install -y \
     git \
     fzf \
     zsh \
-    zsh-autosuggestions \
-    zsh-syntax-highlighting \
     openssh \
     termux-api
+
+echo "==> Installing zsh plugins..."
+mkdir -p ~/.zsh
+[ ! -d ~/.zsh/zsh-autosuggestions ] && \
+    git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+[ ! -d ~/.zsh/zsh-syntax-highlighting ] && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh/zsh-syntax-highlighting
 
 echo "==> Installing optional tools..."
 pkg install -y bat ripgrep fd zoxide 2>/dev/null || true
