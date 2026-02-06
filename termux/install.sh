@@ -58,6 +58,11 @@ ln -sf "$DOTFILES/.zshrc" ~/.zshrc
 ln -sf "$DOTFILES/tmux/.tmux.conf" ~/.tmux.conf
 ln -sf "$DOTFILES/nvim" ~/.config/nvim
 
+# Claude Code
+mkdir -p ~/.claude
+ln -sf "$DOTFILES/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+ln -sf "$DOTFILES/claude/statusline.sh" ~/.claude/statusline.sh
+
 echo "==> Setting up git..."
 read -p "Git name [aristeoibarra]: " gitname
 read -p "Git email [aristeoibarra608@gmail.com]: " gitemail

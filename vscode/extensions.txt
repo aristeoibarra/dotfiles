@@ -5,7 +5,6 @@ dbaeumer.vscode-eslint
 dsznajder.es7-react-js-snippets
 eamodio.gitlens
 esbenp.prettier-vscode
-github.copilot
 github.copilot-chat
 metaphore.kanagawa-vscode-color-theme
 ms-python.debugpy
