@@ -223,7 +223,9 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 // visit https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening
 // Enter your personal overrides below this line:
 
-
+// ADHD: disable private browsing as extra safety layer
+user_pref("browser.privatebrowsing.autostart", false);
+user_pref("browser.privatebrowsing.enable", false);
 
 
 /****************************************************************************

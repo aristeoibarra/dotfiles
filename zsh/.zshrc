@@ -120,5 +120,6 @@ bindkey '^[[1;5C' forward-word   # Ctrl+Right - accept word
 # Zoxide (smart cd replacement)
 eval "$(zoxide init zsh)"
 
+
 # nextdns-blocker shell completion
 eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
