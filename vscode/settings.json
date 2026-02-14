@@ -195,8 +195,9 @@
   "terminal.integrated.stickyScroll.enabled": false,
   "workbench.statusBar.visible": false,
   "github.copilot.nextEditSuggestions.enabled": true,
-  "chat.viewSessions.orientation": "stacked",
   "chat.commandCenter.enabled": false,
   "workbench.layoutControl.enabled": false,
-  "workbench.activityBar.location": "hidden"
+  "workbench.activityBar.location": "hidden",
+  "workbench.sideBar.location": "right",
+  "chat.viewSessions.orientation": "stacked"
 }
