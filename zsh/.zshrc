@@ -123,3 +123,12 @@ eval "$(zoxide init zsh)"
 
 # nextdns-blocker shell completion
 eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
+export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
+export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
+
+# bun completions
+[ -s "/Users/aristeoibarra/.bun/_bun" ] && source "/Users/aristeoibarra/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
