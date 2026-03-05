@@ -36,6 +36,11 @@ return {
       },
     },
 
+    -- Bigfile (disable features on large files)
+    bigfile = {
+      enabled = true,
+    },
+
     -- Notifier (notifications)
     notifier = {
       enabled = true,
