@@ -1,6 +1,4 @@
 # Kanagawa Dragon theme for Warp
-# Based on https://github.com/rebelot/kanagawa.nvim
-
 accent: '#8ba4b0'
 background: '#181616'
 foreground: '#c5c9c5'

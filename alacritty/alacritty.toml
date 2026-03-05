@@ -1,5 +1,5 @@
 general.import = [
-  "~/.config/alacritty/kanagawa-dragon.toml"
+  "~/.config/alacritty/theme.toml"
 ]
 
 [env]

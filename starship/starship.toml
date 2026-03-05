@@ -1,7 +1,7 @@
-# Starship Configuration - Kanagawa Dragon Theme
-# Ultraminimal prompt optimized for 27" monitor
+# Starship Configuration
+# Palette managed by `theme` command
 
-palette = "kanagawa_dragon"
+palette = "active_theme"
 
 format = """
 $directory\
@@ -13,15 +13,21 @@ $character"""
 # Right prompt shows command duration
 right_format = """$cmd_duration"""
 
-[palettes.kanagawa_dragon]
+# BEGIN THEME PALETTE
+[palettes.active_theme]
 text = "#c5c9c5"
-subtext = "#a6a69c"  # Gray (Kanagawa Dragon)
+subtext = "#a6a69c"
 green = "#8a9a7b"
 blue = "#8ba4b0"
 cyan = "#8ea4a2"
 red = "#c4746e"
 yellow = "#c4b28a"
 mauve = "#a292a3"
+# END THEME PALETTE
+
+# =============================================================================
+# MODULES
+# =============================================================================
 
 [character]
 success_symbol = "[❯](cyan)"
