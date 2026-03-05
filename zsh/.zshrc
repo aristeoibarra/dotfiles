@@ -30,7 +30,7 @@ bindkey -v
 export KEYTIMEOUT=1
 
 # FZF configuration (optimized for 27" monitor @ 1920x1080)
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(fzf --zsh)"
 # =============================================================================
 # KANAGAWA DRAGON COLORS
 # =============================================================================
@@ -49,7 +49,7 @@ export FZF_DEFAULT_OPTS="--height 60% --layout=reverse --border \
   --color=info:#8a9a7b,prompt:#c4746e,pointer:#c4b28a,marker:#8a9a7b,spinner:#a292a3"
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {} 2>/dev/null | head -100' --preview-window=right:50%:wrap --bind 'enter:execute(nvim {})+abort'"
 export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window=up:3:wrap"
-export FZF_ALT_C_OPTS="--preview 'ls -la {}' --preview-window=right:50%:wrap"
+export FZF_ALT_C_OPTS="--preview 'eza -la --icons --git {}' --preview-window=right:50%:wrap"
 command -v fd > /dev/null && export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 command -v fd > /dev/null && export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 
@@ -77,11 +77,13 @@ alias ll='eza -l --icons --git'
 alias la='eza -la --icons --git'
 alias lt='eza -la --icons --git --tree --level=2'
 
-# Modern CLI tools (bat, rg, fd)
+# Modern CLI replacements
 alias cat='bat --paging=never'
 alias catp='bat'  # with pager
 alias grep='rg'
 alias find='fd'
+alias sed='sd'
+alias dft='difft'
 
 # FZF + bat integration
 alias fzfbat='fzf --preview "bat -n --color=always {}"'
@@ -122,7 +124,7 @@ eval "$(zoxide init zsh)"
 
 
 # nextdns-blocker shell completion
-eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
+command -v nextdns-blocker > /dev/null && eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
 export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
 export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
 
@@ -132,3 +134,6 @@ export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Deduplicate PATH (prevents bloat on repeated source)
+typeset -U PATH
