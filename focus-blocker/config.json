@@ -1,0 +1,20 @@
+{
+  "blockedApps": [
+    {
+      "name": "WhatsApp",
+      "bundleId": "net.whatsapp.WhatsApp"
+    },
+    {
+      "name": "Discord",
+      "bundleId": "com.hnc.Discord"
+    }
+  ],
+  "schedule": {
+    "startHour": 0,
+    "startMinute": 0,
+    "endHour": 4,
+    "endMinute": 0
+  },
+  "snoozeMinutes": 3,
+  "showNotifications": true
+}
