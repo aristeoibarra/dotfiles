@@ -13,7 +13,10 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Setup lazy.nvim
-require("lazy").setup("plugins", {
+require("lazy").setup({
+  { import = "plugins" },
+  { import = "plugins.colorschemes" },
+}, {
   defaults = {
     lazy = false,
     version = false,

@@ -1,23 +1,26 @@
 -- Kanagawa colorscheme (wave, dragon, lotus variants)
--- Activated by `theme` command via ~/.local/state/theme/current
+-- Activated by `theme` command via ~/.local/state/theme/
 
-local function read_theme()
-  local f = io.open(vim.fn.expand("~/.local/state/theme/current"), "r")
+local state_dir = vim.fn.expand("~/.local/state/theme")
+
+local function read_file(path)
+  local f = io.open(path, "r")
   if f then
     local t = f:read("*l")
     f:close()
-    return t or "kanagawa-dragon"
+    return t
   end
-  return "kanagawa-dragon"
+  return nil
 end
 
 return {
   "rebelot/kanagawa.nvim",
+  lazy = false,
   priority = 1000,
   config = function()
-    local cs = read_theme()
-    local is_kanagawa = cs:match("^kanagawa")
-    local variant = is_kanagawa and cs:gsub("^kanagawa%-", "") or "dragon"
+    local theme_name = read_file(state_dir .. "/current") or "kanagawa-dragon"
+    local is_kanagawa = theme_name:match("^kanagawa")
+    local variant = is_kanagawa and theme_name:gsub("^kanagawa%-", "") or "dragon"
 
     require("kanagawa").setup({
       compile = false,
@@ -46,17 +49,11 @@ return {
       },
     })
 
-    -- Apply colorscheme (may be kanagawa or a different family)
-    local ok = pcall(vim.cmd.colorscheme, cs)
-    if not ok then
-      vim.notify("Colorscheme '" .. cs .. "' not found, falling back to kanagawa-dragon", vim.log.levels.WARN)
-      vim.cmd.colorscheme("kanagawa-dragon")
-    end
+    if is_kanagawa then
+      local cs = read_file(state_dir .. "/nvim_colorscheme") or "kanagawa-dragon"
+      vim.cmd.colorscheme(cs)
 
-    -- Set terminal colors for kanagawa variants
-    if vim.g.colors_name and vim.g.colors_name:match("^kanagawa") then
-      local v = vim.g.colors_name:gsub("^kanagawa%-", "")
-      local colors = require("kanagawa.colors").setup({ theme = v }).palette
+      local colors = require("kanagawa.colors").setup({ theme = variant }).palette
       vim.g.terminal_color_0 = colors.sumiInk0
       vim.g.terminal_color_1 = colors.sakuraRed
       vim.g.terminal_color_2 = colors.springGreen

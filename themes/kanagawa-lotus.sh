@@ -37,18 +37,5 @@ AUTOSUGGEST="#8a8980"
 # Neovim
 NVIM_COLORSCHEME="kanagawa-lotus"
 
-# Tmux
-TMUX_MODE="kanagawa"
-TMUX_VARIANT="lotus"
-
 # VSCode
 VSCODE_THEME="Kanagawa Lotus"
-
-# OpenCode extras
-OC_BG_ELEMENT="#e7dba0"
-OC_BORDER="#c7c7a7"
-OC_BORDER_ACTIVE="#6693bf"
-OC_BORDER_SUBTLE="#dcd5a1"
-OC_ACCENT="#836f4a"
-OC_DIFF_ADD_BG="#e0ecd0"
-OC_DIFF_RM_BG="#f0d8d8"

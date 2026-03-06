@@ -180,7 +180,7 @@
   "editor.tabCompletion": "on",
   "editor.parameterHints.enabled": true,
   "git.blame.statusBarItem.enabled": false,
-  "workbench.preferredDarkColorTheme": "Kanagawa Dragon",
+  "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
   "workbench.preferredLightColorTheme": "Kanagawa Lotus",
   "window.customTitleBarVisibility": "never",
   "editor.stickyScroll.enabled": false,
