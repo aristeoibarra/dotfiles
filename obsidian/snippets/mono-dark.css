@@ -1,0 +1,94 @@
+/* Mono Dark - low stimulation theme (Gruvbox Dark) */
+
+.theme-dark {
+  /* Warm dark backgrounds (Gruvbox) */
+  --background-primary: #282828;
+  --background-primary-alt: #2e2a25;
+  --background-secondary: #1d2021;
+  --background-secondary-alt: #1d2021;
+  --background-modifier-border: #3c3836;
+
+  /* Monochrome text (warm) */
+  --text-normal: #ebdbb2;
+  --text-muted: #a89984;
+  --text-faint: #665c54;
+
+  /* Single accent color (aqua Gruvbox) */
+  --text-accent: #83a598;
+  --text-accent-hover: #8ec07c;
+  --interactive-accent: #83a598;
+  --interactive-accent-hover: #8ec07c;
+
+  /* Interactive */
+  --interactive-normal: #3c3836;
+  --interactive-hover: #504945;
+
+  /* Headers - same color, distinguished by size only */
+  --h1-color: #ebdbb2;
+  --h2-color: #ebdbb2;
+  --h3-color: #ebdbb2;
+  --h4-color: #d5c4a1;
+  --h5-color: #d5c4a1;
+  --h6-color: #d5c4a1;
+
+  /* Code */
+  --code-background: #1d2021;
+  --code-normal: #a89984;
+
+  /* Links - only accent */
+  --link-color: #83a598;
+  --link-color-hover: #8ec07c;
+  --link-external-color: #83a598;
+
+  /* Tags */
+  --tag-background: #3c3836;
+  --tag-color: #a89984;
+
+  /* Selection */
+  --text-selection: #504945;
+}
+
+/* Headers - no color, just weight and size */
+.HyperMD-header-1, .markdown-preview-view h1 {
+  color: var(--h1-color) !important;
+}
+.HyperMD-header-2, .markdown-preview-view h2 {
+  color: var(--h2-color) !important;
+}
+.HyperMD-header-3, .markdown-preview-view h3 {
+  color: var(--h3-color) !important;
+}
+.HyperMD-header-4, .markdown-preview-view h4 {
+  color: var(--h4-color) !important;
+}
+.HyperMD-header-5, .markdown-preview-view h5 {
+  color: var(--h5-color) !important;
+}
+.HyperMD-header-6, .markdown-preview-view h6 {
+  color: var(--h6-color) !important;
+}
+
+/* Bold & Italic - no extra color */
+.cm-strong, strong {
+  color: var(--text-normal);
+}
+.cm-em, em {
+  color: var(--text-normal);
+}
+
+/* Links */
+.cm-hmd-internal-link, .cm-link, .cm-url {
+  color: var(--link-color) !important;
+}
+
+/* Inline code */
+.cm-inline-code, .markdown-preview-view code {
+  background-color: var(--code-background) !important;
+  color: var(--code-normal) !important;
+}
+
+/* Tags */
+.tag, .cm-hashtag {
+  background-color: var(--tag-background) !important;
+  color: var(--tag-color) !important;
+}

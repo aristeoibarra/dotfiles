@@ -1,0 +1,105 @@
+/* UI tweaks - independent of color theme */
+
+/* Disable all animations */
+* {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Hide titlebar tabs but keep space for window buttons */
+.workspace-tab-header-container {
+  display: none !important;
+}
+
+.mod-root > .workspace-tabs {
+  padding-top: 30px !important;
+}
+
+/* Line width 1100px */
+.theme-dark {
+  --file-line-width: 1000px;
+}
+
+/* Better line height for readability */
+.cm-line,
+.markdown-preview-view p {
+  line-height: 1.8 !important;
+}
+
+/* No cursor line highlight */
+.cm-line.cm-active {
+  background-color: transparent !important;
+}
+
+/* More visible cursor */
+.cm-cursor {
+  border-left-width: 2px !important;
+  border-left-color: #fb4934 !important;
+}
+
+/* Hide UI noise */
+.status-bar,
+.tooltip,
+.nav-action-button,
+.search-result-count,
+.empty-state,
+.workspace-drawer-header-icon,
+.workspace-sidedock-vault-profile,
+.inline-title,
+.metadata-container,
+.nav-header,
+.sidebar-toggle-button,
+.titlebar-text {
+  display: none !important;
+}
+
+/* Hide scrollbars */
+::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Remove borders */
+.workspace-leaf,
+.workspace-split,
+.nav-folder-title,
+.nav-file-title {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Clean file explorer */
+.nav-files-container {
+  margin-top: 10px !important;
+  padding: 0 16px !important;
+}
+
+.nav-file-title,
+.nav-folder-title {
+  padding: 5px 14px !important;
+  border-radius: 4px !important;
+  margin: 1px 0 !important;
+  opacity: 0.5;
+}
+
+.nav-file-title.is-active,
+.nav-file-title:hover,
+.nav-folder-title:hover {
+  opacity: 1 !important;
+}
+
+/* Make folders stand out */
+.nav-folder-title {
+  font-weight: 600 !important;
+  opacity: 0.9;
+  margin-top: 6px !important;
+}
+
+/* Subtle folder icons */
+.nav-folder-collapse-indicator {
+  opacity: 0.5;
+}
+
+/* Fix sidebar spacing for macOS buttons */
+.workspace-split.mod-left-split {
+  padding-top: 30px !important;
+}

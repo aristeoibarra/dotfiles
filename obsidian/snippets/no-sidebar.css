@@ -1,0 +1,11 @@
+/* Hide left sidebar completely */
+.workspace-split.mod-left-split,
+.workspace-drawer.mod-left {
+  display: none !important;
+}
+
+/* Hide left sidebar toggle button */
+.sidebar-toggle-button.mod-left,
+.clickable-icon[aria-label*="left sidebar"] {
+  display: none !important;
+}
