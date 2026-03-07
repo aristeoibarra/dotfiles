@@ -132,3 +132,4 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Deduplicate PATH (prevents bloat on repeated source)
 typeset -U PATH
+export PATH="$HOME/.local/bin:$PATH"
