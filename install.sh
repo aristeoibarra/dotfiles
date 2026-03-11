@@ -328,6 +328,16 @@ create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc" "Zsh"
 create_symlink "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml" "Starship"
 
+# Claude Code
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[DRY RUN]${NC} Would create: $HOME/.claude/hooks"
+else
+    mkdir -p "$HOME/.claude/hooks"
+fi
+create_symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md" "Claude CLAUDE.md"
+create_symlink "$DOTFILES_DIR/claude/statusline.sh" "$HOME/.claude/statusline.sh" "Claude statusline"
+create_symlink "$DOTFILES_DIR/claude/hooks/notify-tmux.sh" "$HOME/.claude/hooks/notify-tmux.sh" "Claude tmux notify hook"
+
 # Tmux scripts
 if [ "$DRY_RUN" = true ]; then
     echo -e "${YELLOW}[DRY RUN]${NC} Would create: $HOME/.tmux"

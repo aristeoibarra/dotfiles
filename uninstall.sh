@@ -176,6 +176,11 @@ remove_symlink "$VSCODE_USER_DIR/keybindings.json" "VS Code keybindings"
 # Remove Warp theme
 remove_symlink "$HOME/.warp/themes/kanagawa-dragon.yaml" "Warp theme"
 
+# Claude Code
+remove_symlink "$HOME/.claude/CLAUDE.md" "Claude CLAUDE.md"
+remove_symlink "$HOME/.claude/statusline.sh" "Claude statusline"
+remove_symlink "$HOME/.claude/hooks/notify-tmux.sh" "Claude tmux notify hook"
+
 # Remove dependencies if requested
 if [ "$REMOVE_DEPS" = true ]; then
     remove_dependencies

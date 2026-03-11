@@ -58,6 +58,9 @@ configs=(
     "$HOME/.zshrc.backup:$HOME/.zshrc:Zsh"
     "$VSCODE_USER_DIR/settings.json.backup:$VSCODE_USER_DIR/settings.json:VS Code settings"
     "$VSCODE_USER_DIR/keybindings.json.backup:$VSCODE_USER_DIR/keybindings.json:VS Code keybindings"
+    "$HOME/.claude/CLAUDE.md.backup:$HOME/.claude/CLAUDE.md:Claude CLAUDE.md"
+    "$HOME/.claude/statusline.sh.backup:$HOME/.claude/statusline.sh:Claude statusline"
+    "$HOME/.claude/hooks/notify-tmux.sh.backup:$HOME/.claude/hooks/notify-tmux.sh:Claude tmux notify hook"
 )
 
 for config in "${configs[@]}"; do
