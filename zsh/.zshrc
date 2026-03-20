@@ -8,9 +8,16 @@ export VISUAL="nvim"
 export PAGER="less"
 export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:$HOME/.opencode/bin:/opt/homebrew/bin:$PATH"
 
-# Node Version Manager
+# Node Version Manager (lazy-loaded — saves ~700ms startup)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+_nvm_load() {
+  unfunction nvm node npm npx 2>/dev/null
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+}
+nvm()  { _nvm_load; nvm "$@"; }
+node() { _nvm_load; node "$@"; }
+npm()  { _nvm_load; npm "$@"; }
+npx()  { _nvm_load; npx "$@"; }
 
 # Completion system (include Homebrew completions)
 fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
@@ -130,6 +137,8 @@ export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Deduplicate PATH (prevents bloat on repeated source)
-typeset -U PATH
+# Local binaries
 export PATH="$HOME/.local/bin:$PATH"
+
+# Deduplicate PATH (prevents bloat on repeated source — must be last)
+typeset -U PATH
