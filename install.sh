@@ -43,7 +43,7 @@ CORE_DEPS=("nvim" "tmux" "zsh" "yabai" "skhd")
 TERMINAL_DEPS=("alacritty" "ghostty")
 
 # Modern CLI tools (required for full functionality)
-CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship")
+CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship" "fnm" "atuin" "yazi" "sesh")
 
 # Optional
 OPTIONAL_DEPS=("code")
@@ -67,13 +67,17 @@ get_brew_package() {
         lazygit) echo "lazygit" ;;
         jq) echo "jq" ;;
         starship) echo "starship" ;;
+        fnm) echo "fnm" ;;
+        atuin) echo "atuin" ;;
+        yazi) echo "yazi" ;;
+        sesh) echo "sesh" ;;
         code) echo "--cask visual-studio-code" ;;
         *) echo "$1" ;;
     esac
 }
 
 # Zsh plugins (Homebrew)
-ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting")
+ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting" "fzf-tab")
 
 # Fonts
 FONTS=("font-jetbrains-mono-nerd-font")
@@ -92,6 +96,10 @@ install_dependencies() {
     # Tap cask-fonts for Nerd Fonts
     echo -e "${BLUE}Tapping homebrew/cask-fonts...${NC}"
     brew tap homebrew/cask-fonts 2>/dev/null
+
+    # Tap joshmedeski/sesh for sesh
+    echo -e "${BLUE}Tapping joshmedeski/sesh...${NC}"
+    brew tap joshmedeski/sesh 2>/dev/null
 
     # Install core dependencies
     echo -e "\n${BLUE}Installing core dependencies...${NC}"
@@ -135,7 +143,7 @@ install_dependencies() {
     # Install Zsh plugins
     echo -e "\n${BLUE}Installing Zsh plugins...${NC}"
     for plugin in "${ZSH_PLUGINS[@]}"; do
-        if [ ! -f "/opt/homebrew/share/$plugin/$plugin.zsh" ]; then
+        if [ ! -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] && [ ! -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ]; then
             echo -e "  Installing $plugin..."
             brew install "$plugin" 2>/dev/null && \
                 echo -e "${GREEN}  ✓${NC} $plugin" || \
@@ -216,7 +224,7 @@ check_dependencies() {
     # Check Zsh plugins
     echo -e "\n${BLUE}Zsh Plugins:${NC}"
     for plugin in "${ZSH_PLUGINS[@]}"; do
-        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ]; then
+        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] || [ -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ]; then
             echo -e "${GREEN}  ✓${NC} $plugin"
         else
             echo -e "${RED}  ✗${NC} $plugin"
@@ -328,6 +336,22 @@ create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc" "Zsh"
 create_symlink "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml" "Starship"
 
+# Atuin
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[DRY RUN]${NC} Would create: $CONFIG_DIR/atuin"
+else
+    mkdir -p "$CONFIG_DIR/atuin"
+fi
+create_symlink "$DOTFILES_DIR/atuin/config.toml" "$CONFIG_DIR/atuin/config.toml" "Atuin"
+
+# Sesh
+if [ "$DRY_RUN" = true ]; then
+    echo -e "${YELLOW}[DRY RUN]${NC} Would create: $CONFIG_DIR/sesh"
+else
+    mkdir -p "$CONFIG_DIR/sesh"
+fi
+create_symlink "$DOTFILES_DIR/sesh/sesh.toml" "$CONFIG_DIR/sesh/sesh.toml" "Sesh"
+
 # Claude Code
 if [ "$DRY_RUN" = true ]; then
     echo -e "${YELLOW}[DRY RUN]${NC} Would create: $HOME/.claude/hooks"
@@ -392,5 +416,6 @@ else
     echo -e "  1. Restart your terminal or run: source ~/.zshrc"
     echo -e "  2. Open Neovim and run: :Lazy sync"
     echo -e "  3. Install Tmux plugins: prefix + I"
-    echo -e "  4. Restart services: yabai --restart-service && skhd --restart-service"
+    echo -e "  4. Import shell history: atuin import auto"
+    echo -e "  5. Restart services: yabai --restart-service && skhd --restart-service"
 fi
