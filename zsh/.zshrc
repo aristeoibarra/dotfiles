@@ -137,3 +137,6 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Deduplicate PATH (prevents bloat on repeated source — must be last)
 typeset -U PATH
+
+# Local secrets (API keys, tokens — never tracked by git)
+[[ -f ~/.env.local ]] && source ~/.env.local
