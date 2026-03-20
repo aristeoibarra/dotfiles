@@ -3,6 +3,8 @@
 
 palette = "active_theme"
 
+command_timeout = 1000
+
 format = """
 $directory\
 $git_branch\
