@@ -2,10 +2,8 @@ anthropic.claude-code
 bradlc.vscode-tailwindcss
 dbaeumer.vscode-eslint
 dsznajder.es7-react-js-snippets
-eamodio.gitlens
 esbenp.prettier-vscode
 jdinhlife.gruvbox
-metaphore.kanagawa-vscode-color-theme
 prisma.prisma
 tal7aouy.icons
 vscodevim.vim
