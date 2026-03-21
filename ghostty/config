@@ -19,15 +19,18 @@ term = xterm-256color
 # Mouse
 mouse-hide-while-typing = true
 
-# macOS specific
-macos-option-as-alt = true
+# Cursor
+cursor-style = block
+cursor-style-blink = false
 
-# Clipboard (allow programs to read clipboard for image paste)
+# Clipboard
 clipboard-read = allow
 clipboard-write = allow
 
+# macOS specific
+macos-option-as-alt = true
+
 # Keybindings
-keybind = super+v=paste_from_clipboard
 keybind = shift+enter=text:\x1b\r
 
 # BEGIN THEME
@@ -35,7 +38,6 @@ keybind = shift+enter=text:\x1b\r
 background = 282828
 foreground = ebdbb2
 
-cursor-style = block
 cursor-color = ebdbb2
 cursor-text = 282828
 

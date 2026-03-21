@@ -190,7 +190,7 @@
   "editor.mouseWheelZoom": true,
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.iconTheme": "icons",
   "claudeCode.selectedModel": "default",
   "workbench.tree.enableStickyScroll": false,
   "terminal.integrated.stickyScroll.enabled": false,
@@ -199,6 +199,8 @@
   "chat.commandCenter.enabled": false,
   "workbench.layoutControl.enabled": false,
   "workbench.activityBar.location": "hidden",
-  "workbench.sideBar.location": "right",
-  "chat.viewSessions.orientation": "stacked"
+  "chat.viewSessions.orientation": "stacked",
+  "claudeCode.preferredLocation": "sidebar",
+  "workbench.colorTheme": "Gruvbox Dark Medium",
+  "editor.lineNumbers": "relative"
 }
