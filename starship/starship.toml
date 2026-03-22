@@ -17,14 +17,14 @@ right_format = """$cmd_duration"""
 
 # BEGIN THEME PALETTE
 [palettes.active_theme]
-text = "#ebdbb2"
-subtext = "#928374"
-green = "#b8bb26"
-blue = "#458588"
-cyan = "#8ec07c"
-red = "#fb4934"
-yellow = "#fabd2f"
-mauve = "#d3869b"
+text = "#cdd6f4"
+subtext = "#6c7086"
+green = "#a6e3a1"
+blue = "#89b4fa"
+cyan = "#94e2d5"
+red = "#f38ba8"
+yellow = "#f9e2af"
+mauve = "#cba6f7"
 # END THEME PALETTE
 
 # =============================================================================
