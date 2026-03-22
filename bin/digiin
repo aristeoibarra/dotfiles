@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Quick start: digiin development session
 # Layout: [nvim | claude] side-by-side
+# Always ensures the dev window exists
 
 SESSION="digiin"
 PROJECT_DIR="$HOME/digiin/project"
+WINDOW_NAME="dev"
 
 # Validate project directory
 if [[ ! -d "$PROJECT_DIR" ]]; then
@@ -11,29 +13,26 @@ if [[ ! -d "$PROJECT_DIR" ]]; then
   exit 1
 fi
 
-# If session exists, just attach
+setup_dev_window() {
+  local target="$1"
+  tmux split-window -h -t "$target" -c "$PROJECT_DIR"
+  tmux send-keys -t "${target}.1" 'nvim' Enter
+  tmux send-keys -t "${target}.2" 'claude --dangerously-skip-permissions -c' Enter
+  tmux resize-pane -t "${target}.2" -x "60%"
+  tmux select-pane -t "${target}.1"
+}
+
 if tmux has-session -t "$SESSION" 2>/dev/null; then
+  # Session exists — check if dev window exists
+  if ! tmux list-windows -t "$SESSION" -F '#W' | grep -q "^${WINDOW_NAME}$"; then
+    tmux new-window -t "$SESSION" -n "$WINDOW_NAME" -c "$PROJECT_DIR"
+    setup_dev_window "$SESSION:$WINDOW_NAME"
+  fi
+  tmux select-window -t "$SESSION:$WINDOW_NAME"
   tmux attach-session -t "$SESSION"
-  exit 0
+else
+  # Create session with dev window
+  tmux new-session -d -s "$SESSION" -n "$WINDOW_NAME" -c "$PROJECT_DIR" -x "$(tput cols)" -y "$(tput lines)"
+  setup_dev_window "$SESSION:$WINDOW_NAME"
+  tmux attach-session -t "$SESSION"
 fi
-
-# Create session (detached) rooted at project dir
-tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR" -x "$(tput cols)" -y "$(tput lines)"
-
-# Split into two vertical panes (left | right)
-tmux split-window -h -t "$SESSION" -c "$PROJECT_DIR"
-
-# Left pane (1): nvim
-tmux send-keys -t "$SESSION:1.1" 'nvim' Enter
-
-# Right pane (2): claude code
-tmux send-keys -t "$SESSION:1.2" 'claude --dangerously-skip-permissions -c' Enter
-
-# 40/60 split favoring claude
-tmux resize-pane -t "$SESSION:1.2" -x "60%"
-
-# Focus on nvim pane
-tmux select-pane -t "$SESSION:1.1"
-
-# Attach
-tmux attach-session -t "$SESSION"
