@@ -1,0 +1,4 @@
+[[session]]
+name = "digiin"
+path = "~/digiin/project"
+startup_command = "digiin"

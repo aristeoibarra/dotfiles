@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Quick start: digiin development session
+# Layout: [nvim | claude] side-by-side
+
+SESSION="digiin"
+PROJECT_DIR="$HOME/digiin/project"
+
+# Validate project directory
+if [[ ! -d "$PROJECT_DIR" ]]; then
+  echo "Error: $PROJECT_DIR does not exist"
+  exit 1
+fi
+
+# If session exists, just attach
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+  tmux attach-session -t "$SESSION"
+  exit 0
+fi
+
+# Create session (detached) rooted at project dir
+tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR" -x "$(tput cols)" -y "$(tput lines)"
+
+# Split into two vertical panes (left | right)
+tmux split-window -h -t "$SESSION" -c "$PROJECT_DIR"
+
+# Left pane (1): nvim
+tmux send-keys -t "$SESSION:1.1" 'nvim' Enter
+
+# Right pane (2): claude code
+tmux send-keys -t "$SESSION:1.2" 'claude --dangerously-skip-permissions -c' Enter
+
+# 40/60 split favoring claude
+tmux resize-pane -t "$SESSION:1.2" -x "60%"
+
+# Focus on nvim pane
+tmux select-pane -t "$SESSION:1.1"
+
+# Attach
+tmux attach-session -t "$SESSION"
