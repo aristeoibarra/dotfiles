@@ -10,22 +10,34 @@
 - No emojis or motivational phrases.
 - Get to the point.
 
-## Preferred Tools
-Use modern tools instead of system defaults:
-- `bat` instead of `cat`
-- `rg` instead of `grep`
-- `fd` instead of `find`
-- `eza` instead of `ls`
-- `sd` instead of `sed` — syntax: `sd 'pattern' 'replacement' file`
-- `delta` — configured as git pager (no action needed, git uses it automatically)
-- `difft` — structural diff by AST: `difft file1 file2`
-- `ast-grep` — structural code search/refactor by AST: `ast-grep -p 'pattern' --lang tsx`
-- `shellcheck` — validate shell scripts before execution: `shellcheck script.sh`
-- `scc` — codebase stats (languages, lines, complexity): `scc .`
-- Editor: `nvim`
+## Environment
+- Terminal: Ghostty + tmux (multi-pane workflow)
+- Editor: nvim
+- Git: lazygit (alias: lg), delta as pager
 
-## Tool Usage Rules
-- For shell script generation, run `shellcheck` to validate before suggesting execution.
-- For multi-file refactoring, prefer `ast-grep` over regex-based `rg` + `sd`.
-- To understand project structure, run `scc .` before planning large changes.
-- Never use `cat`, `grep`, `find`, `ls`, `sed` system commands. Always use the modern alternatives above.
+## Preferred Tools (via Bash)
+When running shell commands, use modern alternatives:
+- `eza` for directory listings
+- `sd 'pattern' 'replacement' file` for find-and-replace
+- `bat` for syntax-highlighted file display
+- `scc .` before planning large changes
+- `ast-grep -p 'pattern' --lang tsx` for structural refactoring
+- `shellcheck script.sh` to validate shell scripts before execution
+- `jq` / `yq` for JSON/YAML/TOML processing
+- `difft` for structural AST diffs
+- `gh` for GitHub CLI operations (PRs, issues, actions)
+
+## Tool Rules
+- For multi-file refactoring, prefer `ast-grep` over regex-based replacements.
+- For codebase overview, run `scc .` before planning.
+- Validate generated shell scripts with `shellcheck` before suggesting execution.
+
+## Git
+- Conventional commits: fix:, feat:, refactor:, chore:, docs:
+- Small, focused commits — one concern per commit
+- No co-authored-by tags
+
+## When stuck
+- On failure: diagnose root cause, don't retry blindly
+- Run long processes as background tasks
+- If stuck after 2 attempts, stop and ask
