@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ClearBrowsingDataOnExitList</key>
+	<array>
+		<string>browsing_history</string>
+		<string>download_history</string>
+		<string>cookies_and_other_site_data</string>
+		<string>cached_images_and_files</string>
+		<string>autofill</string>
+		<string>site_settings</string>
+	</array>
+	<key>URLAllowlist</key>
+	<array>
+		<string>localhost</string>
+		<string>127.0.0.1</string>
+		<string>file://*</string>
+	</array>
+	<key>URLBlocklist</key>
+	<array>
+		<string>*</string>
+	</array>
+</dict>
+</plist>

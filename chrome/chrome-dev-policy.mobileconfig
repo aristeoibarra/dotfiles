@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>ClearBrowsingDataOnExitList</key>
+			<array>
+				<string>browsing_history</string>
+				<string>download_history</string>
+				<string>cookies_and_other_site_data</string>
+				<string>cached_images_and_files</string>
+				<string>autofill</string>
+				<string>site_settings</string>
+			</array>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadIdentifier</key>
+			<string>com.dotfiles.chrome.policy</string>
+			<key>PayloadType</key>
+			<string>com.google.Chrome</string>
+			<key>PayloadUUID</key>
+			<string>A1B2C3D4-E5F6-7890-ABCD-EF1234567890</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>URLAllowlist</key>
+			<array>
+				<string>localhost</string>
+				<string>127.0.0.1</string>
+				<string>file://*</string>
+				<string>chrome://*</string>
+				<string>chrome-extension://*</string>
+			</array>
+			<key>URLBlocklist</key>
+			<array>
+				<string>*</string>
+			</array>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Restricts Chrome to localhost and approved dev domains only</string>
+	<key>PayloadDisplayName</key>
+	<string>Chrome Dev-Only Policy</string>
+	<key>PayloadIdentifier</key>
+	<string>com.dotfiles.chrome</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>F1E2D3C4-B5A6-7890-1234-567890ABCDEF</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

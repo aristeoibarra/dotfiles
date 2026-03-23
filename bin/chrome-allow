@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# chrome-allow — manage Chrome URLAllowlist in mobileconfig profile
+# Usage:
+#   chrome-allow add <domain>      Add domain to allowlist
+#   chrome-allow rm <domain>       Remove domain from allowlist
+#   chrome-allow ls                List current allowlist
+#   chrome-allow apply             Reinstall the profile
+
+set -euo pipefail
+
+MOBILECONFIG="$HOME/dotfiles/chrome/chrome-dev-policy.mobileconfig"
+PROFILE_ID="com.dotfiles.chrome"
+KEY="URLAllowlist"
+
+# Base entries that should never be removed
+BASE_ENTRIES=(localhost 127.0.0.1 'file://*' 'chrome://*' 'chrome-extension://*')
+
+_read_list() {
+  /usr/libexec/PlistBuddy -c "Print :PayloadContent:0:$KEY" "$MOBILECONFIG" 2>/dev/null \
+    | sed -e '1d' -e '$d' -e 's/^[[:space:]]*//' \
+    | grep -v '^$'
+}
+
+_is_base() {
+  local entry="$1"
+  for base in "${BASE_ENTRIES[@]}"; do
+    [[ "$entry" == "$base" ]] && return 0
+  done
+  return 1
+}
+
+_apply() {
+  echo "Opening profile for installation..."
+  echo "1. Remove the old profile in System Settings > General > Device Management"
+  echo "2. Install the new one when prompted"
+  open "$MOBILECONFIG"
+  echo "After installing, restart Chrome."
+}
+
+case "${1:-}" in
+  add)
+    [[ -z "${2:-}" ]] && { echo "Usage: chrome-allow add <domain>"; exit 1; }
+    domain="$2"
+    if _read_list | grep -qxF "$domain"; then
+      echo "$domain ya esta en la allowlist"
+      exit 0
+    fi
+    idx=$(/usr/libexec/PlistBuddy -c "Print :PayloadContent:0:$KEY" "$MOBILECONFIG" \
+      | sed -e '1d' -e '$d' | grep -cv '^$' || echo 0)
+    /usr/libexec/PlistBuddy -c "Add :PayloadContent:0:$KEY:$idx string '$domain'" "$MOBILECONFIG"
+    echo "+ $domain added"
+    _apply
+    ;;
+  rm|remove)
+    [[ -z "${2:-}" ]] && { echo "Usage: chrome-allow rm <domain>"; exit 1; }
+    domain="$2"
+    if _is_base "$domain"; then
+      echo "$domain es una entrada base, no se puede eliminar"
+      exit 1
+    fi
+    list=$(_read_list)
+    if ! echo "$list" | grep -qxF "$domain"; then
+      echo "$domain no esta en la allowlist"
+      exit 1
+    fi
+    i=0
+    while IFS= read -r line; do
+      if [[ "$line" == "$domain" ]]; then
+        /usr/libexec/PlistBuddy -c "Delete :PayloadContent:0:$KEY:$i" "$MOBILECONFIG"
+        echo "- $domain removed"
+        _apply
+        exit 0
+      fi
+      ((i++))
+    done <<< "$list"
+    ;;
+  ls|list)
+    echo "Chrome allowed URLs:"
+    _read_list | sed 's/^/  /'
+    ;;
+  apply)
+    _apply
+    ;;
+  *)
+    echo "Usage: chrome-allow {add|rm|ls|apply} [domain]"
+    exit 1
+    ;;
+esac
