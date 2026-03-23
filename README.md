@@ -187,10 +187,10 @@ brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd
 brew install --cask alacritty ghostty
 
 # Modern CLI tools (required)
-brew install bat ripgrep fd eza fzf zoxide lazygit jq mpv
+brew install bat ripgrep fd eza fzf zoxide lazygit jq yq mpv sd difftastic ast-grep shellcheck scc git-delta gh
 
 # Zsh plugins
-brew install zsh-autosuggestions zsh-syntax-highlighting
+brew install zsh-autosuggestions zsh-syntax-highlighting zsh-completions
 
 # Nerd Font
 brew install --cask font-jetbrains-mono-nerd-font
@@ -208,11 +208,15 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 |----------|-------|
 | Core | nvim, tmux, zsh, yabai, skhd |
 | Terminals | alacritty, ghostty |
-| CLI Tools | bat, rg, fd, eza, fzf, zoxide, lazygit, jq, mpv, starship |
-| Zsh Plugins | zsh-autosuggestions, zsh-syntax-highlighting |
+| CLI Tools | bat, rg, fd, eza, sd, delta, difft, fzf, zoxide, lazygit, gh, atuin, yazi, sesh |
+| Dev Tools | ast-grep, shellcheck, scc, jq, yq |
+| Runtimes | fnm, pnpm, bun, starship |
+| Media | mpv |
+| Containers | docker, colima, docker-compose |
+| Zsh Plugins | zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions, fzf-tab |
 | Fonts | JetBrainsMono Nerd Font |
 | Tmux | TPM (Tmux Plugin Manager) |
-| Optional | VS Code |
+| Optional | VS Code, deno |
 
 ### Yabai SIP Configuration
 
