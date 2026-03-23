@@ -42,11 +42,23 @@ CORE_DEPS=("nvim" "tmux" "zsh" "yabai" "skhd")
 # Terminals (at least one required)
 TERMINAL_DEPS=("alacritty" "ghostty")
 
-# Modern CLI tools (required for full functionality)
-CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship" "fnm" "atuin" "yazi" "sesh")
+# Modern CLI replacements (shell, search, files, git)
+CLI_DEPS=("bat" "rg" "fd" "eza" "sd" "delta" "difft" "fzf" "zoxide" "lazygit" "gh" "atuin" "yazi" "sesh")
+
+# Dev tools (code analysis, validation, stats)
+DEV_DEPS=("ast-grep" "shellcheck" "scc" "jq" "yq")
+
+# Runtimes & package managers
+RUNTIME_DEPS=("fnm" "pnpm" "starship")
+
+# Media (focus mode, yazi previews)
+MEDIA_DEPS=("mpv")
+
+# Containers (optional — install if you use Docker)
+CONTAINER_DEPS=("docker" "colima" "docker-compose")
 
 # Optional
-OPTIONAL_DEPS=("code")
+OPTIONAL_DEPS=("code" "deno")
 
 # Homebrew packages mapping (command:brew_package)
 get_brew_package() {
@@ -71,16 +83,48 @@ get_brew_package() {
         atuin) echo "atuin" ;;
         yazi) echo "yazi" ;;
         sesh) echo "sesh" ;;
+        sd) echo "sd" ;;
+        difft) echo "difftastic" ;;
+        ast-grep) echo "ast-grep" ;;
+        shellcheck) echo "shellcheck" ;;
+        scc) echo "scc" ;;
+        delta) echo "git-delta" ;;
+        gh) echo "gh" ;;
+        mpv) echo "mpv" ;;
+        yq) echo "yq" ;;
+        pnpm) echo "pnpm" ;;
+        docker) echo "docker" ;;
+        colima) echo "colima" ;;
+        docker-compose) echo "docker-compose" ;;
+        deno) echo "deno" ;;
         code) echo "--cask visual-studio-code" ;;
         *) echo "$1" ;;
     esac
 }
 
 # Zsh plugins (Homebrew)
-ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting" "fzf-tab")
+ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting" "zsh-completions" "fzf-tab")
 
 # Fonts
 FONTS=("font-jetbrains-mono-nerd-font")
+
+# Helper: install a list of brew deps
+install_brew_deps() {
+    local label="$1"; shift
+    local deps=("$@")
+    echo -e "\n${BLUE}Installing ${label}...${NC}"
+    for dep in "${deps[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            echo -e "  Installing $(get_brew_package "$dep")..."
+            # shellcheck disable=SC2046
+            brew install $(get_brew_package "$dep") 2>/dev/null && \
+                echo -e "${GREEN}  ✓${NC} $dep" || \
+                echo -e "${RED}  ✗${NC} $dep (failed)"
+        else
+            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
+        fi
+    done
+}
 
 # Install dependencies with Homebrew
 install_dependencies() {
@@ -101,49 +145,19 @@ install_dependencies() {
     echo -e "${BLUE}Tapping joshmedeski/sesh...${NC}"
     brew tap joshmedeski/sesh 2>/dev/null
 
-    # Install core dependencies
-    echo -e "\n${BLUE}Installing core dependencies...${NC}"
-    for dep in "${CORE_DEPS[@]}"; do
-        if ! command -v "$dep" &> /dev/null; then
-            echo -e "  Installing $(get_brew_package "$dep")..."
-            brew install $(get_brew_package "$dep") 2>/dev/null && \
-                echo -e "${GREEN}  ✓${NC} $dep" || \
-                echo -e "${RED}  ✗${NC} $dep (failed)"
-        else
-            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
-        fi
-    done
+    # Brew categories
+    install_brew_deps "core"               "${CORE_DEPS[@]}"
+    install_brew_deps "terminals"          "${TERMINAL_DEPS[@]}"
+    install_brew_deps "CLI tools"          "${CLI_DEPS[@]}"
+    install_brew_deps "dev tools"          "${DEV_DEPS[@]}"
+    install_brew_deps "runtimes"           "${RUNTIME_DEPS[@]}"
+    install_brew_deps "media"              "${MEDIA_DEPS[@]}"
+    install_brew_deps "containers"         "${CONTAINER_DEPS[@]}"
 
-    # Install terminals
-    echo -e "\n${BLUE}Installing terminals...${NC}"
-    for dep in "${TERMINAL_DEPS[@]}"; do
-        if ! command -v "$dep" &> /dev/null; then
-            echo -e "  Installing $(get_brew_package "$dep")..."
-            brew install $(get_brew_package "$dep") 2>/dev/null && \
-                echo -e "${GREEN}  ✓${NC} $dep" || \
-                echo -e "${YELLOW}  ⚠${NC} $dep (skipped)"
-        else
-            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
-        fi
-    done
-
-    # Install CLI tools
-    echo -e "\n${BLUE}Installing CLI tools...${NC}"
-    for dep in "${CLI_DEPS[@]}"; do
-        if ! command -v "$dep" &> /dev/null; then
-            echo -e "  Installing $(get_brew_package "$dep")..."
-            brew install $(get_brew_package "$dep") 2>/dev/null && \
-                echo -e "${GREEN}  ✓${NC} $dep" || \
-                echo -e "${RED}  ✗${NC} $dep (failed)"
-        else
-            echo -e "${GREEN}  ✓${NC} $dep (already installed)"
-        fi
-    done
-
-    # Install Zsh plugins
+    # Zsh plugins
     echo -e "\n${BLUE}Installing Zsh plugins...${NC}"
     for plugin in "${ZSH_PLUGINS[@]}"; do
-        if [ ! -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] && [ ! -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ]; then
+        if [ ! -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] && [ ! -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ] && [ ! -d "/opt/homebrew/share/$plugin" ]; then
             echo -e "  Installing $plugin..."
             brew install "$plugin" 2>/dev/null && \
                 echo -e "${GREEN}  ✓${NC} $plugin" || \
@@ -153,7 +167,7 @@ install_dependencies() {
         fi
     done
 
-    # Install fonts
+    # Fonts
     echo -e "\n${BLUE}Installing fonts...${NC}"
     for font in "${FONTS[@]}"; do
         echo -e "  Installing $font..."
@@ -162,7 +176,17 @@ install_dependencies() {
             echo -e "${YELLOW}  ⚠${NC} $font (may already be installed)"
     done
 
-    # Install TPM (Tmux Plugin Manager)
+    # Bun (not available via Homebrew)
+    echo -e "\n${BLUE}Installing Bun...${NC}"
+    if ! command -v bun &> /dev/null; then
+        curl -fsSL https://bun.sh/install | bash 2>/dev/null && \
+            echo -e "${GREEN}  ✓${NC} bun" || \
+            echo -e "${RED}  ✗${NC} bun (failed)"
+    else
+        echo -e "${GREEN}  ✓${NC} bun (already installed)"
+    fi
+
+    # TPM (Tmux Plugin Manager)
     echo -e "\n${BLUE}Installing Tmux Plugin Manager...${NC}"
     if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
         git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm 2>/dev/null && \
@@ -175,25 +199,30 @@ install_dependencies() {
     echo -e "\n${GREEN}Dependencies installed!${NC}\n"
 }
 
-# Check dependencies
-check_dependencies() {
-    echo -e "${BLUE}Checking dependencies...${NC}"
-    local missing=0
-    local missing_list=()
-
-    # Check core
-    echo -e "\n${BLUE}Core:${NC}"
-    for dep in "${CORE_DEPS[@]}"; do
+# Helper: check a list of deps (increments $missing)
+check_brew_deps() {
+    local label="$1"; shift
+    local deps=("$@")
+    echo -e "\n${BLUE}${label}:${NC}"
+    for dep in "${deps[@]}"; do
         if ! command -v "$dep" &> /dev/null; then
             echo -e "${RED}  ✗${NC} $dep"
             ((missing++))
-            missing_list+=("$dep")
         else
             echo -e "${GREEN}  ✓${NC} $dep"
         fi
     done
+}
 
-    # Check terminals (at least one)
+# Check dependencies
+check_dependencies() {
+    echo -e "${BLUE}Checking dependencies...${NC}"
+    local missing=0
+
+    # Required categories
+    check_brew_deps "Core"       "${CORE_DEPS[@]}"
+
+    # Terminals (at least one)
     echo -e "\n${BLUE}Terminals:${NC}"
     local terminal_found=false
     for dep in "${TERMINAL_DEPS[@]}"; do
@@ -209,22 +238,16 @@ check_dependencies() {
         ((missing++))
     fi
 
-    # Check CLI tools
-    echo -e "\n${BLUE}CLI Tools:${NC}"
-    for dep in "${CLI_DEPS[@]}"; do
-        if ! command -v "$dep" &> /dev/null; then
-            echo -e "${RED}  ✗${NC} $dep"
-            ((missing++))
-            missing_list+=("$dep")
-        else
-            echo -e "${GREEN}  ✓${NC} $dep"
-        fi
-    done
+    check_brew_deps "CLI Tools"  "${CLI_DEPS[@]}"
+    check_brew_deps "Dev Tools"  "${DEV_DEPS[@]}"
+    check_brew_deps "Runtimes"   "${RUNTIME_DEPS[@]}"
+    check_brew_deps "Media"      "${MEDIA_DEPS[@]}"
+    check_brew_deps "Containers" "${CONTAINER_DEPS[@]}"
 
-    # Check Zsh plugins
+    # Zsh plugins
     echo -e "\n${BLUE}Zsh Plugins:${NC}"
     for plugin in "${ZSH_PLUGINS[@]}"; do
-        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] || [ -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ]; then
+        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] || [ -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ] || [ -d "/opt/homebrew/share/$plugin" ]; then
             echo -e "${GREEN}  ✓${NC} $plugin"
         else
             echo -e "${RED}  ✗${NC} $plugin"
@@ -232,7 +255,16 @@ check_dependencies() {
         fi
     done
 
-    # Check TPM
+    # Non-Homebrew
+    echo -e "\n${BLUE}Non-Homebrew:${NC}"
+    if command -v bun &> /dev/null; then
+        echo -e "${GREEN}  ✓${NC} bun"
+    else
+        echo -e "${RED}  ✗${NC} bun"
+        ((missing++))
+    fi
+
+    # TPM
     echo -e "\n${BLUE}Tmux Plugins:${NC}"
     if [ -d "$HOME/.tmux/plugins/tpm" ]; then
         echo -e "${GREEN}  ✓${NC} tpm (Tmux Plugin Manager)"
@@ -241,7 +273,7 @@ check_dependencies() {
         ((missing++))
     fi
 
-    # Check optional
+    # Optional (don't count as missing)
     echo -e "\n${BLUE}Optional:${NC}"
     for dep in "${OPTIONAL_DEPS[@]}"; do
         if command -v "$dep" &> /dev/null; then
