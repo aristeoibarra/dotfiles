@@ -11,7 +11,7 @@
 - Get to the point.
 
 ## Environment
-- Terminal: Ghostty + tmux (multi-pane workflow)
+- Terminal: Alacritty + tmux (multi-pane workflow)
 - Editor: nvim
 - Git: lazygit (alias: lg), delta as pager
 
