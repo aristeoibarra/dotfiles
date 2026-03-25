@@ -16,8 +16,8 @@ fi
 setup_dev_window() {
   local target="$1"
   tmux split-window -h -t "$target" -c "$PROJECT_DIR"
-  tmux send-keys -t "${target}.1" 'nvim' Enter
-  tmux send-keys -t "${target}.2" 'claude --dangerously-skip-permissions -c' Enter
+  tmux send-keys -t "${target}.1" "cd '$PROJECT_DIR' && nvim" Enter
+  tmux send-keys -t "${target}.2" "cd '$PROJECT_DIR' && claude --dangerously-skip-permissions -c" Enter
   tmux resize-pane -t "${target}.2" -x "60%"
   tmux select-pane -t "${target}.1"
 }
@@ -25,14 +25,14 @@ setup_dev_window() {
 if tmux has-session -t "$SESSION" 2>/dev/null; then
   # Session exists — check if dev window exists
   if ! tmux list-windows -t "$SESSION" -F '#W' | grep -q "^${WINDOW_NAME}$"; then
-    tmux new-window -t "$SESSION" -n "$WINDOW_NAME" -c "$PROJECT_DIR"
+    tmux new-window -t "$SESSION" -n "$WINDOW_NAME" -c "$HOME"
     setup_dev_window "$SESSION:$WINDOW_NAME"
   fi
   tmux select-window -t "$SESSION:$WINDOW_NAME"
   tmux attach-session -t "$SESSION"
 else
   # Create session with dev window
-  tmux new-session -d -s "$SESSION" -n "$WINDOW_NAME" -c "$PROJECT_DIR" -x "$(tput cols)" -y "$(tput lines)"
+  tmux new-session -d -s "$SESSION" -n "$WINDOW_NAME" -c "$HOME" -x "$(tput cols)" -y "$(tput lines)"
   setup_dev_window "$SESSION:$WINDOW_NAME"
   tmux attach-session -t "$SESSION"
 fi
