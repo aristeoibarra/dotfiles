@@ -33,9 +33,9 @@ if [[ -n "$TMUX" ]]; then
   # Check frontmost app first — tmux doesn't change active pane when user switches apps
   front_app=$(osascript -e 'tell application "System Events" to get name of first application process whose frontmost is true' 2>/dev/null)
 
-  # Ghostty focused → check if user is in Claude's pane
+  # Alacritty focused → check if user is in Claude's pane
   # Use list-clients to get the real active pane (works across sessions/windows)
-  if [[ "$front_app" == "ghostty" || "$front_app" == "Ghostty" ]]; then
+  if [[ "$front_app" == "alacritty" || "$front_app" == "Alacritty" ]]; then
     claude_pane="$TMUX_PANE"
     active_pane=$(tmux list-clients -F '#{client_activity} #{pane_id}' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2)
     [[ "$claude_pane" == "$active_pane" ]] && exit 0
