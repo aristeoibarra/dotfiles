@@ -1,38 +1,178 @@
 #!/usr/bin/env bash
 # Quick start: digiin development session
 # Layout: [nvim | claude] side-by-side
-# Always ensures the dev window exists
+#
+# Usage:
+#   digiin             — open main project session
+#   digiin <branch>    — create/open worktree session for branch
+#   digiin ls          — list worktrees and their session status
+#   digiin rm <branch> — remove worktree and kill its tmux session
+#   digiin help        — show usage
 
-SESSION="digiin"
-PROJECT_DIR="$HOME/digiin/project"
-WINDOW_NAME="dev"
+MAIN_DIR="$HOME/digiin/project"
+WORKTREE_BASE="$HOME/digiin"
 
-# Validate project directory
-if [[ ! -d "$PROJECT_DIR" ]]; then
-  echo "Error: $PROJECT_DIR does not exist"
+# Validate main project directory
+if [[ ! -d "$MAIN_DIR" ]]; then
+  echo "Error: $MAIN_DIR does not exist"
   exit 1
 fi
 
 setup_dev_window() {
   local target="$1"
-  tmux split-window -h -t "$target" -c "$PROJECT_DIR"
-  tmux send-keys -t "${target}.1" "cd '$PROJECT_DIR' && nvim" Enter
-  tmux send-keys -t "${target}.2" "cd '$PROJECT_DIR' && claude --dangerously-skip-permissions -c" Enter
+  local dir="$2"
+  tmux split-window -h -t "$target" -c "$dir"
+  tmux send-keys -t "${target}.1" "cd '$dir' && nvim" Enter
+  tmux send-keys -t "${target}.2" "cd '$dir' && claude --dangerously-skip-permissions -c" Enter
   tmux resize-pane -t "${target}.2" -x "60%"
   tmux select-pane -t "${target}.1"
 }
 
-if tmux has-session -t "$SESSION" 2>/dev/null; then
-  # Session exists — check if dev window exists
-  if ! tmux list-windows -t "$SESSION" -F '#W' | grep -q "^${WINDOW_NAME}$"; then
-    tmux new-window -t "$SESSION" -n "$WINDOW_NAME" -c "$HOME"
-    setup_dev_window "$SESSION:$WINDOW_NAME"
+open_session() {
+  local session="$1"
+  local dir="$2"
+  local window_name="$3"
+
+  if tmux has-session -t "$session" 2>/dev/null; then
+    if ! tmux list-windows -t "$session" -F '#W' | grep -q "^${window_name}$"; then
+      tmux new-window -t "$session" -n "$window_name" -c "$HOME"
+      setup_dev_window "$session:$window_name" "$dir"
+    fi
+    tmux select-window -t "$session:$window_name"
+    tmux attach-session -t "$session"
+  else
+    tmux new-session -d -s "$session" -n "$window_name" -c "$HOME" -x "$(tput cols)" -y "$(tput lines)"
+    setup_dev_window "$session:$window_name" "$dir"
+    tmux attach-session -t "$session"
   fi
-  tmux select-window -t "$SESSION:$WINDOW_NAME"
-  tmux attach-session -t "$SESSION"
-else
-  # Create session with dev window
-  tmux new-session -d -s "$SESSION" -n "$WINDOW_NAME" -c "$HOME" -x "$(tput cols)" -y "$(tput lines)"
-  setup_dev_window "$SESSION:$WINDOW_NAME"
-  tmux attach-session -t "$SESSION"
-fi
+}
+
+cmd_ls() {
+  local main_branch
+  main_branch=$(git -C "$MAIN_DIR" branch --show-current)
+
+  while IFS= read -r line; do
+    local path branch status
+    path=$(echo "$line" | awk '{print $1}')
+    branch=$(echo "$line" | grep -o '\[.*\]' | tr -d '[]')
+    name=$(basename "$path")
+
+    # Check tmux session status
+    local session_name
+    if [[ "$path" == "$MAIN_DIR" ]]; then
+      session_name="digiin"
+      name="project"
+    else
+      session_name="digiin-$name"
+    fi
+
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      status="active"
+    else
+      status="-"
+    fi
+
+    printf "  %-20s %-25s %s\n" "$name" "$branch" "$status"
+  done < <(git -C "$MAIN_DIR" worktree list)
+}
+
+copy_env_files() {
+  local dest="$1"
+  # Copy untracked .env files from main project, preserving directory structure
+  while IFS= read -r envfile; do
+    local rel="${envfile#"$MAIN_DIR"/}"
+    local target="$dest/$rel"
+    if [[ ! -f "$target" ]]; then
+      mkdir -p "$(dirname "$target")"
+      cp "$envfile" "$target"
+    fi
+  done < <(git -C "$MAIN_DIR" ls-files --others --ignored --exclude-standard -- '*.env' '*.env.*' | \
+    grep -v '.env.example' | \
+    sed "s|^|$MAIN_DIR/|")
+}
+
+cmd_worktree() {
+  local branch="$1"
+  local worktree_dir="$WORKTREE_BASE/$branch"
+  local created=false
+
+  if [[ ! -d "$worktree_dir" ]]; then
+    created=true
+    # Check if branch exists remotely or locally
+    if git -C "$MAIN_DIR" show-ref --verify --quiet "refs/heads/$branch" 2>/dev/null; then
+      git -C "$MAIN_DIR" worktree add "$worktree_dir" "$branch"
+    elif git -C "$MAIN_DIR" show-ref --verify --quiet "refs/remotes/origin/$branch" 2>/dev/null; then
+      git -C "$MAIN_DIR" worktree add "$worktree_dir" "$branch"
+    else
+      git -C "$MAIN_DIR" worktree add -b "$branch" "$worktree_dir"
+    fi
+  fi
+
+  if [[ "$created" == true ]]; then
+    copy_env_files "$worktree_dir"
+  fi
+
+  open_session "digiin-$branch" "$worktree_dir" "$branch"
+}
+
+cmd_rm() {
+  local branch="$1"
+  local worktree_dir="$WORKTREE_BASE/$branch"
+
+  if [[ -z "$branch" ]]; then
+    echo "Usage: digiin rm <branch>"
+    echo ""
+    echo "Active worktrees:"
+    cmd_ls
+    exit 1
+  fi
+
+  if [[ "$worktree_dir" == "$MAIN_DIR" ]]; then
+    echo "Error: cannot remove main project"
+    exit 1
+  fi
+
+  # Kill tmux session if running
+  tmux kill-session -t "digiin-$branch" 2>/dev/null
+
+  # Remove worktree
+  if git -C "$MAIN_DIR" worktree list | grep -q "$worktree_dir"; then
+    git -C "$MAIN_DIR" worktree remove "$worktree_dir" --force
+    echo "Removed worktree: $branch"
+  else
+    echo "Error: worktree '$branch' not found"
+    exit 1
+  fi
+}
+
+cmd_help() {
+  cat <<'EOF'
+digiin — worktree-based dev sessions
+
+Usage:
+  digiin             open main project session
+  digiin <branch>    create/open worktree for branch
+  digiin ls          list worktrees and session status
+  digiin rm <branch> remove worktree and kill session
+  digiin help        show this help
+EOF
+}
+
+case "${1:-}" in
+  "")
+    main_branch=$(git -C "$MAIN_DIR" branch --show-current)
+    open_session "digiin" "$MAIN_DIR" "${main_branch:-main}"
+    ;;
+  ls)
+    cmd_ls
+    ;;
+  rm)
+    cmd_rm "$2"
+    ;;
+  help|-h|--help)
+    cmd_help
+    ;;
+  *)
+    cmd_worktree "$1"
+    ;;
+esac
