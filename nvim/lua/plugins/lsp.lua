@@ -31,6 +31,14 @@ return {
         },
         automatic_installation = true,
         handlers = {
+          -- ts_ls: registered but not auto-started — use <leader>lt
+          ["ts_ls"] = function()
+            require("lspconfig").ts_ls.setup({
+              capabilities = require("blink.cmp").get_lsp_capabilities(),
+              autostart = false,
+            })
+          end,
+
           function(server_name)
             local lspconfig = require("lspconfig")
             local capabilities = require("blink.cmp").get_lsp_capabilities()
@@ -92,6 +100,19 @@ return {
       -- LSP SERVERS CONFIGURED BY MASON-LSPCONFIG
       -- ========================================================================
       -- All servers are already configured in mason.nvim plugin config
+
+      -- ========================================================================
+      -- MANUAL LSP START (ts_ls excluded from auto-start to save RAM)
+      -- ========================================================================
+      vim.keymap.set("n", "<leader>lt", function()
+        local clients = vim.lsp.get_clients({ name = "ts_ls" })
+        if #clients > 0 then
+          vim.notify("[LSP] ts_ls already running", vim.log.levels.WARN)
+          return
+        end
+        vim.cmd("LspStart ts_ls")
+        vim.notify("[LSP] ts_ls started", vim.log.levels.INFO)
+      end, { desc = "Start TypeScript LSP" })
 
       -- ========================================================================
       -- COMMANDS
