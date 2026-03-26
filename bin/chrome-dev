@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# chrome-dev — launch Chrome with resource-optimized flags
+# Policies control behavior; these flags control process architecture.
+# Usage:
+#   chrome-dev              Launch Chrome (must not be already running)
+#   chrome-dev --restart    Quit running Chrome and relaunch with flags
+set -euo pipefail
+
+APP="/Applications/Google Chrome.app"
+
+if pgrep -qf "Google Chrome.app"; then
+  if [[ "${1:-}" == "--restart" ]]; then
+    echo "Quitting Chrome..."
+    osascript -e 'tell application "Google Chrome" to quit' 2>/dev/null || true
+    timeout=10
+    while pgrep -qf "Google Chrome.app" && ((timeout-- > 0)); do
+      sleep 1
+    done
+    if pgrep -qf "Google Chrome.app"; then
+      echo "Chrome didn't quit in time. Kill manually or run: pkill -f 'Google Chrome'"
+      exit 1
+    fi
+  else
+    echo "Chrome is already running — flags only apply at launch."
+    echo "Run: chrome-dev --restart"
+    exit 1
+  fi
+fi
+
+# ── Process architecture ──────────────────────────────────────────
+# --process-per-site         All localhost tabs share one renderer
+# --renderer-process-limit   Hard cap on renderer processes
+# --disable-breakpad         Kill crashpad handler (no crash reports)
+#
+# ── Background activity ───────────────────────────────────────────
+# --disable-background-networking   Zero background network traffic
+# --disable-component-update        No component downloads
+# --disable-client-side-phishing-detection
+# --disable-domain-reliability      No domain monitoring
+#
+# ── Memory ────────────────────────────────────────────────────────
+# --disk-cache-size          1MB cache (cleared on exit anyway)
+# --js-flags                 Cap V8 heap at 256MB per renderer
+#
+# ── Feature flags ─────────────────────────────────────────────────
+# Disable features at the flag level (belt-and-suspenders with policies)
+
+exec open -a "$APP" --args \
+  --process-per-site \
+  --renderer-process-limit=2 \
+  --disable-breakpad \
+  --disable-background-networking \
+  --disable-component-update \
+  --disable-client-side-phishing-detection \
+  --disable-domain-reliability \
+  --disk-cache-size=1048576 \
+  --js-flags=--max-old-space-size=256 \
+  --disable-features=MediaRouter,TranslateUI,SpellCheckService,OptimizationHints,InterestCohort,Prerender2 \
+  --no-first-run

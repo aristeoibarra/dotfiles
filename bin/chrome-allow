@@ -9,11 +9,10 @@
 set -euo pipefail
 
 MOBILECONFIG="$HOME/dotfiles/chrome/chrome-dev-policy.mobileconfig"
-PROFILE_ID="com.dotfiles.chrome"
 KEY="URLAllowlist"
 
 # Base entries that should never be removed
-BASE_ENTRIES=(localhost 127.0.0.1 'file://*' 'chrome://*' 'chrome-extension://*')
+BASE_ENTRIES=(localhost 127.0.0.1 '[::1]' '*.localhost' 'file://*' 'chrome://*' 'chrome-extension://*' 'devtools://*')
 
 _read_list() {
   /usr/libexec/PlistBuddy -c "Print :PayloadContent:0:$KEY" "$MOBILECONFIG" 2>/dev/null \

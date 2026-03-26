@@ -2,6 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- URL Restrictions -->
+	<key>URLBlocklist</key>
+	<array>
+		<string>*</string>
+	</array>
+	<key>URLAllowlist</key>
+	<array>
+		<string>localhost</string>
+		<string>127.0.0.1</string>
+		<string>[::1]</string>
+		<string>*.localhost</string>
+		<string>file://*</string>
+		<string>chrome://*</string>
+		<string>chrome-extension://*</string>
+		<string>devtools://*</string>
+	</array>
+
+	<!-- Cleanup on Exit -->
 	<key>ClearBrowsingDataOnExitList</key>
 	<array>
 		<string>browsing_history</string>
@@ -11,15 +29,103 @@
 		<string>autofill</string>
 		<string>site_settings</string>
 	</array>
-	<key>URLAllowlist</key>
+
+	<!-- Memory & Performance -->
+	<key>BackgroundModeEnabled</key>
+	<false/>
+	<key>HighEfficiencyModeEnabled</key>
+	<true/>
+	<key>BatterySaverModeAvailability</key>
+	<integer>2</integer>
+	<key>HardwareAccelerationModeEnabled</key>
+	<false/>
+	<key>TabDiscardingExceptions</key>
 	<array>
 		<string>localhost</string>
 		<string>127.0.0.1</string>
-		<string>file://*</string>
+		<string>[::1]</string>
 	</array>
-	<key>URLBlocklist</key>
+
+	<!-- Disable Background Services -->
+	<key>SyncDisabled</key>
+	<true/>
+	<key>BrowserSignin</key>
+	<integer>0</integer>
+	<key>MetricsReportingEnabled</key>
+	<false/>
+	<key>SafeBrowsingEnabled</key>
+	<false/>
+	<key>SafeBrowsingExtendedReportingEnabled</key>
+	<false/>
+	<key>SpellCheckServiceEnabled</key>
+	<false/>
+	<key>TranslateEnabled</key>
+	<false/>
+	<key>SearchSuggestEnabled</key>
+	<false/>
+	<key>AlternateErrorPagesEnabled</key>
+	<false/>
+	<key>NetworkPredictionOptions</key>
+	<integer>2</integer>
+	<key>MediaRouterEnabled</key>
+	<false/>
+	<key>AutoplayAllowed</key>
+	<false/>
+	<key>PromotionalTabsEnabled</key>
+	<false/>
+	<key>ShoppingListEnabled</key>
+	<false/>
+
+	<!-- Autofill & Passwords Off -->
+	<key>AutofillAddressEnabled</key>
+	<false/>
+	<key>AutofillCreditCardEnabled</key>
+	<false/>
+	<key>PasswordManagerEnabled</key>
+	<false/>
+
+	<!-- Block All Permissions -->
+	<key>DefaultNotificationsSetting</key>
+	<integer>2</integer>
+	<key>DefaultGeolocationSetting</key>
+	<integer>2</integer>
+	<key>DefaultPopupsSetting</key>
+	<integer>2</integer>
+	<key>DefaultWebBluetoothGuardSetting</key>
+	<integer>2</integer>
+	<key>DefaultWebUsbGuardSetting</key>
+	<integer>2</integer>
+	<key>DefaultSensorsSetting</key>
+	<integer>2</integer>
+	<key>DefaultSerialGuardSetting</key>
+	<integer>2</integer>
+
+	<!-- Minimal Startup & UI -->
+	<key>RestoreOnStartup</key>
+	<integer>4</integer>
+	<key>RestoreOnStartupURLs</key>
 	<array>
-		<string>*</string>
+		<string>about:blank</string>
 	</array>
+	<key>HomepageIsNewTabPage</key>
+	<false/>
+	<key>HomepageLocation</key>
+	<string>about:blank</string>
+	<key>NewTabPageLocation</key>
+	<string>about:blank</string>
+	<key>BookmarkBarEnabled</key>
+	<false/>
+	<key>ShowHomeButton</key>
+	<false/>
+	<key>ShowAppsShortcutInBookmarkBar</key>
+	<false/>
+
+	<!-- Dev Tools Always Available -->
+	<key>DeveloperToolsAvailability</key>
+	<integer>1</integer>
+
+	<!-- Printing Off -->
+	<key>PrintingEnabled</key>
+	<false/>
 </dict>
 </plist>
