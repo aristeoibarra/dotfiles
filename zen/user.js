@@ -227,6 +227,41 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 user_pref("browser.privatebrowsing.autostart", false);
 user_pref("browser.privatebrowsing.enable", false);
 
+// ── Resource Optimization (limited system) ────────────────────
+// Override Betterfox defaults that assume abundant RAM
+
+// Limit content processes: 8 default → 2 (saves ~200-400MB)
+user_pref("dom.ipc.processCount", 2);
+user_pref("dom.ipc.processCount.webIsolated", 1);
+
+// Reduce memory caches (Betterfox sets these high for speed)
+user_pref("browser.cache.memory.capacity", 32768); // 32MB (was 128MB)
+user_pref("media.memory_cache_max_size", 65536); // 64MB (was 256MB)
+user_pref("media.memory_caches_combined_limit_kb", 262144); // 256MB (was 1GB)
+
+// Reduce back/forward page cache held in memory
+user_pref("browser.sessionhistory.max_total_viewers", 2); // was 4
+
+// Localhost doesn't need 1800 connections or 10k DNS entries
+user_pref("network.http.max-connections", 256);
+user_pref("network.dnsCacheEntries", 256);
+
+// Unload tabs when memory is low + lazy restore on startup
+user_pref("browser.tabs.unloadOnLowMemory", true);
+user_pref("browser.sessionstore.restore_on_demand", true);
+
+// No preallocated processes waiting idle
+user_pref("dom.ipc.processPrelaunch.fission.number", 0);
+
+// New tab page (replaces New Tab Override extension)
+user_pref("browser.newtab.url", "https://vimium.github.io/new-tab/");
+user_pref("browser.newtabpage.enabled", false);
+
+// Disable unused features that consume memory per tab
+user_pref("extensions.pocket.enabled", false);
+user_pref("accessibility.force_disabled", 1);
+user_pref("reader.parse-on-load.enabled", false);
+
 
 /****************************************************************************
  * SECTION: SMOOTHFOX                                                       *
