@@ -138,5 +138,62 @@ export PATH="$HOME/.local/bin:$PATH"
 # Deduplicate PATH (prevents bloat on repeated source — must be last)
 typeset -U PATH
 
+# ── Digiin local dev (M1 8GB optimizations) ────────────────
+DIGIIN_DOCKER="$HOME/digiin/project"  # Main repo — docker-compose + override live here
+export TURBO_CONCURRENCY=2
+
+# Resolve current digiin worktree root, fallback to main
+_dg-root() {
+  local root=$(git rev-parse --show-toplevel 2>/dev/null)
+  [[ -f "$root/turbo.json" ]] && echo "$root" || echo "$DIGIIN_DOCKER"
+}
+
+# Docker: shared across all worktrees (always uses main)
+# Uses docker-compose (standalone) — docker compose plugin conflicts with OrbStack
+dg-up()     { (cd "$DIGIIN_DOCKER" && docker-compose up -d postgres redis); }
+dg-up-all() { (cd "$DIGIIN_DOCKER" && docker-compose up -d); }
+dg-down()   { (cd "$DIGIIN_DOCKER" && docker-compose down); }
+
+# Lint with reduced heap (3GB instead of 8GB) — stop dev servers first
+dg-lint-be() {
+  local root=$(_dg-root)
+  (cd "$root/apps/backend" && NODE_OPTIONS='--max-old-space-size=3072' \
+    pnpm exec eslint '{src,apps,libs,test}/**/*.ts' --fix --cache \
+    --cache-location node_modules/.cache/eslint)
+}
+
+# Typecheck with reduced heap — stop dev servers first
+dg-tc-be() {
+  local root=$(_dg-root)
+  (cd "$root/apps/backend" && NODE_OPTIONS='--max-old-space-size=2560' \
+    pnpm exec tsc -p tsconfig.typecheck.json)
+}
+dg-tc-fe() {
+  local root=$(_dg-root)
+  (cd "$root/apps/frontend" && NODE_OPTIONS='--max-old-space-size=3072' \
+    pnpm exec tsc --noEmit)
+}
+
+# Full validation pipeline (sequential, dev servers OFF)
+dg-validate() {
+  local root=$(_dg-root)
+  echo "-- validating: $root"
+  (cd "$root/apps/backend" && NODE_OPTIONS='--max-old-space-size=3072' \
+    pnpm exec eslint '{src,apps,libs,test}/**/*.ts' --fix --cache \
+    --cache-location node_modules/.cache/eslint) && echo "-- be lint ok" &&
+  (cd "$root/apps/frontend" && pnpm lint) && echo "-- fe lint ok" &&
+  (cd "$root/apps/backend" && NODE_OPTIONS='--max-old-space-size=2560' \
+    pnpm exec tsc -p tsconfig.typecheck.json) && echo "-- be typecheck ok" &&
+  (cd "$root/apps/frontend" && NODE_OPTIONS='--max-old-space-size=3072' \
+    pnpm exec tsc --noEmit) && echo "-- fe typecheck ok" &&
+  echo "all checks passed"
+}
+
+# Clean Next.js cache (current worktree)
+dg-clean() { rm -rf "$(_dg-root)/apps/frontend/.next" && echo "next cache cleared"; }
+
+# Memory monitor
+dg-mem() { memory_pressure | command grep "free percentage"; docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}"; }
+
 # Local secrets (API keys, tokens — never tracked by git)
 [[ -f ~/.env.local ]] && source ~/.env.local

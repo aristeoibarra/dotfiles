@@ -18,6 +18,22 @@ if [[ ! -d "$MAIN_DIR" ]]; then
   exit 1
 fi
 
+ensure_infra() {
+  # Colima
+  if ! colima status &>/dev/null; then
+    echo "Starting Colima..."
+    colima start
+  fi
+
+  # Containers (postgres + redis minimum)
+  local running
+  running=$(docker ps --format '{{.Names}}' 2>/dev/null)
+  if ! echo "$running" | grep -q "digiin-postgres"; then
+    echo "Starting containers..."
+    (cd "$MAIN_DIR" && docker-compose up -d postgres redis)
+  fi
+}
+
 setup_dev_window() {
   local target="$1"
   local dir="$2"
@@ -160,6 +176,7 @@ EOF
 
 case "${1:-}" in
   "")
+    ensure_infra
     main_branch=$(git -C "$MAIN_DIR" branch --show-current)
     open_session "digiin" "$MAIN_DIR" "${main_branch:-main}"
     ;;
@@ -173,6 +190,7 @@ case "${1:-}" in
     cmd_help
     ;;
   *)
+    ensure_infra
     cmd_worktree "$1"
     ;;
 esac
