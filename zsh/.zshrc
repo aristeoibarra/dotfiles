@@ -127,7 +127,7 @@ export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
 export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
 
 # bun completions
-[ -s "/Users/aristeoibarra/.bun/_bun" ] && source "/Users/aristeoibarra/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
