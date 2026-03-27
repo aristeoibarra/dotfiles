@@ -107,21 +107,6 @@ return {
         },
         opts = { skip = true },
       },
-      -- Hide Copilot "rejected by config" messages
-      {
-        filter = {
-          event = "msg_show",
-          find = "rejected by config",
-        },
-        opts = { skip = true },
-      },
-      {
-        filter = {
-          event = "notify",
-          find = "rejected by config",
-        },
-        opts = { skip = true },
-      },
     },
   },
 }

@@ -6,39 +6,13 @@ return {
   opts = {
     -- Dashboard configuration
     dashboard = {
-      enabled = true,
-      sections = {
-        { section = "header" },
-        { icon = " ", title = "Keymaps", section = "keys", indent = 2, padding = 1 },
-        { icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
-        { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
-        { section = "startup" },
-      },
-      preset = {
-        header = [[
-
-████████╗███████╗██╗     ██╗      ██████╗
-╚══██╔══╝██╔════╝██║     ██║     ██╔═══██╗
-   ██║   █████╗  ██║     ██║     ██║   ██║
-   ██║   ██╔══╝  ██║     ██║     ██║   ██║
-   ██║   ███████╗███████╗███████╗╚██████╔╝
-   ╚═╝   ╚══════╝╚══════╝╚══════╝ ╚═════╝
-        ]],
-        keys = {
-          { icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
-          { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-          { icon = " ", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
-          { icon = " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
-          { icon = " ", key = "c", desc = "Config", action = function() vim.cmd("e " .. vim.fn.stdpath("config") .. "/init.lua") end },
-          { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
-          { icon = " ", key = "q", desc = "Quit", action = ":qa" },
-        },
-      },
+      enabled = false,
     },
 
     -- Bigfile (disable features on large files)
     bigfile = {
       enabled = true,
+      size = 512 * 1024, -- 512KB (aggressive for 8GB RAM)
     },
 
     -- Notifier (notifications)

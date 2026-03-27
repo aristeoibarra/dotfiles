@@ -109,16 +109,13 @@ return {
       vim.fn.sign_define("DapBreakpointRejected", { text = "○", texthl = "DapBreakpointRejected", linehl = "", numhl = "" })
 
       -- =======================================================================
-      -- KANAGAWA DRAGON COLORS
+      -- CATPPUCCIN MOCHA COLORS
       -- =======================================================================
-      -- Red: #c4746e | Green: #8a9a7b | Yellow: #c4b28a | Blue: #8ba4b0
-      -- Bright Blue: #7fb4ca | Magenta: #938aa9 | Cyan: #7aa89f
-      -- =======================================================================
-      vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#c4746e" })           -- Red
-      vim.api.nvim_set_hl(0, "DapBreakpointCondition", { fg = "#c4b28a" })  -- Yellow
-      vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#7fb4ca" })             -- Bright Blue
-      vim.api.nvim_set_hl(0, "DapStopped", { fg = "#8a9a7b" })              -- Green
-      vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#1f1d1a" })          -- Subtle yellow tint
+      vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#f38ba8" })           -- Red
+      vim.api.nvim_set_hl(0, "DapBreakpointCondition", { fg = "#f9e2af" })  -- Yellow
+      vim.api.nvim_set_hl(0, "DapLogPoint", { fg = "#74c7ec" })             -- Sapphire
+      vim.api.nvim_set_hl(0, "DapStopped", { fg = "#a6e3a1" })              -- Green
+      vim.api.nvim_set_hl(0, "DapStoppedLine", { bg = "#2a2b3d" })          -- Subtle surface tint
 
       -- =====================================================================
       -- JavaScript/TypeScript/Node.js Configuration

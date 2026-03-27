@@ -5,7 +5,7 @@ return {
   -- ============================================================================
   {
     "stevearc/conform.nvim",
-    lazy = false,
+    event = { "BufWritePre", "BufNewFile" },
     config = function()
       local conform = require("conform")
 
@@ -25,7 +25,7 @@ return {
           lua = { "stylua" },
         },
         format_on_save = {
-          timeout_ms = 10000,
+          timeout_ms = 3000,
           lsp_format = "never",
         },
         notify_on_error = true,
@@ -114,14 +114,6 @@ return {
 
       -- Auto-lint on save
       vim.api.nvim_create_autocmd("BufWritePost", {
-        group = lint_augroup,
-        callback = function()
-          lint.try_lint()
-        end,
-      })
-
-      -- Auto-lint on insert leave (when you finish editing)
-      vim.api.nvim_create_autocmd("InsertLeave", {
         group = lint_augroup,
         callback = function()
           lint.try_lint()

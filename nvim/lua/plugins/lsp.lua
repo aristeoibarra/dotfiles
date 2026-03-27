@@ -36,6 +36,9 @@ return {
             require("lspconfig").ts_ls.setup({
               capabilities = require("blink.cmp").get_lsp_capabilities(),
               autostart = false,
+              init_options = {
+                maxTsServerMemory = 2048,
+              },
             })
           end,
 

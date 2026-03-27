@@ -70,5 +70,15 @@ return {
     })
 
     vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
+
+    -- Auto-open tree on startup
+    vim.api.nvim_create_autocmd("VimEnter", {
+      callback = function()
+        require("nvim-tree.api").tree.open()
+        if vim.fn.argc() == 0 then
+          vim.cmd("only")
+        end
+      end,
+    })
   end,
 }
