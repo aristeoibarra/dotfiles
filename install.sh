@@ -40,7 +40,7 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 CORE_DEPS=("nvim" "tmux" "zsh" "yabai" "skhd")
 
 # Terminals (at least one required)
-TERMINAL_DEPS=("alacritty" "ghostty")
+TERMINAL_DEPS=("alacritty")
 
 # Modern CLI replacements (shell, search, files, git)
 CLI_DEPS=("bat" "rg" "fd" "eza" "sd" "delta" "difft" "fzf" "zoxide" "lazygit" "gh" "atuin" "yazi" "sesh")
@@ -58,7 +58,7 @@ MEDIA_DEPS=("mpv")
 CONTAINER_DEPS=("docker" "colima" "docker-compose")
 
 # Optional
-OPTIONAL_DEPS=("code" "deno")
+OPTIONAL_DEPS=("deno")
 
 # Homebrew packages mapping (command:brew_package)
 get_brew_package() {
@@ -69,7 +69,6 @@ get_brew_package() {
         yabai) echo "koekeishiya/formulae/yabai" ;;
         skhd) echo "koekeishiya/formulae/skhd" ;;
         alacritty) echo "--cask alacritty" ;;
-        ghostty) echo "--cask ghostty" ;;
         bat) echo "bat" ;;
         rg) echo "ripgrep" ;;
         fd) echo "fd" ;;
@@ -97,7 +96,6 @@ get_brew_package() {
         colima) echo "colima" ;;
         docker-compose) echo "docker-compose" ;;
         deno) echo "deno" ;;
-        code) echo "--cask visual-studio-code" ;;
         *) echo "$1" ;;
     esac
 }
@@ -234,7 +232,7 @@ check_dependencies() {
         fi
     done
     if [ "$terminal_found" = false ]; then
-        echo -e "${RED}  ✗ No terminal found (install alacritty or ghostty)${NC}"
+        echo -e "${RED}  ✗ No terminal found (install alacritty)${NC}"
         ((missing++))
     fi
 
@@ -361,7 +359,6 @@ create_config_dir
 echo -e "${BLUE}Creating symlinks...${NC}"
 create_symlink "$DOTFILES_DIR/nvim" "$CONFIG_DIR/nvim" "Neovim"
 create_symlink "$DOTFILES_DIR/alacritty" "$CONFIG_DIR/alacritty" "Alacritty"
-create_symlink "$DOTFILES_DIR/ghostty" "$CONFIG_DIR/ghostty" "Ghostty"
 create_symlink "$DOTFILES_DIR/yabai" "$CONFIG_DIR/yabai" "Yabai"
 create_symlink "$DOTFILES_DIR/skhd" "$CONFIG_DIR/skhd" "skhd"
 create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"
@@ -401,44 +398,6 @@ else
     mkdir -p "$HOME/.tmux"
 fi
 create_symlink "$DOTFILES_DIR/tmux/tmux-swap-and-follow.sh" "$HOME/.tmux/tmux-swap-and-follow.sh" "Tmux swap script"
-
-# VS Code configuration
-VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
-if [ -d "$HOME/Library/Application Support/Code" ]; then
-    if [ "$DRY_RUN" = true ]; then
-        echo -e "${YELLOW}[DRY RUN]${NC} Would create: $VSCODE_USER_DIR"
-    else
-        mkdir -p "$VSCODE_USER_DIR"
-        mkdir -p "$VSCODE_USER_DIR/snippets"
-    fi
-    create_symlink "$DOTFILES_DIR/vscode/settings.json" "$VSCODE_USER_DIR/settings.json" "VS Code settings"
-    create_symlink "$DOTFILES_DIR/vscode/keybindings.json" "$VSCODE_USER_DIR/keybindings.json" "VS Code keybindings"
-
-    # Install VS Code extensions
-    if [ "$DRY_RUN" = true ]; then
-        echo -e "${YELLOW}[DRY RUN]${NC} Would install VS Code extensions from extensions.txt"
-    else
-        echo -e "${BLUE}Installing VS Code extensions...${NC}"
-        while IFS= read -r extension || [ -n "$extension" ]; do
-            if [ -n "$extension" ]; then
-                code --install-extension "$extension" --force > /dev/null 2>&1 && \
-                    echo -e "${GREEN}  ✓${NC} $extension" || \
-                    echo -e "${YELLOW}  ⚠${NC} $extension (failed)"
-            fi
-        done < "$DOTFILES_DIR/vscode/extensions.txt"
-    fi
-else
-    echo -e "${YELLOW}VS Code not installed, skipping VS Code config${NC}"
-fi
-
-# Warp terminal theme
-WARP_THEMES_DIR="$HOME/.warp/themes"
-if [ "$DRY_RUN" = true ]; then
-    echo -e "${YELLOW}[DRY RUN]${NC} Would create: $WARP_THEMES_DIR"
-else
-    mkdir -p "$WARP_THEMES_DIR"
-fi
-create_symlink "$DOTFILES_DIR/warp/themes/kanagawa-dragon.yaml" "$WARP_THEMES_DIR/kanagawa-dragon.yaml" "Warp theme"
 
 if [ "$DRY_RUN" = true ]; then
     echo -e "\n${YELLOW}DRY RUN complete. Run without --dry-run to apply changes.${NC}"

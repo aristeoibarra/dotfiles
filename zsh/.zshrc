@@ -6,7 +6,7 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
-export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:$HOME/.opencode/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:/opt/homebrew/bin:$PATH"
 
 # Node version manager (fnm — Rust, <5ms init, .nvmrc compatible)
 eval "$(fnm env --use-on-cd)"

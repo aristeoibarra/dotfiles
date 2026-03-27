@@ -70,9 +70,6 @@ return {
       -- DAP/Debug
       { "<leader>b", desc = "Toggle breakpoint" },
 
-      -- OpenCode
-      { "<leader>o", group = "opencode" },
-
       -- Obsidian
       { "<leader>O", group = "obsidian" },
 

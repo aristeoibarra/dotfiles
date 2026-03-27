@@ -8,7 +8,6 @@ My personal dotfiles for macOS, optimized for a keyboard-centric, minimal develo
 
 - **[Neovim](https://neovim.io/)** - Modern extensible text editor with Lua configuration and Lazy.nvim plugin manager
 - **[Alacritty](https://alacritty.org/)** - GPU-accelerated terminal emulator
-- **[Ghostty](https://ghostty.org/)** - Fast, native terminal emulator (alternative)
 - **[Yabai](https://github.com/koekeishiya/yabai)** - Tiling window manager for macOS
 - **[skhd](https://github.com/koekeishiya/skhd)** - Hotkey daemon for macOS
 - **[Tmux](https://github.com/tmux/tmux)** - Terminal multiplexer with TPM plugins
@@ -18,13 +17,6 @@ My personal dotfiles for macOS, optimized for a keyboard-centric, minimal develo
 ### Browser
 
 - **[Zen Browser](https://zen-browser.app/)** - Privacy-focused Firefox fork with Betterfox configuration
-
-### Optional
-
-- **[VS Code](https://code.visualstudio.com/)** - Secondary editor with Kanagawa theme and 18+ extensions
-- **[OpenCode](https://github.com/opencode-ai/opencode)** - Code assistant with MCP integration
-- **[Warp](https://www.warp.dev/)** - Modern terminal with AI features and Kanagawa theme
-- **[Mole](https://github.com/tw93/mole)** - macOS cleanup and optimization tool
 
 ## Theme
 
@@ -40,7 +32,7 @@ Switch themes across all tools with:
 ~/dotfiles/bin/theme dragon  # or wave, lotus
 ```
 
-This synchronizes colors in Neovim, Starship, Tmux, Alacritty, Ghostty, and FZF.
+This synchronizes colors in Neovim, Starship, Tmux, Alacritty, and FZF.
 
 ## Structure
 
@@ -55,9 +47,6 @@ dotfiles/
 ├── alacritty/                 # Terminal emulator
 │   ├── alacritty.toml         # Main config
 │   └── kanagawa-*.toml        # Theme variants
-│
-├── ghostty/                   # Alternative terminal
-│   └── config                 # Kanagawa Dragon theme
 │
 ├── yabai/                     # Tiling window manager
 │   └── yabairc                # Stack layout, padding, app exclusions
@@ -75,25 +64,10 @@ dotfiles/
 ├── starship/                  # Shell prompt
 │   └── starship.toml          # Kanagawa theme with git/node info
 │
-├── vscode/                    # VS Code (optional)
-│   ├── settings.json          # Editor settings
-│   ├── keybindings.json       # Custom bindings
-│   └── extensions.txt         # Extension list
-│
-├── warp/                      # Warp terminal (optional)
-│   └── themes/
-│       └── kanagawa-dragon.yaml
-│
 ├── zen/                       # Zen Browser
 │   ├── user.js                # Betterfox configuration
 │   └── chrome/
 │       └── userChrome.css     # UI customizations
-│
-├── opencode/                  # Code assistant
-│   └── opencode.json          # Theme and MCP config
-│
-├── mole/                      # macOS cleanup tool
-│   └── README.md              # Installation and commands
 │
 ├── bin/                       # Utility scripts
 │   └── theme                  # Theme switcher
@@ -184,7 +158,7 @@ brew install neovim tmux zsh starship
 brew install koekeishiya/formulae/yabai koekeishiya/formulae/skhd
 
 # Terminals (at least one)
-brew install --cask alacritty ghostty
+brew install --cask alacritty
 
 # Modern CLI tools (required)
 brew install bat ripgrep fd eza fzf zoxide lazygit jq yq mpv sd difftastic ast-grep shellcheck scc git-delta gh
@@ -207,7 +181,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 | Category | Tools |
 |----------|-------|
 | Core | nvim, tmux, zsh, yabai, skhd |
-| Terminals | alacritty, ghostty |
+| Terminals | alacritty |
 | CLI Tools | bat, rg, fd, eza, sd, delta, difft, fzf, zoxide, lazygit, gh, atuin, yazi, sesh |
 | Dev Tools | ast-grep, shellcheck, scc, jq, yq |
 | Runtimes | fnm, pnpm, bun, starship |
@@ -216,7 +190,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 | Zsh Plugins | zsh-autosuggestions, zsh-syntax-highlighting, zsh-completions, fzf-tab |
 | Fonts | JetBrainsMono Nerd Font |
 | Tmux | TPM (Tmux Plugin Manager) |
-| Optional | VS Code, deno |
+| Optional | deno |
 
 ### Yabai SIP Configuration
 
@@ -254,8 +228,6 @@ The installer:
 - Validates all dependencies (core, terminals, CLI tools, plugins)
 - Creates backups of existing configs (`.backup` files)
 - Creates symlinks to `~/.config/`
-- Installs VS Code extensions (if VS Code is installed)
-- Installs Warp theme to `~/.warp/themes/`
 
 **Options:**
 
@@ -316,7 +288,7 @@ bash ~/dotfiles/macos/enable-animations.sh
 - Runs in terminal, integrates with tmux
 - 50MB memory (vs 500MB+)
 
-**Why Alacritty/Ghostty?**
+**Why Alacritty?**
 - GPU-accelerated, smooth scrolling
 - Minimal config, zero bloat
 - No tabs/splits (tmux handles this)

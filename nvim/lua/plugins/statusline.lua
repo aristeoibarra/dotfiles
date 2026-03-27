@@ -30,20 +30,6 @@ local mode_component = {
   end,
 }
 
--- OpenCode adapter info (for AI chat buffers)
-local function opencode_status()
-  local ok, opencode = pcall(require, "opencode")
-  if not ok then
-    return nil
-  end
-  -- Check if we're in an opencode buffer
-  local bufname = vim.fn.bufname()
-  if bufname:match("opencode") or vim.bo.filetype == "opencode" then
-    return " AI"
-  end
-  return nil
-end
-
 return {
   -- =========================================================================
   -- LUALINE: Minimalist statusline (Gentleman-style)

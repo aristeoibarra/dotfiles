@@ -31,7 +31,7 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 CORE_DEPS=("nvim" "tmux" "zsh" "yabai" "skhd")
 
 # Terminals
-TERMINAL_DEPS=("alacritty" "ghostty")
+TERMINAL_DEPS=("alacritty")
 
 # Modern CLI tools
 CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship")
@@ -51,7 +51,6 @@ get_brew_package() {
         yabai) echo "yabai" ;;
         skhd) echo "skhd" ;;
         alacritty) echo "alacritty" ;;
-        ghostty) echo "ghostty" ;;
         bat) echo "bat" ;;
         rg) echo "ripgrep" ;;
         fd) echo "fd" ;;
@@ -128,11 +127,11 @@ remove_dependencies() {
     fi
 
     echo -e "\n${YELLOW}Note: Core dependencies (neovim, tmux, yabai, skhd) were NOT removed.${NC}"
-    echo -e "${YELLOW}Note: Terminals (alacritty, ghostty) were NOT removed.${NC}"
+    echo -e "${YELLOW}Note: Terminals (alacritty) were NOT removed.${NC}"
     echo -e "${YELLOW}Note: Fonts were NOT removed.${NC}"
     echo -e "${BLUE}To remove them manually:${NC}"
     echo -e "  brew uninstall neovim tmux yabai skhd"
-    echo -e "  brew uninstall --cask alacritty ghostty"
+    echo -e "  brew uninstall --cask alacritty"
     echo -e "  brew uninstall --cask font-jetbrains-mono-nerd-font"
 }
 
@@ -160,21 +159,12 @@ echo -e "\n${BLUE}Removing symlinks...${NC}"
 # Remove each configuration
 remove_symlink "$CONFIG_DIR/nvim" "Neovim"
 remove_symlink "$CONFIG_DIR/alacritty" "Alacritty"
-remove_symlink "$CONFIG_DIR/ghostty" "Ghostty"
 remove_symlink "$CONFIG_DIR/yabai" "Yabai"
 remove_symlink "$CONFIG_DIR/skhd" "skhd"
 remove_symlink "$CONFIG_DIR/starship.toml" "Starship"
 remove_symlink "$HOME/.tmux.conf" "Tmux"
 remove_symlink "$HOME/.tmux/tmux-swap-and-follow.sh" "Tmux swap script"
 remove_symlink "$HOME/.zshrc" "Zsh"
-
-# Remove VS Code symlinks
-VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
-remove_symlink "$VSCODE_USER_DIR/settings.json" "VS Code settings"
-remove_symlink "$VSCODE_USER_DIR/keybindings.json" "VS Code keybindings"
-
-# Remove Warp theme
-remove_symlink "$HOME/.warp/themes/kanagawa-dragon.yaml" "Warp theme"
 
 # Claude Code
 remove_symlink "$HOME/.claude/CLAUDE.md" "Claude CLAUDE.md"

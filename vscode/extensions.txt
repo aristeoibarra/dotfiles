@@ -1,9 +1,0 @@
-anthropic.claude-code
-bradlc.vscode-tailwindcss
-dbaeumer.vscode-eslint
-dsznajder.es7-react-js-snippets
-esbenp.prettier-vscode
-jdinhlife.gruvbox
-prisma.prisma
-tal7aouy.icons
-vscodevim.vim
