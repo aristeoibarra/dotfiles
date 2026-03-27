@@ -92,22 +92,6 @@ return {
               lualine_z = {},
             },
           },
-          -- Terminal extension
-          {
-            filetypes = { "toggleterm", "terminal" },
-            sections = {
-              lualine_a = { mode_component },
-              lualine_b = {
-                function()
-                  return " Terminal"
-                end,
-              },
-              lualine_c = {},
-              lualine_x = {},
-              lualine_y = {},
-              lualine_z = {},
-            },
-          },
           -- Neogit extension
           {
             filetypes = { "NeogitStatus", "NeogitCommitMessage" },
@@ -140,22 +124,6 @@ return {
               lualine_z = {},
             },
           },
-          -- Trouble extension
-          {
-            filetypes = { "Trouble" },
-            sections = {
-              lualine_a = { mode_component },
-              lualine_b = {
-                function()
-                  return " Diagnostics"
-                end,
-              },
-              lualine_c = {},
-              lualine_x = {},
-              lualine_y = {},
-              lualine_z = {},
-            },
-          },
           -- Telescope extension
           {
             filetypes = { "TelescopePrompt" },
@@ -180,22 +148,6 @@ return {
               lualine_b = {
                 function()
                   return "󰒲 Lazy"
-                end,
-              },
-              lualine_c = {},
-              lualine_x = {},
-              lualine_y = {},
-              lualine_z = {},
-            },
-          },
-          -- Mason extension
-          {
-            filetypes = { "mason" },
-            sections = {
-              lualine_a = { mode_component },
-              lualine_b = {
-                function()
-                  return " Mason"
                 end,
               },
               lualine_c = {},

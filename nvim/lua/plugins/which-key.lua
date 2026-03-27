@@ -47,31 +47,9 @@ return {
       -- Buffer operations
       { "<leader>b", group = "buffer" },
 
-      -- Diagnostics
-      { "<leader>d", desc = "Diagnostics list" },
-      { "<leader>D", desc = "Diagnostic float" },
-
-      -- LSP & Code
-      { "<leader>l", group = "lsp" },
-      { "<leader>c", group = "code" },
-
       -- Git
       { "<leader>g", group = "git" },
       { "<leader>h", group = "hunk" },
-
-      -- Harpoon
-      { "<leader>m", group = "harpoon" },
-
-      -- Multicursor
-      { "<leader>M", group = "multicursor" },
-
-      -- Flash (s and S are mapped directly, no leader)
-
-      -- DAP/Debug
-      { "<leader>b", desc = "Toggle breakpoint" },
-
-      -- Obsidian
-      { "<leader>O", group = "obsidian" },
 
       -- Zen mode
       { "<leader>z", desc = "Zen mode" },
