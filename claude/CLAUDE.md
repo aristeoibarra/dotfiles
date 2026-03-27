@@ -1,8 +1,8 @@
 # Claude Code - Global Configuration
 
 ## Language
-- Code, variables, commits: always in English
-- Explanations and conversation: Spanish (direct style)
+- Everything in English: code, commits, conversation
+- Direct style, no filler
 
 ## Response Style
 - Be concise. Don't explain the obvious.
