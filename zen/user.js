@@ -182,6 +182,9 @@ user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("browser.compactmode.show", true);
 user_pref("browser.privateWindowSeparation.enabled", false); // WINDOWS
 
+/** TRANSLATIONS ***/
+user_pref("browser.translations.automaticallyPopup", false);
+
 /** AI ***/
 user_pref("browser.ml.enable", false);
 user_pref("browser.ml.chat.enabled", false);
@@ -196,6 +199,13 @@ user_pref("full-screen-api.warning.timeout", 0);
 
 /** URL BAR ***/
 user_pref("browser.urlbar.trending.featureGate", false);
+user_pref("browser.urlbar.openViewOnFocus", false);
+user_pref("browser.urlbar.suggest.topsites", false);
+user_pref("browser.urlbar.suggest.bookmark", false);
+user_pref("browser.urlbar.suggest.history", false);
+user_pref("browser.urlbar.suggest.openpage", false);
+user_pref("browser.urlbar.suggest.engines", false);
+user_pref("browser.urlbar.maxRichResults", 0);
 
 /** NEW TAB PAGE ***/
 user_pref("browser.newtabpage.activity-stream.default.sites", "");
