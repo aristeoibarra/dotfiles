@@ -57,7 +57,7 @@ shift + alt - a : open -a "Alacritty"
 shift + alt - z : open -a "Zen"
 shift + alt - c : open -a "Claude"
 shift + alt - p : open -a "Podcasts"
-shift + alt - u : open -a "Music"
+shift + alt - m : open -a "Music"
 shift + alt - o : open "obsidian://open?vault=aristeo"
 
 # All apps
