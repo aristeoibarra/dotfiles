@@ -6,7 +6,7 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
-export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:$HOME/.opencode/bin:/opt/homebrew/bin:$PATH"
+export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:/opt/homebrew/bin:$PATH"
 
 # Node version manager (fnm — Rust, <5ms init, .nvmrc compatible)
 eval "$(fnm env --use-on-cd)"
@@ -104,10 +104,6 @@ tn() {
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
 alias bwu='eval "$(bw-unlock)"'
 
-# Focus mode (brown noise for concentration)
-alias focus='nohup ffplay -nodisp -loglevel quiet -f lavfi -i "anoisesrc=c=brown" -volume 40 &>/dev/null &'
-alias unfocus='pkill -f "ffplay.*anoisesrc"'
-
 # Arrow keys for autosuggestions
 bindkey '^[[C' forward-char      # Right arrow - accept full suggestion
 bindkey '^[OC' forward-char      # Right arrow (alternate escape sequence)
@@ -123,8 +119,11 @@ eval "$(zoxide init zsh)"
 
 # nextdns-blocker shell completion
 command -v nextdns-blocker > /dev/null && eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
-export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
-export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
+# PHP (only if installed)
+if [[ -x /opt/homebrew/opt/php@8.2/bin/php ]]; then
+  export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
+  export PATH="/opt/homebrew/opt/php@8.2/sbin:$PATH"
+fi
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

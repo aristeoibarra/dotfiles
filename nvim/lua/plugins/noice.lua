@@ -7,13 +7,13 @@ return {
     "MunifTanjim/nui.nvim",
   },
   config = function(_, opts)
-    vim.opt.cmdheight = 0 -- Hide cmdline, noice handles it
+    vim.opt.cmdheight = 0
     require("noice").setup(opts)
   end,
   opts = {
     cmdline = {
       enabled = true,
-      view = "cmdline_popup", -- Floating popup for commands
+      view = "cmdline_popup",
       format = {
         cmdline = { icon = ":" },
         search_down = { icon = "/" },
@@ -25,11 +25,11 @@ return {
     },
     messages = {
       enabled = true,
-      view = "mini", -- Minimal messages at bottom right
+      view = "mini",
       view_error = "mini",
       view_warn = "mini",
       view_history = "messages",
-      view_search = false, -- Disable search count messages
+      view_search = false,
     },
     popupmenu = {
       enabled = true,
@@ -40,24 +40,14 @@ return {
       view = "mini",
     },
     lsp = {
-      progress = {
-        enabled = false, -- Disable LSP progress (can be noisy)
-      },
-      override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
-        ["cmp.entry.get_documentation"] = true,
-      },
-      signature = {
-        enabled = false, -- Using lsp_signature or built-in
-      },
+      progress = { enabled = false },
+      override = {},
+      signature = { enabled = false },
     },
     presets = {
-      bottom_search = false, -- Use floating for search too
-      command_palette = true, -- Command palette style
-      long_message_to_split = true, -- Long messages in split
-      inc_rename = false,
-      lsp_doc_border = true,
+      bottom_search = false,
+      command_palette = true,
+      long_message_to_split = true,
     },
     views = {
       mini = {
@@ -82,7 +72,6 @@ return {
       },
     },
     routes = {
-      -- Hide "written" messages
       {
         filter = {
           event = "msg_show",
@@ -91,34 +80,10 @@ return {
         },
         opts = { skip = true },
       },
-      -- Hide search count messages
       {
         filter = {
           event = "msg_show",
           kind = "search_count",
-        },
-        opts = { skip = true },
-      },
-      -- Hide "No information available" from LSP
-      {
-        filter = {
-          event = "notify",
-          find = "No information available",
-        },
-        opts = { skip = true },
-      },
-      -- Hide Copilot "rejected by config" messages
-      {
-        filter = {
-          event = "msg_show",
-          find = "rejected by config",
-        },
-        opts = { skip = true },
-      },
-      {
-        filter = {
-          event = "notify",
-          find = "rejected by config",
         },
         opts = { skip = true },
       },

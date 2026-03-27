@@ -13,20 +13,11 @@ autocmd("TextYankPost", {
   desc = "Highlight when yanking text",
 })
 
--- Remove trailing whitespace on save (exclude files handled by formatters)
+-- Remove trailing whitespace on save
 autocmd("BufWritePre", {
   group = augroup("trim_whitespace", { clear = true }),
   pattern = "*",
   callback = function()
-    -- Skip filetypes that are handled by conform/prettier
-    local dominated_by_formatter = {
-      json = true, jsonc = true, javascript = true, typescript = true,
-      javascriptreact = true, typescriptreact = true, css = true,
-      scss = true, less = true, html = true, yaml = true, lua = true,
-    }
-    if dominated_by_formatter[vim.bo.filetype] then
-      return
-    end
     local save_cursor = vim.fn.getpos(".")
     vim.cmd([[%s/\s\+$//e]])
     vim.fn.setpos(".", save_cursor)
@@ -77,32 +68,3 @@ autocmd("BufReadPre", {
   desc = "Open images with system default app",
 })
 
--- Verify Mason LSP servers on startup (non-blocking)
-autocmd("VimEnter", {
-  group = augroup("mason_health_check", { clear = true }),
-  callback = function()
-    vim.defer_fn(function()
-      local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
-      local required_servers = {
-        "typescript-language-server",
-        "tailwindcss-language-server",
-      }
-
-      local broken = {}
-      for _, server in ipairs(required_servers) do
-        local server_path = mason_bin .. "/" .. server
-        if vim.fn.executable(server_path) ~= 1 then
-          table.insert(broken, server)
-        end
-      end
-
-      if #broken > 0 then
-        vim.notify(
-          "LSP servers not working: " .. table.concat(broken, ", ") .. "\nRun :checkhealth config for details",
-          vim.log.levels.WARN
-        )
-      end
-    end, 1000) -- Delay 1 second to not block startup
-  end,
-  desc = "Check Mason LSP servers on startup",
-})

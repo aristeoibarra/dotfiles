@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# dev — open nvim + claude side by side in tmux
+
+if [[ -z "$TMUX" ]]; then
+  echo "dev requires tmux"
+  exit 1
+fi
+
+dir="$(pwd)"
+
+tmux split-window -h -c "$dir"
+tmux send-keys "claude --dangerously-skip-permissions" Enter
+tmux resize-pane -x 80%
+
+tmux select-pane -L
+nvim
