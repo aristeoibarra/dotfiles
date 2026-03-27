@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# bw-unlock — Unlock Bitwarden vault and sync session token
+# Usage: eval "$(bw-unlock)"
+set -euo pipefail
+
+ENV_FILE="$HOME/.env.local"
+
+# Check bw is logged in
+if ! bw login --check &>/dev/null; then
+  echo 'echo "Error: not logged in. Run: bw login"' >&2
+  exit 1
+fi
+
+# Unlock and capture token
+TOKEN=$(bw unlock --raw 2>/dev/null)
+if [[ -z "$TOKEN" ]]; then
+  echo 'echo "Error: unlock failed"' >&2
+  exit 1
+fi
+
+# Update or add BW_SESSION in ~/.env.local
+if grep -q '^export BW_SESSION=' "$ENV_FILE" 2>/dev/null; then
+  sed -i '' "s|^export BW_SESSION=.*|export BW_SESSION=\"$TOKEN\"|" "$ENV_FILE"
+else
+  printf '\n# Bitwarden session (auto-updated by bw-unlock)\nexport BW_SESSION="%s"\n' "$TOKEN" >> "$ENV_FILE"
+fi
+
+# Output export command (captured by eval)
+echo "export BW_SESSION=\"$TOKEN\""
+echo "# Vault unlocked — token in shell + ~/.env.local" >&2
+echo "# Restart Claude Code to pick up the new token" >&2

@@ -102,6 +102,7 @@ tn() {
 
 # System utilities
 alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+alias bwu='eval "$(bw-unlock)"'
 
 # Focus mode (brown noise for concentration)
 alias focus='nohup ffplay -nodisp -loglevel quiet -f lavfi -i "anoisesrc=c=brown" -volume 40 &>/dev/null &'
