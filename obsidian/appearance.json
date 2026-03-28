@@ -1,7 +1,7 @@
 {
   "showViewHeader": false,
   "showRibbon": false,
-  "accentColor": "#8ba4b0",
+  "accentColor": "#89b4fa",
   "baseFontSize": 18,
   "enabledCssSnippets": [
     "mono-dark",
