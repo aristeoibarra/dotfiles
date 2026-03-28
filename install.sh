@@ -409,4 +409,6 @@ else
     echo -e "  3. Install Tmux plugins: prefix + I"
     echo -e "  4. Import shell history: atuin import auto"
     echo -e "  5. Restart services: yabai --restart-service && skhd --restart-service"
+    echo -e "  6. Apply macOS optimizations: bash ~/dotfiles/macos/disable-animations.sh"
+    echo -e "  7. Disable unused services: bash ~/dotfiles/macos/disable-extras.sh"
 fi

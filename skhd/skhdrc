@@ -49,11 +49,19 @@ shift + alt - r : yabai --restart-service; skhd --restart-service
 # Move to space: requiere SIP deshabilitado o arrastrar manualmente con Mission Control
 
 # ============================================
-# APPS
+# APPS (replaces Raycast — saves ~88 MB)
 # ============================================
 
-# Obsidian - vault personal
-alt - o : open "obsidian://open?vault=aristeo"
+# Launch / focus apps
+shift + alt - a : open -a "Alacritty"
+shift + alt - z : open -a "Zen"
+shift + alt - c : open -a "Claude"
+shift + alt - p : open -a "Podcasts"
+shift + alt - m : open -a "Music"
+shift + alt - o : open "obsidian://open?vault=aristeo"
 
-# Daily note en nvim (tmux)
-shift + alt - o : osascript -e 'tell application "Alacritty" to activate' && (/opt/homebrew/bin/tmux select-window -t obsidian 2>/dev/null || /opt/homebrew/bin/tmux new-window -n obsidian "$HOME/dotfiles/tmux/obsidian-daily-open.sh")
+# All apps
+shift + alt - space : open /System/Applications/Apps.app
+
+# Quit focused app
+shift + alt - q : yabai -m query --windows --window | jq -r '.pid' | xargs kill
