@@ -2,7 +2,7 @@
   "showViewHeader": false,
   "showRibbon": false,
   "accentColor": "#89b4fa",
-  "baseFontSize": 18,
+  "baseFontSize": 26,
   "enabledCssSnippets": [
     "mono-dark",
     "ui-tweaks"

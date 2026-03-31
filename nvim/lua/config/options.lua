@@ -28,7 +28,7 @@ vim.opt.linebreak = true -- Wrap at word boundaries (better for long Tailwind cl
 vim.opt.breakindent = true -- Maintain indentation on wrapped lines
 vim.opt.showbreak = "↪ " -- Show indicator for wrapped lines
 vim.opt.cmdheight = 1 -- Will be set to 0 by noice.nvim when it loads
-vim.opt.mouse = "a" -- Enable mouse (useful for multicursor, resizing splits, etc.)
+vim.opt.mouse = "" -- Mouse disabled — keyboard-driven workflow
 vim.opt.laststatus = 0 -- Will be set to 3 by lualine when it loads
 
 -- Files
