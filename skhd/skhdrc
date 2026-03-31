@@ -64,4 +64,4 @@ shift + alt - o : open "obsidian://open?vault=aristeo"
 shift + alt - space : open /System/Applications/Apps.app
 
 # Quit focused app
-shift + alt - q : yabai -m query --windows --window | jq -r '.pid' | xargs kill
+shift + alt - q : app=$(yabai -m query --windows --window | jq -r '.app') && osascript -e "tell application \"$app\" to quit"
