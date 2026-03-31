@@ -27,11 +27,12 @@ user_pref("gfx.canvas.accelerated.cache-size", 4096);
 user_pref("webgl.max-size", 16384);
 
 /** DISK CACHE ***/
-user_pref("browser.cache.disk.enable", false);
+user_pref("browser.cache.disk.enable", true);
+user_pref("browser.cache.disk.smart_size.enabled", true);
 
 /** MEMORY CACHE ***/
 user_pref("browser.cache.memory.capacity", 131072);
-user_pref("browser.cache.memory.max_entry_size", 20480);
+user_pref("browser.cache.memory.max_entry_size", 153600);
 user_pref("browser.sessionhistory.max_total_viewers", 4);
 user_pref("browser.sessionstore.max_tabs_undo", 10);
 
@@ -43,7 +44,7 @@ user_pref("media.cache_resume_threshold", 300);
 
 /** IMAGE CACHE ***/
 user_pref("image.cache.size", 10485760);
-user_pref("image.mem.decode_bytes_at_a_time", 65536);
+user_pref("image.mem.decode_bytes_at_a_time", 131072);
 
 /** NETWORK ***/
 user_pref("network.http.max-connections", 1800);
@@ -56,12 +57,12 @@ user_pref("network.dnsCacheExpiration", 3600);
 user_pref("network.ssl_tokens_cache_capacity", 10240);
 
 /** SPECULATIVE LOADING ***/
-user_pref("network.http.speculative-parallel-limit", 0);
-user_pref("network.dns.disablePrefetch", true);
-user_pref("network.dns.disablePrefetchFromHTTPS", true);
-user_pref("browser.urlbar.speculativeConnect.enabled", false);
-user_pref("browser.places.speculativeConnect.enabled", false);
-user_pref("network.prefetch-next", false);
+user_pref("network.http.speculative-parallel-limit", 6);
+user_pref("network.dns.disablePrefetch", false);
+user_pref("network.dns.disablePrefetchFromHTTPS", false);
+user_pref("browser.urlbar.speculativeConnect.enabled", true);
+user_pref("browser.places.speculativeConnect.enabled", true);
+user_pref("network.prefetch-next", true);
 
 /****************************************************************************
  * SECTION: SECUREFOX                                                       *
@@ -80,11 +81,12 @@ user_pref("security.csp.reporting.enabled", false);
 /** SSL / TLS ***/
 user_pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 user_pref("browser.xul.error_pages.expert_bad_cert", true);
-user_pref("security.tls.enable_0rtt_data", false);
+user_pref("security.tls.enable_0rtt_data", true);
 
 /** DISK AVOIDANCE ***/
 user_pref("browser.privatebrowsing.forceMediaMemoryCache", true);
-user_pref("browser.sessionstore.interval", 60000);
+user_pref("browser.sessionstore.interval", 15000);
+user_pref("browser.sessionstore.resume_from_crash", true);
 
 /** SHUTDOWN & SANITIZING ***/
 user_pref("privacy.history.custom", true);
@@ -237,37 +239,71 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 user_pref("browser.privatebrowsing.autostart", false);
 user_pref("browser.privatebrowsing.enable", false);
 
-// ── Resource Optimization (limited system) ────────────────────
-// Override Betterfox defaults that assume abundant RAM
+// ── Network Speed Optimization ──────────────────────────────
+// Maximize throughput with fast internet
 
-// Limit content processes: 8 default → 2 (saves ~200-400MB)
-user_pref("dom.ipc.processCount", 2);
-user_pref("dom.ipc.processCount.webIsolated", 1);
+// Content processes: more = better parallelism and stability
+user_pref("dom.ipc.processCount", 8);
+user_pref("dom.ipc.processCount.webIsolated", 4);
 
-// Reduce memory caches (Betterfox sets these high for speed)
-user_pref("browser.cache.memory.capacity", 32768); // 32MB (was 128MB)
-user_pref("media.memory_cache_max_size", 65536); // 64MB (was 256MB)
-user_pref("media.memory_caches_combined_limit_kb", 262144); // 256MB (was 1GB)
+// HTTP/3 + QUIC: faster multiplexed connections
+user_pref("network.http.http3.enabled", true);
+user_pref("network.http.http3.default-qpack-table-size", 65536);
+user_pref("network.http.http3.default-max-stream-blocked", 20);
 
-// Reduce back/forward page cache held in memory
-user_pref("browser.sessionhistory.max_total_viewers", 2); // was 4
+// DNS over HTTPS: faster + encrypted resolution
+user_pref("network.trr.mode", 2);
+user_pref("network.trr.uri", "https://mozilla.cloudflare-dns.com/dns-query");
+user_pref("network.trr.max-retry", 2);
 
-// Localhost doesn't need 1800 connections or 10k DNS entries
-user_pref("network.http.max-connections", 256);
-user_pref("network.dnsCacheEntries", 256);
+// ECH (Encrypted Client Hello): faster TLS negotiation
+user_pref("network.dns.echconfig.enabled", true);
+user_pref("network.dns.use_https_rr_as_altsvc", true);
 
-// Unload tabs when memory is low + lazy restore on startup
-user_pref("browser.tabs.unloadOnLowMemory", true);
+// Early Hints (103): start loading resources before HTML arrives
+user_pref("network.early-hints.enabled", true);
+user_pref("network.early-hints.preconnect.enabled", true);
+
+// Fetch Priority: browser prioritizes critical resources (CSS, fonts)
+user_pref("network.fetchpriority.enabled", true);
+
+// TCP Fast Open: save a round-trip on new connections
+user_pref("network.tcp.tcp_fastopen_enable", true);
+user_pref("network.tcp.tcp_fastopen_consecutive_failure_limit", 5);
+
+// Race Cache With Network: use whichever responds first
+user_pref("network.http.rcwn.enabled", true);
+
+// Larger network buffers for fast connections
+user_pref("network.buffer.cache.size", 262144);
+user_pref("network.buffer.cache.count", 128);
+
+// Faster connection timeouts (don't wait on slow servers)
+user_pref("network.http.connection-timeout", 10);
+user_pref("network.http.response.timeout", 60);
+
+// ── Rendering Speed ─────────────────────────────────────────
+// Instant first paint (default waits 250ms)
+user_pref("nglayout.initialpaint.delay", 0);
+user_pref("nglayout.initialpaint.delay_in_oopif", 0);
+
+// More frequent reflow during page load (smoother progressive render)
+user_pref("content.notify.interval", 100000);
+
+// GPU rendering (webrender.all is safe, compositor force-enable crashes on macOS)
+user_pref("gfx.webrender.all", true);
+
+// Hardware video decoding
+user_pref("media.hardware-video-decoding.enabled", true);
+
+// Lazy restore on startup
 user_pref("browser.sessionstore.restore_on_demand", true);
-
-// No preallocated processes waiting idle
-user_pref("dom.ipc.processPrelaunch.fission.number", 0);
 
 // New tab page (replaces New Tab Override extension)
 user_pref("browser.newtab.url", "https://vimium.github.io/new-tab/");
 user_pref("browser.newtabpage.enabled", false);
 
-// Disable unused features that consume memory per tab
+// Disable unused features
 user_pref("extensions.pocket.enabled", false);
 user_pref("accessibility.force_disabled", 1);
 user_pref("reader.parse-on-load.enabled", false);
