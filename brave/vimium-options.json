@@ -1,0 +1,8 @@
+{
+  "exclusionRules": [],
+  "grabBackFocus": true,
+  "linkHintCharacters": "asdfghjkl",
+  "searchEngines": "g: https://www.google.com/search?q=%s Google\ngh: https://github.com/search?q=%s GitHub\nyt: https://www.youtube.com/results?search_query=%s YouTube\nr: https://www.reddit.com/search/?q=%s Reddit",
+  "settingsVersion": "2.4.2",
+  "userDefinedLinkHintCss": "/* === LINK HINTS (Kanagawa Dragon) === */\n  div > .vimiumHintMarker {\n    background: #1D1C19 !important;\n    border: 1px solid #393836 !important;\n    border-radius: 4px !important;\n    box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;\n    padding: 2px 4px !important;\n  }\n\n  div > .vimiumHintMarker span {\n    color: #c5c9c5 !important;\n    font-weight: bold !important;\n    font-size: 11px !important;\n    text-shadow: none !important;\n  }\n\n  div > .vimiumHintMarker > .matchingCharacter {\n    color: #c4746e !important;\n  }\n\n  /* === VOMNIBAR === */\n  #vomnibar {\n    max-width: 750px !important;\n    left: 0 !important;\n    right: 0 !important;\n    top: 25% !important;\n    margin-left: auto !important;\n    margin-right: auto !important;\n  }\n\n  #vomnibar ul {\n    max-height: 400px !important;\n    overflow-y: auto !important;\n    overflow-x: hidden !important;\n  }\n\n  /* === HUD === */\n  div.vimiumHUD {\n    background: #181616 !important;\n    border: 1px solid #282727 !important;\n    border-radius: 4px !important;\n    color: #c5c9c5 !important;\n  }"
+}

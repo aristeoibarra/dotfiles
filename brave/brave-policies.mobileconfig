@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.brave.Browser</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.dotfiles.brave.policies</string>
+			<key>PayloadUUID</key>
+			<string>AB3092BC-E2DA-40CF-8A06-5EE0CF91D85D</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadDisplayName</key>
+			<string>Brave Browser Policies</string>
+
+			<!-- ADHD: disable private browsing as extra focus layer -->
+			<key>IncognitoModeAvailability</key>
+			<integer>1</integer>
+
+			<!-- Telemetry off -->
+			<key>MetricsReportingEnabled</key>
+			<false/>
+			<key>BraveStatsPingEnabled</key>
+			<false/>
+			<key>UserFeedbackAllowed</key>
+			<false/>
+
+			<!-- Disable bloat: AI, Rewards, Wallet, VPN -->
+			<key>BraveAIChatEnabled</key>
+			<false/>
+			<key>BraveRewardsDisabled</key>
+			<true/>
+			<key>BraveWalletDisabled</key>
+			<true/>
+			<key>BraveVPNDisabled</key>
+			<true/>
+
+			<!-- Chromium GenAI features off (2 = disabled) -->
+			<key>HelpMeWriteSettings</key>
+			<integer>2</integer>
+			<key>TabOrganizerSettings</key>
+			<integer>2</integer>
+			<key>CreateThemesSettings</key>
+			<integer>2</integer>
+			<key>HistorySearchSettings</key>
+			<integer>2</integer>
+			<key>DevToolsGenAiSettings</key>
+			<integer>2</integer>
+			<key>GenAILocalFoundationalModelSettings</key>
+			<integer>1</integer>
+
+			<!-- RAM savings (8GB M1) -->
+			<key>MemorySaverModeSavings</key>
+			<integer>2</integer>
+			<key>BackgroundModeEnabled</key>
+			<false/>
+			<key>NetworkPredictionOptions</key>
+			<integer>2</integer>
+			<key>AutoplayAllowed</key>
+			<false/>
+
+			<!-- Sin sugerencias, sin spell-check de Google -->
+			<key>SearchSuggestEnabled</key>
+			<false/>
+			<key>SpellCheckServiceEnabled</key>
+			<false/>
+
+			<!-- Bitwarden handles passwords -->
+			<key>PasswordManagerEnabled</key>
+			<false/>
+
+			<!-- No Google sync, no profile pickers -->
+			<key>SyncDisabled</key>
+			<true/>
+			<key>BrowserSignin</key>
+			<integer>0</integer>
+
+			<!-- Startup + new tab → vimium new-tab page -->
+			<key>RestoreOnStartup</key>
+			<integer>4</integer>
+			<key>RestoreOnStartupURLs</key>
+			<array>
+				<string>https://vimium.github.io/new-tab/</string>
+			</array>
+			<key>NewTabPageLocation</key>
+			<string>https://vimium.github.io/new-tab/</string>
+			<key>HomepageLocation</key>
+			<string>https://vimium.github.io/new-tab/</string>
+			<key>HomepageIsNewTabPage</key>
+			<false/>
+			<key>ShowHomeButton</key>
+			<false/>
+
+			<!-- Quality of life -->
+			<key>BookmarkBarEnabled</key>
+			<false/>
+			<key>SafeBrowsingProtectionLevel</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Privacidad, sin telemetria, sin modo privado, busqueda por defecto Brave Search.</string>
+	<key>PayloadDisplayName</key>
+	<string>Brave Browser - Dotfiles Policies</string>
+	<key>PayloadIdentifier</key>
+	<string>com.dotfiles.brave</string>
+	<key>PayloadOrganization</key>
+	<string>dotfiles</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>A8619E7D-3C3F-4188-88E3-1184C5649FF9</string>
+	<key>PayloadVersion</key>
+	<integer>3</integer>
+</dict>
+</plist>
