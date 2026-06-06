@@ -24,7 +24,7 @@ STATE_FILE="$STATE_DIR/current"
 # =============================================================================
 
 get_current() {
-  [[ -f "$STATE_FILE" ]] && cat "$STATE_FILE" || echo "kanagawa-dragon"
+  [[ -f "$STATE_FILE" ]] && cat "$STATE_FILE" || echo "catppuccin-mocha"
 }
 
 list_themes() {
