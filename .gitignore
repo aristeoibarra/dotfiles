@@ -52,9 +52,11 @@ nvim/undo/
 plan/
 
 # Personal guides (private)
-keyboard-driven-guide.md
 tmux/copy-mode-guide.md
 
 # Claude Code
 .claude/
 zen/chrome/zen-themes.css
+
+# Style reference (private)
+style/
