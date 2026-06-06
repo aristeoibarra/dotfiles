@@ -8,6 +8,10 @@ export VISUAL="nvim"
 export PAGER="less"
 export PATH="$HOME/dotfiles/bin:$HOME/.local/share/nvim/mason/bin:/opt/homebrew/bin:$PATH"
 
+# Prevent Zen/Firefox "Troubleshoot Mode" dialog when launched via skhd (alt key)
+export MOZ_DISABLE_SAFE_MODE_KEY=1
+launchctl setenv MOZ_DISABLE_SAFE_MODE_KEY 1
+
 # Node version manager (fnm — Rust, <5ms init, .nvmrc compatible)
 eval "$(fnm env --use-on-cd)"
 
@@ -116,9 +120,6 @@ eval "$(zoxide init zsh)"
 # Yazi file manager (cd-on-exit wrapper)
 [ -f ~/dotfiles/zsh/yazi-wrapper.sh ] && source ~/dotfiles/zsh/yazi-wrapper.sh
 
-
-# nextdns-blocker shell completion
-command -v nextdns-blocker > /dev/null && eval "$(_NEXTDNS_BLOCKER_COMPLETE=zsh_source nextdns-blocker)"
 # PHP (only if installed)
 if [[ -x /opt/homebrew/opt/php@8.2/bin/php ]]; then
   export PATH="/opt/homebrew/opt/php@8.2/bin:$PATH"
@@ -197,3 +198,16 @@ dg-mem() { memory_pressure | command grep "free percentage"; docker stats --no-s
 
 # Local secrets (API keys, tokens — never tracked by git)
 [[ -f ~/.env.local ]] && source ~/.env.local
+
+# opencode
+export PATH=/Users/aristeoibarra/.opencode/bin:$PATH
+
+# >>> railway initialize >>>
+source "$HOME/.railway/env"
+# <<< railway initialize <<<
+
+# Cloudflare credentials (flarectl, wrangler, etc.)
+[ -f "$HOME/.config/cloudflare/env" ] && source "$HOME/.config/cloudflare/env"
+
+# Resend CLI
+export PATH="$HOME/.resend/bin:$PATH"
