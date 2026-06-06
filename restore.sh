@@ -50,6 +50,10 @@ configs=(
     "$CONFIG_DIR/yabai.backup:$CONFIG_DIR/yabai:Yabai"
     "$CONFIG_DIR/skhd.backup:$CONFIG_DIR/skhd:skhd"
     "$CONFIG_DIR/starship.toml.backup:$CONFIG_DIR/starship.toml:Starship"
+    "$CONFIG_DIR/atuin/config.toml.backup:$CONFIG_DIR/atuin/config.toml:Atuin"
+    "$CONFIG_DIR/sesh/sesh.toml.backup:$CONFIG_DIR/sesh/sesh.toml:Sesh"
+    "$HOME/.gitconfig.backup:$HOME/.gitconfig:Git config"
+    "$HOME/.gitignore_global.backup:$HOME/.gitignore_global:Git ignore global"
     "$HOME/.tmux.conf.backup:$HOME/.tmux.conf:Tmux"
     "$HOME/.tmux/tmux-swap-and-follow.sh.backup:$HOME/.tmux/tmux-swap-and-follow.sh:Tmux swap script"
     "$HOME/.zshrc.backup:$HOME/.zshrc:Zsh"
@@ -69,14 +73,10 @@ done
 if [ $backups_found -eq 0 ]; then
     echo -e "\n${YELLOW}No backups found.${NC}"
     echo -e "${BLUE}Backup files should be located at:${NC}"
-    echo -e "  ~/.config/nvim.backup"
-    echo -e "  ~/.config/alacritty.backup"
-    echo -e "  ~/.config/yabai.backup"
-    echo -e "  ~/.config/skhd.backup"
-    echo -e "  ~/.config/starship.toml.backup"
-    echo -e "  ~/.tmux.conf.backup"
-    echo -e "  ~/.tmux/tmux-swap-and-follow.sh.backup"
-    echo -e "  ~/.zshrc.backup"
+    for config in "${configs[@]}"; do
+        IFS=':' read -r backup_path _ _ <<< "$config"
+        echo -e "  $backup_path"
+    done
     exit 1
 fi
 

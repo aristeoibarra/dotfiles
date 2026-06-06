@@ -27,20 +27,11 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 # DEPENDENCIES (same as install.sh)
 # =============================================================================
 
-# Core (required)
-CORE_DEPS=("nvim" "tmux" "zsh" "yabai" "skhd")
-
-# Terminals
-TERMINAL_DEPS=("alacritty")
-
 # Modern CLI tools
 CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship")
 
 # Zsh plugins
 ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting")
-
-# Fonts
-FONTS=("font-jetbrains-mono-nerd-font")
 
 # Homebrew packages mapping (command:brew_package)
 get_brew_package() {
@@ -75,7 +66,8 @@ remove_symlink() {
     fi
 
     # Check if it points to our dotfiles
-    local link_target=$(readlink "$target_path")
+    local link_target
+    link_target=$(readlink "$target_path")
     if [[ "$link_target" != "$DOTFILES_DIR"* ]]; then
         echo -e "${YELLOW}✗ Symlink doesn't point to dotfiles repo: $name${NC}"
         echo -e "  Points to: $link_target"
@@ -162,6 +154,10 @@ remove_symlink "$CONFIG_DIR/alacritty" "Alacritty"
 remove_symlink "$CONFIG_DIR/yabai" "Yabai"
 remove_symlink "$CONFIG_DIR/skhd" "skhd"
 remove_symlink "$CONFIG_DIR/starship.toml" "Starship"
+remove_symlink "$CONFIG_DIR/atuin/config.toml" "Atuin"
+remove_symlink "$CONFIG_DIR/sesh/sesh.toml" "Sesh"
+remove_symlink "$HOME/.gitconfig" "Git config"
+remove_symlink "$HOME/.gitignore_global" "Git ignore global"
 remove_symlink "$HOME/.tmux.conf" "Tmux"
 remove_symlink "$HOME/.tmux/tmux-swap-and-follow.sh" "Tmux swap script"
 remove_symlink "$HOME/.zshrc" "Zsh"

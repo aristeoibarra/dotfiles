@@ -365,6 +365,10 @@ create_symlink "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf" "Tmux"
 create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc" "Zsh"
 create_symlink "$DOTFILES_DIR/starship/starship.toml" "$CONFIG_DIR/starship.toml" "Starship"
 
+# Git
+create_symlink "$DOTFILES_DIR/git/.gitconfig" "$HOME/.gitconfig" "Git config"
+create_symlink "$DOTFILES_DIR/git/.gitignore_global" "$HOME/.gitignore_global" "Git ignore global"
+
 # Atuin
 if [ "$DRY_RUN" = true ]; then
     echo -e "${YELLOW}[DRY RUN]${NC} Would create: $CONFIG_DIR/atuin"
