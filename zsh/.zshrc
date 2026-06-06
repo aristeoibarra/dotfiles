@@ -203,7 +203,7 @@ dg-mem() { memory_pressure | command grep "free percentage"; docker stats --no-s
 export PATH=/Users/aristeoibarra/.opencode/bin:$PATH
 
 # >>> railway initialize >>>
-source "$HOME/.railway/env"
+[ -f "$HOME/.railway/env" ] && source "$HOME/.railway/env"
 # <<< railway initialize <<<
 
 # Cloudflare credentials (flarectl, wrangler, etc.)
