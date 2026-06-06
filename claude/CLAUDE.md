@@ -27,11 +27,6 @@ When running shell commands, use modern alternatives:
 - `difft` for structural AST diffs
 - `gh` for GitHub CLI operations (PRs, issues, actions)
 
-## Tool Rules
-- For multi-file refactoring, prefer `ast-grep` over regex-based replacements.
-- For codebase overview, run `scc .` before planning.
-- Validate generated shell scripts with `shellcheck` before suggesting execution.
-
 ## Git
 - Conventional commits: fix:, feat:, refactor:, chore:, docs:
 - Small, focused commits — one concern per commit
