@@ -99,39 +99,6 @@ return {
   },
   config = function(_, opts)
     require("render-markdown").setup(opts)
-
-    -- =======================================================================
-    -- KANAGAWA DRAGON COLORS
-    -- =======================================================================
-    -- Red: #c4746e | Green: #8a9a7b | Yellow: #c4b28a | Blue: #8ba4b0
-    -- Bright Blue: #7fb4ca | Magenta: #938aa9 | Cyan: #7aa89f
-    -- Background: #181616
-    -- =======================================================================
-
-    -- Heading foregrounds (using Kanagawa Dragon palette)
-    vim.api.nvim_set_hl(0, "RenderMarkdownH1", { fg = "#c4746e", bold = true })  -- Red
-    vim.api.nvim_set_hl(0, "RenderMarkdownH2", { fg = "#c4b28a", bold = true })  -- Yellow
-    vim.api.nvim_set_hl(0, "RenderMarkdownH3", { fg = "#8a9a7b", bold = true })  -- Green
-    vim.api.nvim_set_hl(0, "RenderMarkdownH4", { fg = "#7fb4ca", bold = true })  -- Bright Blue
-    vim.api.nvim_set_hl(0, "RenderMarkdownH5", { fg = "#938aa9", bold = true })  -- Magenta
-    vim.api.nvim_set_hl(0, "RenderMarkdownH6", { fg = "#7aa89f", bold = true })  -- Cyan
-
-    -- Heading backgrounds (subtle tints based on Kanagawa Dragon)
-    vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#1f1a1a" })
-    vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = "#1f1d1a" })
-    vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = "#1a1d1a" })
-    vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = "#1a1c1f" })
-    vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = "#1c1a1d" })
-    vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = "#1a1c1c" })
-
-    -- Other elements
-    vim.api.nvim_set_hl(0, "RenderMarkdownBullet", { fg = "#7fb4ca" })   -- Bright Blue
-    vim.api.nvim_set_hl(0, "RenderMarkdownTodo", { fg = "#c4b28a" })     -- Yellow
-    vim.api.nvim_set_hl(0, "RenderMarkdownInfo", { fg = "#7fb4ca" })     -- Bright Blue
-    vim.api.nvim_set_hl(0, "RenderMarkdownSuccess", { fg = "#8a9a7b" })  -- Green
-    vim.api.nvim_set_hl(0, "RenderMarkdownHint", { fg = "#938aa9" })     -- Magenta
-    vim.api.nvim_set_hl(0, "RenderMarkdownWarn", { fg = "#c4b28a" })     -- Yellow
-    vim.api.nvim_set_hl(0, "RenderMarkdownError", { fg = "#c4746e" })    -- Red
   end,
   keys = {
     { "<leader>um", "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle Markdown Render" },
