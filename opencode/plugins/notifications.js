@@ -7,7 +7,7 @@ export default async ({ $, directory }) => {
     event: async ({ event }) => {
       if (event.type !== "session.idle" && event.type !== "session.error") return
 
-      const sessionId = event.sessionId || "default"
+      const sessionId = event.properties?.sessionID || "default"
       const stateFile = `${STATE_FILE_PREFIX}${sessionId}`
 
       const now = Math.floor(Date.now() / 1000)
