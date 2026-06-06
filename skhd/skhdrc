@@ -54,14 +54,10 @@ shift + alt - r : yabai --restart-service; skhd --restart-service
 
 # Launch / focus apps
 shift + alt - a : open -a "Alacritty"
-shift + alt - z : open -a "Zen"
-shift + alt - c : open -a "Claude"
-shift + alt - p : open -a "Podcasts"
-shift + alt - m : open -a "Music"
 shift + alt - o : open "obsidian://open?vault=aristeo"
 
 # All apps
 shift + alt - space : open /System/Applications/Apps.app
 
 # Quit focused app
-shift + alt - q : app=$(yabai -m query --windows --window | jq -r '.app') && osascript -e "tell application \"$app\" to quit"
+shift + alt - q : pid=$(yabai -m query --windows --window | jq -r '.pid') && kill -TERM "$pid"
