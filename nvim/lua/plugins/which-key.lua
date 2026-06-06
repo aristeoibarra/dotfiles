@@ -38,9 +38,6 @@ return {
       -- Resize windows
       { "<leader>r", group = "resize" },
 
-      -- Terminal
-      { "<leader>t", group = "terminal" },
-
       -- UI Toggles
       { "<leader>u", group = "ui" },
 

@@ -19,8 +19,6 @@ vim.keymap.set({ 'n', 'i', 'v' }, '<Right>', '<Nop>', { desc = 'Disabled' })
 -- Window navigation (Ctrl + hjkl) handled by vim-tmux-navigator plugin
 -- See: plugins/tmux-navigator.lua for seamless Neovim <-> Tmux navigation
 
--- Terminal keymaps are defined in plugins/terminal.lua
-
 -- Buffer switching
 vim.keymap.set('n', '<leader><leader>', '<C-^>', { desc = 'Toggle last buffer' })
 
@@ -88,7 +86,7 @@ vim.keymap.set('n', '<leader>bq', function()
 end, { desc = 'Close all buffers except current' })
 
 -- [F]IND/SEARCH (f = find, ff = files, fg = grep, fb = buffers, fd = diagnostics)
--- Telescope keymaps are set in plugins/navigation.lua
+-- Telescope keymaps are set in plugins/telescope.lua
 -- <leader>ff - Find files
 -- <leader>fg - Live grep
 -- <leader>fb - Find buffers
@@ -97,7 +95,7 @@ end, { desc = 'Close all buffers except current' })
 -- <leader>fh - Help tags
 
 -- [E]XPLORER/TREE (e = explorer)
--- <leader>e defined in plugins/navigation.lua
+-- <leader>e defined in plugins/nvim-tree.lua
 vim.keymap.set('n', '<leader>eh', function()
   print([[
   NvimTree commands:
@@ -154,67 +152,6 @@ vim.keymap.set('n', '<leader>d', vim.diagnostic.setloclist, { desc = 'Diagnostic
 vim.keymap.set('n', '<leader>D', vim.diagnostic.open_float, { desc = 'Diagnostic details (float)' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
-
--- [C]ODE & LSP (c = code: cr = rename, ca = actions, cf = format, li = lsp info)
--- Note: Most LSP keymaps are set in plugins/lsp.lua
--- <leader>cr - Code rename
--- <leader>ca - Code actions
--- <leader>cf - Code format
--- <leader>li - LSP info
-
-vim.keymap.set('n', '<leader>la', function()
-  print('Loading all project files...')
-  local extensions = {
-    -- TypeScript/JavaScript
-    'ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs',
-    -- Styles
-    'css', 'scss', 'sass',
-    -- Markup/Data
-    'html', 'json', 'yaml', 'yml',
-    -- Database/ORM
-    'prisma', 'sql', 'graphql', 'gql',
-    -- Config
-    'env.example', 'env.local.example',
-  }
-  local ext_flags = table.concat(vim.tbl_map(function(e) return '-e ' .. e end, extensions), ' ')
-  local excludes = '--exclude node_modules --exclude .git --exclude coverage --exclude dist --exclude build --exclude .next --exclude .turbo'
-  local find_cmd = string.format('fd %s --type f --hidden %s', ext_flags, excludes)
-  local files = vim.fn.systemlist(find_cmd)
-
-  if #files == 0 then
-    print('No files found')
-    return
-  end
-
-  print(string.format('Found %d files. Loading in batches...', #files))
-
-  local batch_size = 50
-  local total = #files
-  local loaded = 0
-
-  local function load_batch(start_idx)
-    local end_idx = math.min(start_idx + batch_size - 1, total)
-    for i = start_idx, end_idx do
-      local bufnr = vim.fn.bufadd(files[i])
-      if bufnr > 0 then
-        vim.fn.bufload(bufnr)
-        loaded = loaded + 1
-      end
-    end
-
-    if end_idx < total then
-      vim.defer_fn(function()
-        load_batch(end_idx + 1)
-      end, 100)
-    else
-      vim.defer_fn(function()
-        print(string.format('Loaded %d/%d files. LSP scanning complete.', loaded, total))
-      end, 1000)
-    end
-  end
-
-  load_batch(1)
-end, { desc = 'Load all project files (LSP scan)' })
 
 -- [G]IT (g = git)
 -- <leader>gg - Git status (Neogit)
