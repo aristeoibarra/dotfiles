@@ -59,5 +59,4 @@ vim.opt.shortmess:append("I")
 -- Line spacing (optimized for 8+ hours programming on 27" monitor @ 82 PPI)
 vim.opt.linespace = 5
 
--- Note: Diagnostics config is in utils/lsp.lua
 -- Note: netrw is disabled by nvim-tree plugin
