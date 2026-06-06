@@ -1,7 +1,6 @@
 -- Flash.nvim: Ultra-fast navigation
 return {
   "folke/flash.nvim",
-  event = "VeryLazy",
   opts = {
     labels = "asdfghjklqwertyuiopzxcvbnm",
     search = {
