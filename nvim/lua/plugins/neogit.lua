@@ -8,6 +8,7 @@ return {
       "sindrets/diffview.nvim",
       "nvim-telescope/telescope.nvim",
     },
+    keys = { "<leader>gg", "<leader>gc", "<leader>gp", "<leader>gl", "<leader>gs" },
     config = function()
       local neogit = require("neogit")
 
@@ -59,6 +60,8 @@ return {
   {
     "sindrets/diffview.nvim",
     dependencies = "nvim-lua/plenary.nvim",
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewFileHistory" },
+    keys = { "<leader>gd", "<leader>gD", "<leader>gh" },
     config = function()
       local diffview = require("diffview")
 

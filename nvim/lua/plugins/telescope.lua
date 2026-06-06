@@ -5,6 +5,10 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
+  keys = {
+    "<leader>ff", "<leader>fg", "<leader>fb", "<leader>fh", "<leader>fd", "<leader>fc",
+    "<leader>?", { "<leader>sg", mode = "v" }, { "<leader>sG", mode = "v" },
+  },
   config = function()
     require("telescope").setup({
       defaults = {
