@@ -3,13 +3,10 @@
   "showRibbon": false,
   "accentColor": "#89b4fa",
   "baseFontSize": 26,
-  "enabledCssSnippets": [
-    "mono-dark",
-    "ui-tweaks"
-  ],
+  "enabledCssSnippets": [],
   "interfaceFontFamily": "Inter",
   "monospaceFontFamily": "JetBrains Mono",
   "textFontFamily": "Inter",
-  "theme": "obsidian",
+  "theme": "moonstone",
   "nativeMenus": true
 }
