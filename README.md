@@ -37,7 +37,7 @@ yabai --start-service && skhd --start-service
 | yabai + skhd | Tiling WM + hotkeys |
 | zsh | Shell (no OMZ, standalone plugins via brew) |
 | starship | Prompt |
-| zen | Browser (Betterfox privacy config) |
+| brave | Browser (hardened policy profile) |
 
 CLI: bat, rg, fd, eza, sd, delta, difft, fzf, zoxide, lazygit, gh, atuin, yazi, sesh
 
@@ -56,11 +56,13 @@ Syncs colors across nvim, alacritty, tmux, starship, lazygit, delta, and FZF. Ad
 alacritty/     Terminal config + theme
 atuin/         Shell history
 bin/           Scripts (theme, digiin, bw-unlock, obsidian-daily)
-claude/        Claude Code config + hooks
+brave/         Browser policy profile + new-tab extension
+claude/        Claude Code config, rules, hooks + statusline
 git/           .gitconfig + .gitignore_global
 macos/         System scripts (animations, display)
 nvim/          Neovim (config/, plugins/, utils/, snippets/)
 obsidian/      Appearance + CSS snippets
+opencode/      OpenCode config + agents
 safari/        Safari guard (auto-close private windows)
 sesh/          Session manager
 skhd/          Hotkey daemon
@@ -68,7 +70,6 @@ starship/      Prompt
 themes/        Color definitions
 tmux/          Multiplexer config + scripts
 yabai/         Window manager
-zen/           Zen Browser (user.js, userChrome.css)
 zsh/           Shell config
 ```
 
