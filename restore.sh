@@ -60,6 +60,7 @@ configs=(
     "$HOME/.claude/CLAUDE.md.backup:$HOME/.claude/CLAUDE.md:Claude CLAUDE.md"
     "$HOME/.claude/statusline.sh.backup:$HOME/.claude/statusline.sh:Claude statusline"
     "$HOME/.claude/hooks/notify-tmux.sh.backup:$HOME/.claude/hooks/notify-tmux.sh:Claude tmux notify hook"
+    "$HOME/.claude/rules.backup:$HOME/.claude/rules:Claude rules"
 )
 
 for config in "${configs[@]}"; do

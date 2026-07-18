@@ -340,6 +340,39 @@ create_symlink() {
     return 0
 }
 
+# Copy a file only if the target is absent. Used for files the app rewrites live
+# (e.g. Claude Code's settings.json) — symlinking those would make every in-app
+# change dirty the repo. On a fresh machine this seeds the base; on an existing
+# one it leaves the live file untouched.
+copy_if_absent() {
+    local source="$1"
+    local target="$2"
+    local name="$3"
+
+    if [ "$DRY_RUN" = true ]; then
+        echo -e "${YELLOW}[DRY RUN]${NC} Would copy (if absent): $source → $target"
+        return 0
+    fi
+
+    if [ ! -e "$source" ]; then
+        echo -e "${RED}✗ Error: Source not found: $source${NC}"
+        return 1
+    fi
+
+    if [ -e "$target" ]; then
+        echo -e "${GREEN}✓${NC} $name (exists, left untouched)"
+        return 0
+    fi
+
+    if ! cp "$source" "$target"; then
+        echo -e "${RED}✗ Error copying: $name${NC}"
+        return 1
+    fi
+
+    echo -e "${GREEN}✓${NC} Copied $name"
+    return 0
+}
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -394,6 +427,8 @@ fi
 create_symlink "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md" "Claude CLAUDE.md"
 create_symlink "$DOTFILES_DIR/claude/statusline.sh" "$HOME/.claude/statusline.sh" "Claude statusline"
 create_symlink "$DOTFILES_DIR/claude/hooks/notify-tmux.sh" "$HOME/.claude/hooks/notify-tmux.sh" "Claude tmux notify hook"
+create_symlink "$DOTFILES_DIR/claude/rules" "$HOME/.claude/rules" "Claude rules"
+copy_if_absent "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json" "Claude settings.json"
 
 # Tmux scripts
 if [ "$DRY_RUN" = true ]; then

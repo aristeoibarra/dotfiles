@@ -166,6 +166,9 @@ remove_symlink "$HOME/.zshrc" "Zsh"
 remove_symlink "$HOME/.claude/CLAUDE.md" "Claude CLAUDE.md"
 remove_symlink "$HOME/.claude/statusline.sh" "Claude statusline"
 remove_symlink "$HOME/.claude/hooks/notify-tmux.sh" "Claude tmux notify hook"
+remove_symlink "$HOME/.claude/rules" "Claude rules"
+# Note: ~/.claude/settings.json is copied (not symlinked) since Claude Code
+# rewrites it live, so it is intentionally left in place on uninstall.
 
 # Remove dependencies if requested
 if [ "$REMOVE_DEPS" = true ]; then
