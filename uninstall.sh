@@ -27,30 +27,20 @@ DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 # DEPENDENCIES (same as install.sh)
 # =============================================================================
 
-# Modern CLI tools
-CLI_DEPS=("bat" "rg" "fd" "eza" "fzf" "zoxide" "lazygit" "jq" "starship")
+# Modern CLI tools (mirrors install.sh CLI_DEPS + jq/starship). Dev tools,
+# runtimes, containers and media are general-purpose — left for manual removal.
+CLI_DEPS=("bat" "rg" "fd" "eza" "sd" "delta" "difft" "fzf" "zoxide" "lazygit" "gh" "atuin" "yazi" "sesh" "jq" "starship")
 
-# Zsh plugins
-ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting")
+# Zsh plugins (same set as install.sh)
+ZSH_PLUGINS=("zsh-autosuggestions" "zsh-syntax-highlighting" "zsh-completions" "fzf-tab")
 
-# Homebrew packages mapping (command:brew_package)
+# Homebrew packages mapping (command:brew_package). Only non-identity names
+# need an entry; everything else maps to itself via the default case.
 get_brew_package() {
     case "$1" in
-        nvim) echo "neovim" ;;
-        tmux) echo "tmux" ;;
-        zsh) echo "zsh" ;;
-        yabai) echo "yabai" ;;
-        skhd) echo "skhd" ;;
-        alacritty) echo "alacritty" ;;
-        bat) echo "bat" ;;
         rg) echo "ripgrep" ;;
-        fd) echo "fd" ;;
-        eza) echo "eza" ;;
-        fzf) echo "fzf" ;;
-        zoxide) echo "zoxide" ;;
-        lazygit) echo "lazygit" ;;
-        jq) echo "jq" ;;
-        starship) echo "starship" ;;
+        delta) echo "git-delta" ;;
+        difft) echo "difftastic" ;;
         *) echo "$1" ;;
     esac
 }
@@ -102,7 +92,7 @@ remove_dependencies() {
     # Remove Zsh plugins
     echo -e "\n${BLUE}Removing Zsh plugins...${NC}"
     for plugin in "${ZSH_PLUGINS[@]}"; do
-        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ]; then
+        if [ -f "/opt/homebrew/share/$plugin/$plugin.zsh" ] || [ -f "/opt/homebrew/share/$plugin/$plugin.plugin.zsh" ] || [ -d "/opt/homebrew/share/$plugin" ]; then
             echo -e "  Removing $plugin..."
             brew uninstall "$plugin" 2>/dev/null && \
                 echo -e "${GREEN}  ✓${NC} $plugin removed" || \
@@ -118,13 +108,13 @@ remove_dependencies() {
             echo -e "${RED}  ✗${NC} TPM (failed)"
     fi
 
-    echo -e "\n${YELLOW}Note: Core dependencies (neovim, tmux, yabai, skhd) were NOT removed.${NC}"
-    echo -e "${YELLOW}Note: Terminals (alacritty) were NOT removed.${NC}"
-    echo -e "${YELLOW}Note: Fonts were NOT removed.${NC}"
+    echo -e "\n${YELLOW}Not removed (core or general-purpose):${NC}"
+    echo -e "${YELLOW}  core:${NC} neovim, tmux, yabai, skhd"
+    echo -e "${YELLOW}  dev:${NC} ast-grep, shellcheck, scc, yq   ${YELLOW}runtimes:${NC} fnm, pnpm"
+    echo -e "${YELLOW}  containers:${NC} docker, colima, docker-compose   ${YELLOW}media:${NC} mpv"
     echo -e "${BLUE}To remove them manually:${NC}"
-    echo -e "  brew uninstall neovim tmux yabai skhd"
-    echo -e "  brew uninstall --cask alacritty"
-    echo -e "  brew uninstall --cask font-jetbrains-mono-nerd-font"
+    echo -e "  brew uninstall neovim tmux yabai skhd ast-grep shellcheck scc yq fnm pnpm mpv"
+    echo -e "  brew uninstall --cask alacritty font-jetbrains-mono-nerd-font"
 }
 
 # Warn user
