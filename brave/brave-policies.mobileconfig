@@ -22,6 +22,33 @@
 			<key>IncognitoModeAvailability</key>
 			<integer>1</integer>
 
+			<!-- Tor windows bypass every DNS layer (NextDNS, router, /etc/hosts) -->
+			<key>TorDisabled</key>
+			<true/>
+
+			<!-- Guest profiles load no extensions, so a guest window is Brave
+			     without the ndb blocking layer. DNS policy still applies there. -->
+			<key>BrowserGuestModeEnabled</key>
+			<false/>
+
+			<!-- A fresh profile starts without ndb, which is a clean bypass of the
+			     URL layer. Single profile (Main) is the intended setup. To add one:
+			     chflags noschg the managed prefs, flip this, restart Brave. -->
+			<key>BrowserAddPersonEnabled</key>
+			<false/>
+
+			<!-- DNS must go through the OS resolver, which is pinned to NextDNS
+			     via /Library/Managed Preferences/com.apple.dnsSettings.managed.plist.
+			     DnsOverHttpsMode=off  → Brave does no DoH of its own; UI toggle locks.
+			     BuiltInDnsClientEnabled=false → use getaddrinfo(), so the system's
+			     DoH profile and /etc/hosts both apply. Both keys are required:
+			     "off" alone still lets Chromium's internal client talk straight
+			     to the router's nameserver, skipping the system DoH profile. -->
+			<key>DnsOverHttpsMode</key>
+			<string>off</string>
+			<key>BuiltInDnsClientEnabled</key>
+			<false/>
+
 			<!-- Telemetry off -->
 			<key>MetricsReportingEnabled</key>
 			<false/>
@@ -112,7 +139,7 @@
 	<key>PayloadOrganization</key>
 	<string>dotfiles</string>
 	<key>PayloadRemovalDisallowed</key>
-	<false/>
+	<true/>
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
