@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "New Tab → Vimium",
+  "version": "1.0.0",
+  "description": "Redirects chrome://newtab to the Vimium new-tab page. Brave ignores the NewTabPageLocation policy; chrome_url_overrides is the only mechanism that works.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  }
+}
