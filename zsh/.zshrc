@@ -211,3 +211,6 @@ export PATH=/Users/aristeoibarra/.opencode/bin:$PATH
 
 # Resend CLI
 export PATH="$HOME/.resend/bin:$PATH"
+
+# jira-cli API token (fuera del dotfile, chmod 600)
+[ -f ~/.config/.jira/token.env ] && source ~/.config/.jira/token.env
