@@ -95,13 +95,20 @@ Luego:
 
 Si alguna policy aparece como **Unknown** o **Error**, esa versión de Brave no la reconoce: quítala del `.mobileconfig` y reinstala.
 
+### Extensiones (fuera del perfil)
+
+El perfil no instala extensiones. Después de instalar el perfil:
+
+1. **New Tab override** — `brave://extensions` → Developer mode (on) → Load unpacked → `~/dotfiles/brave/newtab-vimium` (ver sección **New Tab page**)
+2. **Vimium** — instálala desde el Chrome Web Store, luego `brave://extensions` → Vimium → Details → Extension options → importa `~/dotfiles/brave/vimium-options.json`
+
 ## Uninstall
 
 System Settings → General → Device Management → Profiles → seleccionar el perfil → **−** (remove).
 
 ## Edit
 
-Si modificas `brave-policies.mobileconfig`, reinstala con `profiles install` (sobrescribe el existente).
+`profiles install` ya no existe en Sequoia. Si modificas `brave-policies.mobileconfig`: quita el perfil actual (System Settings → Profiles → **−**) y reinstálalo con los pasos de **Install**. Si los managed prefs están sellados con `schg`, primero `chflags noschg` (ver **Immutable flags**).
 
 ## Notas
 
