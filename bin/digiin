@@ -1,17 +1,29 @@
 #!/usr/bin/env bash
-# digiin — worktree-based dev sessions
-# Layout: [nvim 20% | claude 80%]
-#
-# Usage:
-#   digiin              show this help
-#   digiin init         start infra (Colima + postgres + redis)
-#   digiin open         open main project session
-#   digiin wt <branch>  create/open worktree session
-#   digiin ls           list worktrees and session status
-#   digiin rm <branch>  remove worktree and kill session
+# digiin — unified CLI: local dev sessions + EC2 demo server ops
+# Run `digiin help` for the full command list.
 
 MAIN_DIR="$HOME/digiin/project"
 WORKTREE_BASE="$HOME/digiin"
+
+# EC2 demo server (on-demand — see digiin-ec2 / digiin-status skills).
+# Instance-specific identifiers live outside this (public) repo — create
+# ~/.config/digiin/env (chmod 600) with:  INSTANCE_ID=i-xxxx  EC2_REGION=us-east-2
+DIGIIN_ENV="${DIGIIN_ENV:-$HOME/.config/digiin/env}"
+# shellcheck source=/dev/null
+[[ -f "$DIGIIN_ENV" ]] && source "$DIGIIN_ENV"
+EC2_REGION="${EC2_REGION:-us-east-2}"
+require_ec2() {
+  [[ -n "${INSTANCE_ID:-}" ]] && return 0
+  echo "digiin: INSTANCE_ID not set — add it to $DIGIIN_ENV (chmod 600)." >&2
+  exit 1
+}
+# Connect by the current AWS-reported IP, not by the box's DNS name — the on-boot
+# Cloudflare DNS update can lag/fail, so the IP is the reliable source of truth.
+SSH_KEY="$HOME/.ssh/id_ed25519"
+SSH_OPTS=(-o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new)
+WORKFLOWS=(audit cleanup-stale-ci-runs mutation security-audit
+  validate-backend-tests validate-build validate-lint validate-locales
+  validate-schema validate-tests validate-types verify-docs-weekly)
 
 if [[ ! -d "$MAIN_DIR" ]]; then
   echo "Error: $MAIN_DIR does not exist"
@@ -175,17 +187,159 @@ cmd_rm() {
   fi
 }
 
+# ─── EC2 demo server (on-demand) ─────────────────────────────────────────────
+
+ec2_state() {
+  aws ec2 describe-instances --instance-ids "$INSTANCE_ID" --region "$EC2_REGION" \
+    --query 'Reservations[0].Instances[0].State.Name' --output text 2>/dev/null || echo "unknown"
+}
+
+ec2_ip() {
+  aws ec2 describe-instances --instance-ids "$INSTANCE_ID" --region "$EC2_REGION" \
+    --query 'Reservations[0].Instances[0].PublicIpAddress' --output text 2>/dev/null || echo "none"
+}
+
+# SSH to the box by its current public IP (robust to stale DNS). Extra args -> remote command.
+ec2_ssh() {
+  local ip; ip=$(ec2_ip)
+  if [[ -z "$ip" || "$ip" == "none" || "$ip" == "None" ]]; then
+    echo "No public IP (instance not running?)." >&2
+    return 1
+  fi
+  ssh "${SSH_OPTS[@]}" -i "$SSH_KEY" "ec2-user@$ip" "$@"
+}
+
+# Verify the on-boot Cloudflare update actually succeeded for the current IP.
+# Reads the box's own update-dns log — catches a stale/expired CF token the same
+# boot instead of days later (the failure mode that bit us 2026-07-18).
+check_dns() {
+  local ip; ip=$(ec2_ip)
+  local line; line=$(ec2_ssh "sudo grep -F '$ip' /var/log/update-dns.log 2>/dev/null | tail -1" 2>/dev/null)
+  if [[ "$line" == *"- true" ]]; then
+    echo "DNS on-boot OK ($ip)."
+  else
+    echo "!! DNS on-boot did NOT confirm success for $ip (stale Cloudflare token?)."
+    echo "   last entry: ${line:-<none for this IP>}"
+    echo "   check: digiin ssh -> sudo tail -3 /var/log/update-dns.log"
+    echo "   fix:   re-roll the Cloudflare token and update ~/update-dns.sh on the box"
+  fi
+}
+
+cmd_start() {
+  local s; s=$(ec2_state)
+  if [[ "$s" == "running" ]]; then
+    echo "Already running (IP $(ec2_ip))."
+    check_dns
+    return 0
+  fi
+  echo "Starting $INSTANCE_ID..."
+  aws ec2 start-instances --instance-ids "$INSTANCE_ID" --region "$EC2_REGION" >/dev/null
+  aws ec2 wait instance-running --instance-ids "$INSTANCE_ID" --region "$EC2_REGION"
+  echo "running. IP: $(ec2_ip)"
+  printf "Waiting for SSH"
+  local i
+  for i in $(seq 1 30); do
+    if ec2_ssh true 2>/dev/null; then
+      echo " -> OK after $((i * 5))s."
+      check_dns
+      echo "Ready to deploy."
+      return 0
+    fi
+    printf "."
+    sleep 5
+  done
+  echo ""
+  echo "Note: SSH not responding yet (on-boot DNS may lag). Retry shortly."
+}
+
+cmd_stop() {
+  local s; s=$(ec2_state)
+  if [[ "$s" == "stopped" ]]; then echo "Already stopped."; return 0; fi
+  echo "Stopping $INSTANCE_ID..."
+  aws ec2 stop-instances --instance-ids "$INSTANCE_ID" --region "$EC2_REGION" >/dev/null
+  aws ec2 wait instance-stopped --instance-ids "$INSTANCE_ID" --region "$EC2_REGION"
+  echo "stopped. Compute off (only EBS ~\$2.40/mo remains)."
+}
+
+cmd_status() {
+  local s; s=$(ec2_state)
+  echo "state : $s"
+  [[ "$s" == "running" ]] && echo "ip    : $(ec2_ip)"
+  echo "(full dashboard: digiin-status skill)"
+}
+
+cmd_deploy() {
+  local s; s=$(ec2_state)
+  if [[ "$s" != "running" ]]; then
+    echo "Instance $s -> starting first..."
+    cmd_start
+  fi
+  echo "Deploying (git pull dev + rebuild + restart + health)..."
+  ec2_ssh "cd /opt/digiin && ./deploy.sh update"
+}
+
+cmd_ssh() { ec2_ssh; }
+
+cmd_logs() { ec2_ssh "cd /opt/digiin && ./deploy.sh logs"; }
+
+cmd_schedule() {
+  local st
+  case "${1:-}" in
+    on)  st=ENABLED ;;
+    off) st=DISABLED ;;
+    *) echo "Usage: digiin schedule on|off"; return 1 ;;
+  esac
+  local f; f=$(mktemp)
+  aws scheduler get-schedule --name digiin-start --region "$EC2_REGION" > "$f"
+  aws scheduler update-schedule --name digiin-start --region "$EC2_REGION" --state "$st" \
+    --schedule-expression "$(jq -r .ScheduleExpression "$f")" \
+    --schedule-expression-timezone "$(jq -r .ScheduleExpressionTimezone "$f")" \
+    --flexible-time-window "$(jq -c .FlexibleTimeWindow "$f")" \
+    --target "$(jq -c .Target "$f")" >/dev/null
+  rm -f "$f"
+  echo "digiin-start (auto-start 8-8 Mon-Fri) -> $st  (auto-stop untouched)"
+}
+
+cmd_ci() {
+  local action
+  case "${1:-}" in
+    off) action=disable ;;
+    on)  action=enable ;;
+    *) echo "Usage: digiin ci off|on"; return 1 ;;
+  esac
+  local wf
+  for wf in "${WORKFLOWS[@]}"; do
+    if (cd "$MAIN_DIR" && gh workflow "$action" "$wf.yml" 2>/dev/null); then
+      echo "  $action: $wf.yml"
+    else
+      echo "  skip: $wf.yml"
+    fi
+  done
+  echo "cd-dev.yml left intact (manual deploy)."
+}
+
 cmd_help() {
   cat <<'EOF'
-digiin — worktree-based dev sessions
+digiin — dev sessions + EC2 demo server ops
 
-Usage:
-  digiin              show this help
-  digiin init         start infra (Colima + postgres + redis)
-  digiin open         open main project session
-  digiin wt <branch>  create/open worktree session
-  digiin ls           list worktrees and session status
-  digiin rm <branch>  remove worktree and kill session
+DEV SESSIONS (local)
+  digiin init            start infra (Colima + postgres + redis)
+  digiin open            open main project session
+  digiin wt <branch>     create/open worktree session
+  digiin ls              list worktrees and session status
+  digiin rm <branch>     remove worktree and kill session
+
+SERVER (EC2 demo — on-demand)
+  digiin start           start the EC2 + wait until SSH is reachable
+  digiin stop            stop the EC2 (compute off; auto-stop 8pm is the safety net)
+  digiin status          EC2 state + public IP
+  digiin deploy          start if needed + git pull dev + rebuild + restart + health
+  digiin ssh             SSH into the server (digiin-dev)
+  digiin logs            tail the running services' logs
+  digiin schedule on|off toggle EventBridge auto-start (8-8 Mon-Fri)
+  digiin ci off|on       toggle the 12 self-hosted GitHub Actions workflows
+
+  digiin help            show this help
 EOF
 }
 
@@ -195,6 +349,10 @@ case "${1:-}" in
   wt)         cmd_wt "$2" ;;
   ls)         cmd_ls ;;
   rm)         cmd_rm "$2" ;;
+  start|stop|status|deploy|ssh|logs)
+              require_ec2; "cmd_$1" ;;
+  schedule)   cmd_schedule "$2" ;;
+  ci)         cmd_ci "$2" ;;
   help|-h|--help|"") cmd_help ;;
   *)
     echo "Unknown command: $1"
