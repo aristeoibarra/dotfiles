@@ -21,9 +21,17 @@ require_ec2() {
 # Cloudflare DNS update can lag/fail, so the IP is the reliable source of truth.
 SSH_KEY="$HOME/.ssh/id_ed25519"
 SSH_OPTS=(-o ConnectTimeout=8 -o StrictHostKeyChecking=accept-new)
-WORKFLOWS=(audit cleanup-stale-ci-runs mutation security-audit
-  validate-backend-tests validate-build validate-lint validate-locales
-  validate-schema validate-tests validate-types verify-docs-weekly)
+GH_REPO="${GH_REPO:-digiin-software/digiin}"
+
+# Workflows `digiin ci on|off` toggles. cd-dev is never in this list — it is
+# the deploy path and must stay enabled.
+#
+# Refreshed 2026-07-22: five of the old entries were retired on 2026-07-20
+# (cleanup-stale-ci-runs, mutation, validate-backend-tests, validate-locales,
+# validate-schema, verify-docs-weekly) and `gh workflow disable` errors on a
+# name that no longer exists, so the whole loop bailed partway through.
+WORKFLOWS=(audit backup-board cleanup-branches secret-scan security-audit
+  validate-build validate-lint validate-tests validate-types)
 
 if [[ ! -d "$MAIN_DIR" ]]; then
   echo "Error: $MAIN_DIR does not exist"
@@ -266,14 +274,55 @@ cmd_status() {
   echo "(full dashboard: digiin-status skill)"
 }
 
+# Triggers the cd-dev.yml pipeline instead of SSH-ing into deploy.sh.
+#
+# deploy.sh was left behind by the monorepo restructure: build_images() still
+# builds from source/backend/Dockerfile, a path that has not existed since the
+# apps/ split, so `deploy.sh update` fails at the build step. Rather than fix
+# and then maintain two deploy paths in parallel, this drives the one that
+# works and is already wired end to end.
+#
+# The pipeline is also the only path that runs the `gate` job (typecheck +
+# registry audits on the runner). SSH-ing straight to a rebuild skipped it.
 cmd_deploy() {
+  local branch="${1:-demo}"
+
   local s; s=$(ec2_state)
   if [[ "$s" != "running" ]]; then
     echo "Instance $s -> starting first..."
     cmd_start
   fi
-  echo "Deploying (git pull dev + rebuild + restart + health)..."
-  ec2_ssh "cd /opt/digiin && ./deploy.sh update"
+
+  # The runner lives on the EC2 box; if it has not registered yet the run
+  # queues forever with no indication why.
+  echo "Waiting for the self-hosted runner to come online..."
+  local i
+  for i in $(seq 1 30); do
+    if gh api "/repos/$GH_REPO/actions/runners" --jq \
+        '[.runners[] | select(.status == "online")] | length' 2>/dev/null | grep -qv '^0$'; then
+      echo "  runner online."
+      break
+    fi
+    [[ $i -eq 30 ]] && { echo "  runner never came online after 150s. Check: ssh digiin-dev 'sudo systemctl status actions.runner.*'"; return 1; }
+    sleep 5
+  done
+
+  echo "Dispatching cd-dev.yml on '$branch' (gate -> build -> migrate -> health)..."
+  gh workflow run cd-dev.yml --repo "$GH_REPO" --ref "$branch" || return 1
+
+  # `gh workflow run` returns before the run is queryable.
+  sleep 5
+  local run_id
+  run_id=$(gh run list --repo "$GH_REPO" --workflow=cd-dev.yml --branch "$branch" \
+    --limit 1 --json databaseId --jq '.[0].databaseId' 2>/dev/null)
+
+  if [[ -z "$run_id" ]]; then
+    echo "Dispatched, but could not resolve the run id. Watch it with: gh run list --workflow=cd-dev.yml"
+    return 0
+  fi
+
+  echo "Run: https://github.com/$GH_REPO/actions/runs/$run_id"
+  gh run watch "$run_id" --repo "$GH_REPO" --exit-status
 }
 
 cmd_ssh() { ec2_ssh; }
@@ -331,11 +380,12 @@ SERVER (EC2 demo — on-demand)
   digiin start           start the EC2 + wait until SSH is reachable
   digiin stop            stop the EC2 (compute off; auto-stop 8pm is the safety net)
   digiin status          EC2 state + public IP
-  digiin deploy          start if needed + git pull dev + rebuild + restart + health
+  digiin deploy [branch] start if needed + run cd-dev.yml (gate -> build ->
+                         migrate -> health -> auto-rollback). Default: demo
   digiin ssh             SSH into the server (digiin-dev)
   digiin logs            tail the running services' logs
   digiin schedule on|off toggle EventBridge auto-start (8-8 Mon-Fri)
-  digiin ci off|on       toggle the 12 self-hosted GitHub Actions workflows
+  digiin ci off|on       toggle the GitHub Actions workflows (cd-dev stays on)
 
   digiin help            show this help
 EOF
