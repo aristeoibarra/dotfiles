@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# publish-note — vault → site, gated.
+#
+#   publish-note            list notes in 10-notes with status
+#   publish-note <name>     validate and publish a note (filename, .md optional)
+#
+# Gate: complete frontmatter, publish: true, status ready/published, no [[wikilinks]].
+# Publish: copy to src/content/notas/, build, commit, push.
+# Close: mark status: published in the vault and back it up.
+set -euo pipefail
+
+VAULT_DIR="$HOME/vaults/aristeo"
+NOTES_DIR="$VAULT_DIR/10-notes"
+SITE_DIR="$HOME/dev/aristeoibarra.com"
+DEST_DIR="$SITE_DIR/src/content/notas"
+
+die() { printf 'error: %s\n' "$1" >&2; exit 1; }
+
+fm_field() { # fm_field <key> <file> — frontmatter field value
+  awk -v k="$1" '
+    NR==1 && $0=="---" { infm=1; next }
+    infm && $0=="---" { exit }
+    infm && index($0, k": ")==1 { sub(k": ", ""); print; exit }
+  ' "$2"
+}
+
+# ── no args: list ───────────────────────────────────────────────────
+if [ $# -eq 0 ]; then
+  [ -d "$NOTES_DIR" ] || die "missing $NOTES_DIR"
+  found=0
+  for f in "$NOTES_DIR"/*.md; do
+    [ -e "$f" ] || break
+    found=1
+    site="-"
+    [ "$(fm_field publish "$f")" = "true" ] && site="site"
+    printf '%-11s %-5s %s\n' "$(fm_field status "$f" || echo '?')" "$site" "$(basename "$f" .md)"
+  done
+  [ "$found" -eq 1 ] || echo "(10-notes is empty)"
+  exit 0
+fi
+
+# ── locate note ─────────────────────────────────────────────────────
+name="${1%.md}"
+src="$NOTES_DIR/$name.md"
+[ -f "$src" ] || die "no such note: $src"
+
+# ── gate ────────────────────────────────────────────────────────────
+title="$(fm_field title "$src")"
+date="$(fm_field date "$src")"
+publish="$(fm_field publish "$src")"
+status="$(fm_field status "$src")"
+
+[ -n "$title" ] || die "gate: missing 'title' in frontmatter"
+echo "$date" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' || die "gate: 'date' must be YYYY-MM-DD (got: '$date')"
+[ "$publish" = "true" ] || die "gate: this note is not marked for the site (publish: $publish)"
+case "$status" in
+  ready|published) ;;
+  draft) die "gate: note is still 'status: draft' — flip it to 'ready' when it's time" ;;
+  *) die "gate: 'status' must be draft|ready|published (got: '$status')" ;;
+esac
+if grep -n '\[\[' "$src" >/dev/null; then
+  grep -n '\[\[' "$src" | head -5 >&2
+  die "gate: Obsidian [[wikilinks]] found — the site speaks standard markdown"
+fi
+
+# ── slug ────────────────────────────────────────────────────────────
+slug="$(printf '%s' "$name" \
+  | iconv -f UTF-8 -t ASCII//TRANSLIT \
+  | tr '[:upper:]' '[:lower:]' \
+  | tr -cs 'a-z0-9' '-' \
+  | tr -s '-' | sed 's/^-//; s/-$//')"
+[ -n "$slug" ] || die "could not derive a slug from '$name'"
+dest="$DEST_DIR/$slug.md"
+
+# ── copy (dropping vault-internal fields) ───────────────────────────
+awk '
+  NR==1 && $0=="---" { infm=1; print; next }
+  infm && $0=="---" { infm=0; print; next }
+  infm && (index($0, "publish: ")==1 || index($0, "status: ")==1) { next }
+  { print }
+' "$src" > "$dest"
+echo "→ $slug.md copied to site"
+
+# ── verification build ──────────────────────────────────────────────
+( cd "$SITE_DIR" && npm run build >/dev/null 2>&1 ) || die "site build failed — nothing was published; check the note"
+echo "→ build ok"
+
+# ── commit + push site ──────────────────────────────────────────────
+(
+  cd "$SITE_DIR"
+  git add "src/content/notas/$slug.md"
+  if git diff --cached --quiet; then
+    echo "→ no changes vs what is already published"
+  else
+    git commit -q -m "feat: publish note $slug"
+    git push -q
+    echo "→ pushed: deploy takes it from here"
+  fi
+)
+
+# ── close the loop in the vault ─────────────────────────────────────
+if [ "$status" = "ready" ]; then
+  sd 'status: ready' 'status: published' "$src"
+fi
+(
+  cd "$VAULT_DIR"
+  git add "10-notes/$name.md"
+  git diff --cached --quiet || { git commit -q -m "chore: publish $slug"; git push -q; }
+)
+echo "✓ published: $title"
