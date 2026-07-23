@@ -55,7 +55,7 @@ Syncs colors across nvim, alacritty, tmux, starship, lazygit, delta, and FZF. Ad
 ```
 alacritty/     Terminal config + theme
 atuin/         Shell history
-bin/           Scripts (theme, digiin, bw-unlock, obsidian-daily)
+bin/           Scripts (theme, dev, digiin, bw-unlock, publish-note)
 brave/         Browser policy profile + new-tab extension
 claude/        Claude Code config, rules, hooks + statusline
 git/           .gitconfig + .gitignore_global
