@@ -38,8 +38,10 @@ alt + shift - tab : id=$(yabai -m query --windows --space | jq -r '[.[] | select
 # Close window
 alt - w : yabai -m window --close
 
-# Restart yabai service
-shift + alt - r : yabai --restart-service; skhd --restart-service
+# Restart yabai + skhd services
+# yabai --restart-service busca com.asmvik.yabai.plist; el LaunchAgent instalado
+# es com.koekeishiya.yabai.plist, por eso se reinicia via launchctl
+shift + alt - r : launchctl kickstart -k "gui/$(id -u)/com.koekeishiya.yabai"; skhd --restart-service
 
 # ============================================
 # SPACES/DESKTOPS NAVIGATION
@@ -49,7 +51,7 @@ shift + alt - r : yabai --restart-service; skhd --restart-service
 # Move to space: requiere SIP deshabilitado o arrastrar manualmente con Mission Control
 
 # ============================================
-# APPS (replaces Raycast — saves ~88 MB)
+# APPS (launcher nativo, sin Raycast)
 # ============================================
 
 # Launch / focus apps
