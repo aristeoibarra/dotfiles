@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # publish-note — vault → site, gated.
 #
-#   publish-note            list notes in 10-notes with status
+#   publish-note            list notes in 20-notes with status
 #   publish-note <name>     validate and publish a note (filename, .md optional)
 #
 # Gate: complete frontmatter, publish: true, status ready/published, no [[wikilinks]].
@@ -10,7 +10,7 @@
 set -euo pipefail
 
 VAULT_DIR="$HOME/vaults/aristeo"
-NOTES_DIR="$VAULT_DIR/10-notes"
+NOTES_DIR="$VAULT_DIR/20-notes"
 SITE_DIR="$HOME/dev/aristeoibarra.com"
 DEST_DIR="$SITE_DIR/src/content/notas"
 
@@ -35,7 +35,7 @@ if [ $# -eq 0 ]; then
     [ "$(fm_field publish "$f")" = "true" ] && site="site"
     printf '%-11s %-5s %s\n' "$(fm_field status "$f" || echo '?')" "$site" "$(basename "$f" .md)"
   done
-  [ "$found" -eq 1 ] || echo "(10-notes is empty)"
+  [ "$found" -eq 1 ] || echo "(20-notes is empty)"
   exit 0
 fi
 
@@ -104,7 +104,7 @@ if [ "$status" = "ready" ]; then
 fi
 (
   cd "$VAULT_DIR"
-  git add "10-notes/$name.md"
+  git add "20-notes/$name.md"
   git diff --cached --quiet || { git commit -q -m "chore: publish $slug"; git push -q; }
 )
 echo "✓ published: $title"
