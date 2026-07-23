@@ -42,9 +42,8 @@ yabai -m config auto_balance on
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Finder$" manage=off
-yabai -m rule --add app="^Raycast$" manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
-yabai -m rule --add app="^RoundPie$" manage=off
+yabai -m rule --add app="^Tomito$" manage=off
 yabai -m rule --add app="^App Store$" manage=off
 yabai -m rule --add app="^Archive Utility$" manage=off
 yabai -m rule --add app="^Disk Utility$" manage=off
