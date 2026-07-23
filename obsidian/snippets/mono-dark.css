@@ -46,6 +46,9 @@
 
   /* Selection */
   --text-selection: #45475a;
+
+  /* Cursor - readable on dark background */
+  --cursor-color: #f38ba8;
 }
 
 /* Headers - no color, just weight and size */

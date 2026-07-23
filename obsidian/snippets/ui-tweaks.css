@@ -15,8 +15,8 @@
   padding-top: 30px !important;
 }
 
-/* Line width 1100px */
-.theme-dark {
+/* Line width - theme-independent, applies in both light and dark */
+body {
   --file-line-width: 1000px;
 }
 
@@ -34,7 +34,7 @@
 /* More visible cursor */
 .cm-cursor {
   border-left-width: 2px !important;
-  border-left-color: #f38ba8 !important;
+  border-left-color: var(--cursor-color) !important;
 }
 
 /* Hide UI noise */
@@ -102,4 +102,21 @@
 /* Fix sidebar spacing for macOS buttons */
 .workspace-split.mod-left-split {
   padding-top: 30px !important;
+}
+
+/* --- Backlinks: only show real relations --- */
+
+/* Unlinked mentions are text coincidences, not links. The pane appends
+   its header + results container last, so drop the final two children. */
+.embedded-backlinks .backlink-pane > :nth-last-child(2),
+.embedded-backlinks .backlink-pane > :last-child {
+  display: none !important;
+}
+
+/* Hide the whole block when the note has no backlinks yet.
+   :nth-last-child(3) is the linked-mentions container (the two hidden
+   unlinked elements still count in the DOM), so an empty state there
+   means zero real relations. */
+.embedded-backlinks:has(.backlink-pane > :nth-last-child(3) .search-empty-state) {
+  display: none !important;
 }

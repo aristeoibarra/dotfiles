@@ -1,12 +1,16 @@
 {
   "showViewHeader": false,
   "showRibbon": false,
-  "accentColor": "#89b4fa",
+  "accentColor": "",
   "baseFontSize": 26,
-  "enabledCssSnippets": [],
+  "enabledCssSnippets": [
+    "mono-dark",
+    "mono-light",
+    "ui-tweaks"
+  ],
   "interfaceFontFamily": "Inter",
   "monospaceFontFamily": "JetBrains Mono",
   "textFontFamily": "Inter",
-  "theme": "moonstone",
+  "theme": "system",
   "nativeMenus": true
 }

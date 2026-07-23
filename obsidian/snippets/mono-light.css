@@ -1,0 +1,54 @@
+/* Mono Light - low stimulation theme (Catppuccin Latte) */
+/* Counterpart of mono-dark.css. Structural rules live there and read
+   these variables, so both snippets must stay enabled together. */
+
+.theme-light {
+  /* Warm light backgrounds (Catppuccin Latte) */
+  --background-primary: #eff1f5;
+  --background-primary-alt: #e6e9ef;
+  --background-secondary: #e6e9ef;
+  --background-secondary-alt: #dce0e8;
+  --background-modifier-border: #ccd0da;
+
+  /* Monochrome text (warm) */
+  --text-normal: #4c4f69;
+  --text-muted: #6c6f85;
+  --text-faint: #9ca0b0;
+
+  /* Single accent color (blue Catppuccin) */
+  --text-accent: #1e66f5;
+  --text-accent-hover: #209fb5;
+  --interactive-accent: #1e66f5;
+  --interactive-accent-hover: #209fb5;
+
+  /* Interactive */
+  --interactive-normal: #ccd0da;
+  --interactive-hover: #bcc0cc;
+
+  /* Headers - same color, distinguished by size only */
+  --h1-color: #4c4f69;
+  --h2-color: #4c4f69;
+  --h3-color: #4c4f69;
+  --h4-color: #5c5f77;
+  --h5-color: #5c5f77;
+  --h6-color: #5c5f77;
+
+  /* Code */
+  --code-background: #dce0e8;
+  --code-normal: #6c6f85;
+
+  /* Links - only accent */
+  --link-color: #1e66f5;
+  --link-color-hover: #209fb5;
+  --link-external-color: #1e66f5;
+
+  /* Tags */
+  --tag-background: #ccd0da;
+  --tag-color: #6c6f85;
+
+  /* Selection */
+  --text-selection: #bcc0cc;
+
+  /* Cursor - readable on light background */
+  --cursor-color: #d20f39;
+}
