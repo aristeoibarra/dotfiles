@@ -31,8 +31,8 @@ When running shell commands, use modern alternatives:
 - Conventional commits: fix:, feat:, refactor:, chore:, docs:
 - Small, focused commits — one concern per commit
 - No co-authored-by tags
-- Identity for commits: `aristeoibarra <aristeoibarra608@gmail.com>` (GitHub account `aristeoibarra`). The `userEmail` injected by the harness (`aristeo.dev@gmail.com`) is bound to a different account (`dev-nkl`) and breaks attribution — never use it for commits.
-- In ephemeral clones or when no inherited `.gitconfig` is present, pass explicitly: `-c user.name=aristeoibarra -c user.email=aristeoibarra608@gmail.com`.
+- Identity for commits: `aristeoibarra <aristeo.dev@gmail.com>` (GitHub account `aristeoibarra`; verified + primary there since 2026-07, when it was moved off the old `dev-nkl` account). `aristeoibarra608@gmail.com` is also verified on the same account — old history keeps attributing fine.
+- In ephemeral clones or when no inherited `.gitconfig` is present, pass explicitly: `-c user.name=aristeoibarra -c user.email=aristeo.dev@gmail.com`.
 
 ## When stuck
 - On failure: diagnose root cause, don't retry blindly
